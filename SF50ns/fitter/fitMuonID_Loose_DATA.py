@@ -60,10 +60,18 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     ),
 
     Expressions = cms.PSet(
-        #LooseVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) ", "PF", "Glb", "TM"),
+        #IP Cuts
+        IPLooseVar = cms.vstring("IPLooseVar", "abs(dxyBS)<0.2 && abs(dzPV)<0.5", "dxyBS", "dzPV"),
+        IPTightVar = cms.vstring("IPTightVar", "abs(dxyBS)<0.02 && abs(dzPV)<0.1", "dxyBS", "dzPV"),
+        #ID Cuts
         Loose_noIPVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) ", "PF", "Glb", "TM"),
         Medium_noIPVar= cms.vstring("Medium_noIPVar", "Medium==1", "Medium"),
         Tight_noIPVar = cms.vstring("Tight_noIPVar", "PF==1 && numberOfMatchedStations>1 && GlbPT==1 && tkTrackerLay>5 && tkValidPixelHits>0", "PF", "numberOfMatchedStations", "GlbPT", "tkTrackerLay", "tkValidPixelHits"),
+        #IP ID Cuts
+        LooseVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) && IPLooseVar==1", "PF", "Glb", "TM","IPLooseVar"),
+        MediumVar= cms.vstring("MediumVar", "Medium==1 && IPLooseVar==1", "Medium", "IPLooseVar"),
+        TightVar = cms.vstring("TightVar", "PF==1 && numberOfMatchedStations>1 && GlbPT==1 && tkTrackerLay>5 && tkValidPixelHits>0 && IPLooseVar==1", "PF", "numberOfMatchedStations", "GlbPT", "tkTrackerLay", "tkValidPixelHits", "IPLooseVar"),
+        Tight_tightIPVar = cms.vstring("Tight_tightIPVar", "PF==1 && numberOfMatchedStations>1 && GlbPT==1 && tkTrackerLay>5 && tkValidPixelHits>0 && IPTightVar==1", "PF", "numberOfMatchedStations", "GlbPT", "tkTrackerLay", "tkValidPixelHits", "IPTightVar"),
     ),
 
     Cuts = cms.PSet(
@@ -74,6 +82,11 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         Tight_noIP = cms.vstring("Tightid_noIP", "Tight_noIPVar", "0.5"),
         LooseIso4 = cms.vstring("LooseIso4" ,"combRelIsoPF04dBeta", "0.2"),
         TightIso4 = cms.vstring("TightIso4" ,"combRelIsoPF04dBeta", "0.12"),
+        #IP ID Cuts
+        Loose_IP = cms.vstring("Loose_IP", "LooseVar", "0.5"),
+        Medium_IP = cms.vstring("Medium_IP", "MediumVar", "0.5"),
+        Tight_IP = cms.vstring("Tight_IP", "TightVar", "0.5"),
+        Tight_tightIP = cms.vstring("Tight_tightIP", "Tight_tightIPVar", "0.5"),
     ),
 
                           
@@ -155,8 +168,8 @@ process.TnP_MuonID = Template.clone(
     Efficiencies = cms.PSet(),
 )
 
-#IDS = ["Tightid_noIP"]#Has to be the same as the name of the Cut
-IDS = [ "Loose_noIP", "Medium_noIP", "Tight_noIP"]#Has to be the same as the name of the Cut
+IDS = ["Tight_tightIP"]#Has to be the same as the name of the Cut
+#IDS = [ "Loose_noIP", "Medium_noIP", "Tight_noIP"]#Has to be the same as the name of the Cut
 #ALLBINS = [("pt_abseta",PT_ETA_BINS)]
 #ALLBINS= [("eta", ETA_BINS), ("pt", PT_ETA_BINS), ("vtx",VTX_BINS)]
 ALLBINS= [("eta", ETA_BINS)]
