@@ -35,6 +35,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         combRelIsoPF04dBeta = cms.vstring("dBeta rel iso dR 0.4", "-2", "9999999", ""),
         tag_pt = cms.vstring("Tag p_{T}", "0", "1000", "GeV/c"),
         tag_nVertices   = cms.vstring("Number of vertices", "0", "999", ""),
+        tag_abseta = cms.vstring("|eta| of tag muon", "0", "2.5", ""),
         tag_combRelIsoPF04dBeta = cms.vstring("Tag dBeta rel iso dR 0.4", "-2", "9999999", ""),
         dB = cms.vstring("dB", "-1000", "1000", ""),
         dzPV = cms.vstring("dzPV", "-1000", "1000", ""),
@@ -44,7 +45,6 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         numberOfMatchedStations = cms.vstring("matched stations","-1", "50",""),
         tkTrackerLay = cms.vstring("track.hitPattern.trackerLayersWithMeasurement","-1", "50",""),
         tkValidPixelHits = cms.vstring("track.hitPattern.numberOfValidPixelHits","-1", "50",""),
-
 
         ),
 
@@ -67,7 +67,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         Loose_noIPVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) ", "PF", "Glb", "TM"),
         Medium_noIPVar= cms.vstring("Medium_noIPVar", "Medium==1", "Medium"),
         Tight_noIPVar = cms.vstring("Tight_noIPVar", "PF==1 && numberOfMatchedStations>1 && GlbPT==1 && tkTrackerLay>5 && tkValidPixelHits>0", "PF", "numberOfMatchedStations", "GlbPT", "tkTrackerLay", "tkValidPixelHits"),
-        #IP ID Cuts
+        #IP+ID Cuts
         LooseVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) && IPLooseVar==1", "PF", "Glb", "TM","IPLooseVar"),
         MediumVar= cms.vstring("MediumVar", "Medium==1 && IPLooseVar==1", "Medium", "IPLooseVar"),
         TightVar = cms.vstring("TightVar", "PF==1 && numberOfMatchedStations>1 && GlbPT==1 && tkTrackerLay>5 && tkValidPixelHits>0 && IPLooseVar==1", "PF", "numberOfMatchedStations", "GlbPT", "tkTrackerLay", "tkValidPixelHits", "IPLooseVar"),
@@ -75,18 +75,18 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     ),
 
     Cuts = cms.PSet(
-        #Loose = cms.vstring("Loose", "LooseVar", "0.5"),
         #noIP ids
         Loose_noIP = cms.vstring("Loose_noIP", "Loose_noIPVar", "0.5"),
         Medium_noIP = cms.vstring("Medium_noIP", "Medium_noIPVar", "0.5"),
         Tight_noIP = cms.vstring("Tightid_noIP", "Tight_noIPVar", "0.5"),
-        LooseIso4 = cms.vstring("LooseIso4" ,"combRelIsoPF04dBeta", "0.2"),
-        TightIso4 = cms.vstring("TightIso4" ,"combRelIsoPF04dBeta", "0.12"),
         #IP ID Cuts
         Loose_IP = cms.vstring("Loose_IP", "LooseVar", "0.5"),
         Medium_IP = cms.vstring("Medium_IP", "MediumVar", "0.5"),
         Tight_IP = cms.vstring("Tight_IP", "TightVar", "0.5"),
         Tight_tightIP = cms.vstring("Tight_tightIP", "Tight_tightIPVar", "0.5"),
+        #Isolations
+        LooseIso4 = cms.vstring("LooseIso4" ,"combRelIsoPF04dBeta", "0.2"),
+        TightIso4 = cms.vstring("TightIso4" ,"combRelIsoPF04dBeta", "0.12"),
     ),
 
                           
@@ -134,45 +134,410 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 
 PT_ETA_BINS = cms.PSet(
     #pt     = cms.vdouble(  10, 20, 25, 30, 35, 40, 50, 60, 90, 140, 300, 500 ),
-    pt     = cms.vdouble(20,50,500 ),
-    #abseta = cms.vdouble(  0.0, 0.9, 1.2, 2.1, 2.4),
-    abseta = cms.vdouble(  0.0, 0.9),
+    pt     = cms.vdouble(20, 30, 40, 50, 60, 70, 80, 90, 100),
+    abseta = cms.vdouble(  0.0, 1.2, 2.4),
+    #abseta = cms.vdouble(  0.0, 0.9),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+    #tag selections
+    tag_pt = cms.vdouble(25, 500),
+    tag_abseta = cms.vdouble(0, 2.1)
 )
 ETA_BINS = cms.PSet(
-    pt  = cms.vdouble(20,500),
-    eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+    pt  = cms.vdouble(20,60,500),
+    #eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+    eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+    #tag selections
+    tag_pt = cms.vdouble(25, 500),
+    tag_abseta = cms.vdouble(0, 2.1)
 )
 VTX_BINS  = cms.PSet(
     pt     = cms.vdouble(  20, 500 ),
     abseta = cms.vdouble(  0.0, 2.1),
     tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+    #tag selections
+    tag_pt = cms.vdouble(25, 500),
+    tag_abseta = cms.vdouble(0, 2.1)
 )
 
 OVERALL_ABSETA = cms.PSet(
-    pt  = cms.vdouble(20,500),
-    #abseta = cms.vdouble(0.0, 0.9, 1.2, 2.1, 2.4),
-    abseta = cms.vdouble(1.2, 2.1),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-)
+        pt  = cms.vdouble(20,500),
+        #abseta = cms.vdouble(0.0, 0.9, 1.2, 2.1, 2.4),
+        abseta = cms.vdouble(1.2, 2.1),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1)
+        )
+
+    #_*_*_*_*_*_*_*_*_*_*_*_*_*
+    #Denominators for Rel. Iso
+    #_*_*_*_*_*_*_*_*_*_*_*_*_*
+
+
+LOOSE_noIP_PT_ETA_BINS = cms.PSet(
+        PF = cms.vstring("pass"),
+
+        pt     = cms.vdouble(20, 30, 40, 50, 60, 70, 80, 90, 100),
+        abseta = cms.vdouble(  0.0, 1.2, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1)
+        )
+
+LOOSE_noIP_ETA_BINS= cms.PSet(
+        PF = cms.vstring("pass"),
+
+        pt  = cms.vdouble(20,60,500),
+        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1)
+        )
+
+LOOSE_noIP_VTX_BINS = cms.PSet(
+        PF = cms.vstring("pass"),
+
+        pt     = cms.vdouble(  20, 500 ),
+        abseta = cms.vdouble(  0.0, 2.1),
+        tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1)
+        )
+
+
+MEDIUM_noIP_PT_ETA_BINS = cms.PSet(
+        Medium = cms.vstring("pass"),
+
+        pt     = cms.vdouble(20, 30, 40, 50, 60, 70, 80, 90, 100),
+        abseta = cms.vdouble(  0.0, 1.2, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1)
+        )
+
+MEDIUM_noIP_ETA_BINS = cms.PSet(
+        Medium = cms.vstring("pass"),
+
+        pt  = cms.vdouble(20,60,500),
+        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1)
+        )
+
+MEDIUM_noIP_VTX_BINS = cms.PSet(
+        Medium = cms.vstring("pass"),
+
+        pt     = cms.vdouble(  20, 500 ),
+        abseta = cms.vdouble(  0.0, 2.1),
+        tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1)
+        )
+
+TIGHT_noIP_PT_ETA_BINS = cms.PSet(
+        PF = cms.vstring("pass"),
+        numberOfMatchedStations = cms.vdouble(1, 99),
+        GlbPT = cms.vstring("pass"),
+        tkTrackerLay = cms.vdouble(5, 99),
+        tkValidPixelHits = cms.vdouble(0, 99),
+
+        pt     = cms.vdouble(20, 30, 40, 50, 60, 70, 80, 90, 100),
+        abseta = cms.vdouble(  0.0, 1.2, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1)
+
+        #dB = cms.vdouble(-0.2, 0.2),
+        #dzPV = cms.vdouble(-0.5, 0.5),
+        )
+
+TIGHT_noIP_ETA_BINS = cms.PSet(
+        PF = cms.vstring("pass"),
+        numberOfMatchedStations = cms.vdouble(1, 99),
+        GlbPT = cms.vstring("pass"),
+        tkTrackerLay = cms.vdouble(5, 99),
+        tkValidPixelHits = cms.vdouble(0, 99),
+
+        pt  = cms.vdouble(20,60,500),
+        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1)
+
+        #dB = cms.vdouble(-0.2, 0.2),
+        #dzPV = cms.vdouble(-0.5, 0.5),
+        )
+
+TIGHT_noIP_VTX_BINS = cms.PSet(
+        PF = cms.vstring("pass"),
+        numberOfMatchedStations = cms.vdouble(1, 99),
+        GlbPT = cms.vstring("pass"),
+        tkTrackerLay = cms.vdouble(5, 99),
+        tkValidPixelHits = cms.vdouble(0, 99),
+
+        pt     = cms.vdouble(  20, 500 ),
+        abseta = cms.vdouble(  0.0, 2.1),
+        tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1)
+
+        #dB = cms.vdouble(-0.2, 0.2),
+        #dzPV = cms.vdouble(-0.5, 0.5),
+        )
+
+LOOSE_PT_ETA_BINS = cms.PSet(
+        PF = cms.vstring("pass"),
+
+        pt     = cms.vdouble(20, 30, 40, 50, 60, 70, 80, 90, 100),
+        abseta = cms.vdouble(  0.0, 1.2, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1),
+
+        dxyBS= cms.vdouble(-0.2, 0.2),
+        dzPV = cms.vdouble(-0.5, 0.5),
+        )
+
+LOOSE_ETA_BINS= cms.PSet(
+        PF = cms.vstring("pass"),
+
+        pt  = cms.vdouble(20,60,500),
+        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1),
+
+        dxyBS= cms.vdouble(-0.2, 0.2),
+        dzPV = cms.vdouble(-0.5, 0.5),
+        )
+
+LOOSE_VTX_BINS = cms.PSet(
+        PF = cms.vstring("pass"),
+
+        pt     = cms.vdouble(  20, 500 ),
+        abseta = cms.vdouble(  0.0, 2.1),
+        tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1),
+
+        dxyBS= cms.vdouble(-0.2, 0.2),
+        dzPV = cms.vdouble(-0.5, 0.5),
+        )
+
+
+MEDIUM_PT_ETA_BINS = cms.PSet(
+        Medium = cms.vstring("pass"),
+
+        pt     = cms.vdouble(20, 30, 40, 50, 60, 70, 80, 90, 100),
+        abseta = cms.vdouble(  0.0, 1.2, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1),
+
+        dxyBS= cms.vdouble(-0.2, 0.2),
+        dzPV = cms.vdouble(-0.5, 0.5),
+        )
+
+MEDIUM_ETA_BINS = cms.PSet(
+        Medium = cms.vstring("pass"),
+
+        pt  = cms.vdouble(20,60,500),
+        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1),
+
+        dxyBS= cms.vdouble(-0.2, 0.2),
+        dzPV = cms.vdouble(-0.5, 0.5),
+        )
+
+MEDIUM_VTX_BINS = cms.PSet(
+        Medium = cms.vstring("pass"),
+
+        pt     = cms.vdouble(  20, 500 ),
+        abseta = cms.vdouble(  0.0, 2.1),
+        tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1),
+
+        dxyBS= cms.vdouble(-0.2, 0.2),
+        dzPV = cms.vdouble(-0.5, 0.5),
+        )
+
+TIGHT_PT_ETA_BINS = cms.PSet(
+        PF = cms.vstring("pass"),
+        numberOfMatchedStations = cms.vdouble(1, 99),
+        GlbPT = cms.vstring("pass"),
+        tkTrackerLay = cms.vdouble(5, 99),
+        tkValidPixelHits = cms.vdouble(0, 99),
+
+        pt     = cms.vdouble(20, 30, 40, 50, 60, 70, 80, 90, 100),
+        abseta = cms.vdouble(  0.0, 1.2, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1),
+
+        dxyBS= cms.vdouble(-0.2, 0.2),
+        dzPV = cms.vdouble(-0.5, 0.5),
+        )
+
+TIGHT_ETA_BINS = cms.PSet(
+        PF = cms.vstring("pass"),
+        numberOfMatchedStations = cms.vdouble(1, 99),
+        GlbPT = cms.vstring("pass"),
+        tkTrackerLay = cms.vdouble(5, 99),
+        tkValidPixelHits = cms.vdouble(0, 99),
+
+        pt  = cms.vdouble(20,60,500),
+        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1),
+
+        dxyBS= cms.vdouble(-0.2, 0.2),
+        dzPV = cms.vdouble(-0.5, 0.5),
+        )
+
+TIGHT_VTX_BINS = cms.PSet(
+        PF = cms.vstring("pass"),
+        numberOfMatchedStations = cms.vdouble(1, 99),
+        GlbPT = cms.vstring("pass"),
+        tkTrackerLay = cms.vdouble(5, 99),
+        tkValidPixelHits = cms.vdouble(0, 99),
+
+        pt     = cms.vdouble(  20, 500 ),
+        abseta = cms.vdouble(  0.0, 2.1),
+        tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1),
+
+        dxyBS= cms.vdouble(-0.2, 0.2),
+        dzPV = cms.vdouble(-0.5, 0.5),
+        )
+
+TIGHT_TIGHTIP_PT_ETA_BINS = cms.PSet(
+        PF = cms.vstring("pass"),
+        numberOfMatchedStations = cms.vdouble(1, 99),
+        GlbPT = cms.vstring("pass"),
+        tkTrackerLay = cms.vdouble(5, 99),
+        tkValidPixelHits = cms.vdouble(0, 99),
+
+        pt     = cms.vdouble(20, 30, 40, 50, 60, 70, 80, 90, 100),
+        abseta = cms.vdouble(  0.0, 1.2, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1),
+
+        dxyBS= cms.vdouble(-0.02, 0.02),
+        dzPV = cms.vdouble(-0.01, 0.01),
+        )
+
+TIGHT_TIGHTIP_ETA_BINS = cms.PSet(
+        PF = cms.vstring("pass"),
+        numberOfMatchedStations = cms.vdouble(1, 99),
+        GlbPT = cms.vstring("pass"),
+        tkTrackerLay = cms.vdouble(5, 99),
+        tkValidPixelHits = cms.vdouble(0, 99),
+
+        pt  = cms.vdouble(20,60,500),
+        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1),
+
+        dxyBS= cms.vdouble(-0.02, 0.02),
+        dzPV = cms.vdouble(-0.01, 0.01),
+        )
+
+TIGHT_TIGHTIP_VTX_BINS = cms.PSet(
+        PF = cms.vstring("pass"),
+        numberOfMatchedStations = cms.vdouble(1, 99),
+        GlbPT = cms.vstring("pass"),
+        tkTrackerLay = cms.vdouble(5, 99),
+        tkValidPixelHits = cms.vdouble(0, 99),
+
+        pt     = cms.vdouble(  20, 500 ),
+        abseta = cms.vdouble(  0.0, 2.1),
+        tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
+        pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+        #tag selections
+        tag_pt = cms.vdouble(25, 500),
+        tag_abseta = cms.vdouble(0, 2.1),
+
+        dxyBS= cms.vdouble(-0.02, 0.02),
+        dzPV = cms.vdouble(-0.01, 0.01),
+        )
 
 process.TnP_MuonID = Template.clone(
-    InputFileNames = cms.vstring(
-        'root://eoscms//eos/cms/store/group/phys_muon/TagAndProbe/TnP_trees_aod747_goldenJSON.root',
-                                 ),
-    InputTreeName = cms.string("fitter_tree"),
-    InputDirectoryName = cms.string("tpTree"),
-    OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
-    Efficiencies = cms.PSet(),
-)
+        InputFileNames = cms.vstring(
+            'root://eoscms//eos/cms/store/group/phys_muon/TagAndProbe/TnP_trees_aod747_goldenJSON.root',
+            ),
+        InputTreeName = cms.string("fitter_tree"),
+        InputDirectoryName = cms.string("tpTree"),
+        OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
+        Efficiencies = cms.PSet(),
+        )
 
-IDS = ["Tight_tightIP"]#Has to be the same as the name of the Cut
-#IDS = [ "Loose_noIP", "Medium_noIP", "Tight_noIP"]#Has to be the same as the name of the Cut
-#ALLBINS = [("pt_abseta",PT_ETA_BINS)]
+#Identifications
+#IDS = ["Loose_noIP", "Medium_noIP", "Tight_noIP"]
+#IDS = ["Loose_IP", "Medium_IP","Tight_IP","Tight_tightIP"]#Has to be the same as the name of the Cut
+#Isolations
+IDS = ["LooseIso4"]
+#TESTS
+#IDS = ["LooseIso4_from_Loose_noIP", "LooseIso4_from_Medium_noIP", "LooseIso4_from_Tight_noIP", "LooseIso4_from_Loose_IP", "LooseIso4_from_Medium_IP","LooseIso4_from_Tight_IP","LooseIso4_from_Tight_tightIP","TightIso4_from_Tight_tightIP"]#Has to be the same as the name of the Cut
+#IDS = ["LooseIso4_from_Loose_noIP"]
+
+#Identifications
 #ALLBINS= [("eta", ETA_BINS), ("pt", PT_ETA_BINS), ("vtx",VTX_BINS)]
-ALLBINS= [("eta", ETA_BINS)]
+
+##############
+#Double check this
+############
+
+#Isolations
+#ALLBINS= [("LooseId_noIP_eta", LOOSE_noIP_ETA_BINS), ("LooseId_noIP_pt",LOOSE_noIP_PT_ETA_BINS), ("LooseId_noIP_vtx",LOOSE_noIP_VTX_BINS)]
+#ALLBINS= [("MediumId_noIP_eta", MEDIUM_noIP_ETA_BINS), ("MediumId_noIP_pt", MEDIUM_noIP_PT_ETA_BINS), ("MediumId_noIP_vtx",MEDIUM_noIP_VTX_BINS)]
+#ALLBINS= [("TightId_noIP_eta",TIGHT_noIP_ETA_BINS), ("TightId_noIP_pt", TIGHT_noIP_PT_ETA_BINS), ("TightId_noIP_vtx",TIGHT_noIP_VTX_BINS)]
+
+#Isolation for ID+IP
+#ALLBINS= [("LooseId_eta", LOOSE_ETA_BINS), ("LooseId_pt",LOOSE_PT_ETA_BINS), ("LooseId_vtx",LOOSE_VTX_BINS)]
+#ALLBINS= [("MediumId_eta", MEDIUM_ETA_BINS), ("MediumId_pt", MEDIUM_PT_ETA_BINS), ("MediumId_vtx",MEDIUM_VTX_BINS)]
+#ALLBINS= [("TightId_eta", TIGHT_ETA_BINS), ("TightId_pt", TIGHT_PT_ETA_BINS), ("TightId_vtx",TIGHT_VTX_BINS)]
+
+#Isolation for ID+tightIP
+#ALLBINS= [("TightId_tightIP_eta", TIGHT_ETA_BINS), ("TightId_tightIP_pt", TIGHT_PT_ETA_BINS), ("TightId_tightIP_vtx",TIGHT_VTX_BINS)]
+
+#ALLBINS = [("pt_abseta",PT_ETA_BINS)]
+#ALLBINS= [("eta", ETA_BINS)]
 #ALLBINS= [("vtx",VTX_BINS)]
 #ALLBINS= [("overall_abseta",OVERALL_ABSETA)]
 
@@ -181,7 +546,7 @@ for ID in IDS:
     if len(args) > 1 and ID != args[1]: continue
     for X,B in ALLBINS:
         if len(args) > 2 and X not in args[2:]: continue
-        module = process.TnP_MuonID.clone(OutputFileName = cms.string("TnP_MuonID_%s_%s_%s.root" % (scenario, ID, X)))
+        module = process.TnP_MuonID.clone(OutputFileName = cms.string("DATAeff/TnP_MuonID_%s_%s_%s.root" % (scenario, ID, X)))
         shape = "vpvPlusExpo"
         #change the shape and the range as a function of the selection and the variable
         if "eta" in X and not "abseta" in X: shape = "voigtPlusExpo"
@@ -191,16 +556,12 @@ for ID in IDS:
         DEN = B.clone(); num = ID;
         if "24" in ID and hasattr(DEN,'pt') and "pt" not in X: DEN.pt[0] = 25 #change pt range
         #Implement reliso
-        if "_from_" in ID:
-            parts = ID.split("_from_")
-            num = parts[0]
-            den = parts[1]
-            if den.find("Medium") != -1: 
-                setattr(DEN, parts[1], cms.vstring("pass"))
-            else:
-                setattr(DEN, parts[1], cms.vstring("above"))
+        #if "_from_" in ID:
+            #parts = ID.split("_from_")
+            #num = parts[0]
+            #setattr(DEN, parts[1], cms.vstring("above"))
 
-        #compute isolation efficiency
+        #compute isolation efficiency 
         if num.find("Iso4") != -1: 
             setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring(num,"below"),
@@ -208,7 +569,7 @@ for ID in IDS:
                 BinnedVariables = DEN,
                 BinToPDFmap = cms.vstring(shape)
             ))
-        #Compute isolation for id
+        #Compute id efficiency
         else:
             setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring(num,"above"),
