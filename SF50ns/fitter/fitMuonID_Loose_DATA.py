@@ -114,8 +114,6 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 
 #changed the trigger here
 #TRIGGER = cms.PSet(tag_Mu20 = cms.vstring("pass"))
-#if "mc" in scenario or "39X" in scenario or "38X" in scenario:
-    #TRIGGER = cms.PSet(tag_Mu15 = cms.vstring("pass"), tag_pt = cms.vdouble(24.,9999.))
 
     #_*_*_*_*_*_*_*_*_*_*_*_*
     #Denominators and Binning
@@ -157,7 +155,6 @@ process.TnP_MuonID = Template.clone(
     Efficiencies = cms.PSet(),
 )
 
-#IDS = [ "Loose", "Soft", "Tight", "TightNoPF", "HighPt" ]
 #IDS = ["Tightid_noIP"]#Has to be the same as the name of the Cut
 IDS = [ "Loose_noIP", "Medium_noIP", "Tight_noIP"]#Has to be the same as the name of the Cut
 #ALLBINS = [("pt_abseta",PT_ETA_BINS)]
@@ -190,23 +187,6 @@ for ID in IDS:
             else:
                 setattr(DEN, parts[1], cms.vstring("above"))
 
-        #modify the tag req if iso
-        #if scenario.find("tagiso") != -1:  
-            #DEN.tag_combRelIso = cms.vdouble(-1, 0.1)
-        #if scenario.find("loosetagiso") != -1:  
-            #DEN.tag_combRelIso = cms.vdouble(-1, 0.2)
-        #if scenario.find("probeiso") != -1:
-            #DEN.isoTrk03Abs = cms.vdouble(-1, 3)
-        #if scenario.find("calo") != -1: DEN.caloCompatibility = cms.vdouble(0.9,1.1)  # same as above, I think.
-        #Data here. Do not use this for the moment
-        #if "mc" in scenario:
-            #if num == "Mu24": num = "Mu15"
-            #if num == "IsoMu17": num = "IsoMu15"
-            #if num == "DoubleMu7": num = "DoubleMu3"
-            #if num == "Mu8_forEMu": num = "DoubleMu3"
-            #if num == "Mu17_forEMu": num = "DoubleMu3"
-        #What is this ?
-        #if "EG5" in scenario: DEN.pair_nL1EG5 = cms.vdouble(0.5,999)
         #compute isolation efficiency
         if num.find("Iso4") != -1: 
             setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
@@ -215,13 +195,6 @@ for ID in IDS:
                 BinnedVariables = DEN,
                 BinToPDFmap = cms.vstring(shape)
             ))
-        #elif ID.find("Medium") != -1: 
-            #setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
-                #EfficiencyCategoryAndState = cms.vstring(num,"pass"),
-                #UnbinnedVariables = cms.vstring("mass"),
-                #BinnedVariables = DEN,
-                #BinToPDFmap = cms.vstring(shape)
-            #))
         #Compute isolation for id
         else:
             setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
@@ -230,14 +203,6 @@ for ID in IDS:
                 BinnedVariables = DEN,
                 BinToPDFmap = cms.vstring(shape)
             ))
-        #Data here. Do not use this for the moment
-        #if scenario.find("mc") != -1:
-            #setattr(module.Efficiencies, ID+"_"+X+"_mcTrue", cms.PSet(
-                #EfficiencyCategoryAndState = cms.vstring(num,"above"),
-                ##EfficiencyCategoryAndState = cms.vstring(num,"pass"),
-                #UnbinnedVariables = cms.vstring("mass"),
-                #BinnedVariables = DEN.clone(mcTrue = cms.vstring("true"))
-            #))
         setattr(process, "TnP_MuonID_"+ID+"_"+X, module)        
         setattr(process, "run_"+ID+"_"+X, cms.Path(module))
 
