@@ -13,6 +13,9 @@ scenario = "data_all"
 #scenario = "mc_all"
 if len(args) > 0: scenario = args[0]
 print "Will run scenario ", scenario 
+if len(args) > 1: numerator = args[1]
+print 'The numerator is ', numerator
+
 
 process = cms.Process("TagProbe")
 
@@ -142,7 +145,6 @@ PT_ETA_BINS = cms.PSet(
     #pt     = cms.vdouble(  10, 20, 25, 30, 35, 40, 50, 60, 90, 140, 300, 500 ),
     pt     = cms.vdouble(20, 30, 40, 50, 60, 70, 80, 90, 100),
     abseta = cms.vdouble(  0.0, 1.2, 2.4),
-    #abseta = cms.vdouble(  0.0, 0.9),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
     tag_pt = cms.vdouble(25, 500),
@@ -151,8 +153,7 @@ PT_ETA_BINS = cms.PSet(
 )
 ETA_BINS = cms.PSet(
     pt  = cms.vdouble(20,500),
-    #eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
-    eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+    eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
     tag_pt = cms.vdouble(25, 500),
@@ -172,7 +173,6 @@ VTX_BINS  = cms.PSet(
 
 OVERALL_ABSETA = cms.PSet(
         pt  = cms.vdouble(20,500),
-        #abseta = cms.vdouble(0.0, 0.9, 1.2, 2.1, 2.4),
         abseta = cms.vdouble(1.2, 2.1),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
@@ -202,7 +202,7 @@ LOOSE_noIP_ETA_BINS= cms.PSet(
         PF = cms.vstring("pass"),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -240,7 +240,7 @@ MEDIUM_noIP_ETA_BINS = cms.PSet(
         Medium = cms.vstring("pass"),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -276,8 +276,6 @@ TIGHT_noIP_PT_ETA_BINS = cms.PSet(
         tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
 
-        #dB = cms.vdouble(-0.2, 0.2),
-        #dzPV = cms.vdouble(-0.5, 0.5),
         )
 
 TIGHT_noIP_ETA_BINS = cms.PSet(
@@ -288,7 +286,7 @@ TIGHT_noIP_ETA_BINS = cms.PSet(
         tkValidPixelHits = cms.vdouble(0, 99),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -315,8 +313,6 @@ TIGHT_noIP_VTX_BINS = cms.PSet(
         tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
 
-        #dB = cms.vdouble(-0.2, 0.2),
-        #dzPV = cms.vdouble(-0.5, 0.5),
         )
 
 LOOSE_PT_ETA_BINS = cms.PSet(
@@ -338,7 +334,7 @@ LOOSE_ETA_BINS= cms.PSet(
         PF = cms.vstring("pass"),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -385,7 +381,7 @@ MEDIUM_ETA_BINS = cms.PSet(
         Medium = cms.vstring("pass"),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -439,7 +435,7 @@ TIGHT_ETA_BINS = cms.PSet(
         tkValidPixelHits = cms.vdouble(0, 99),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -497,7 +493,7 @@ TIGHT_TIGHTIP_ETA_BINS = cms.PSet(
         tkValidPixelHits = cms.vdouble(0, 99),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.8, -1.5, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -549,7 +545,7 @@ if scenario == 'mc_all':
 #IDS = ["Loose_noIP", "Medium_noIP", "Tight_noIP"]
 #IDS = ["Loose_IP", "Medium_IP","Tight_IP","Tight_tightIP"]#Has to be the same as the name of the Cut
 #Isolations
-IDS = ["LooseIso4"]
+#IDS = ["LooseIso4"]
 #IDS = ["TightIso4"]
 
 #BIN
@@ -558,7 +554,7 @@ IDS = ["LooseIso4"]
 #ALLBINS= [("eta", ETA_BINS), ("pt", PT_ETA_BINS), ("vtx",VTX_BINS)]
 
 #Isolations
-ALLBINS= [("LooseId_noIP_eta", LOOSE_noIP_ETA_BINS), ("LooseId_noIP_pt",LOOSE_noIP_PT_ETA_BINS), ("LooseId_noIP_vtx",LOOSE_noIP_VTX_BINS)]
+#ALLBINS= [("LooseId_noIP_eta", LOOSE_noIP_ETA_BINS), ("LooseId_noIP_pt",LOOSE_noIP_PT_ETA_BINS), ("LooseId_noIP_vtx",LOOSE_noIP_VTX_BINS)]
 #ALLBINS= [("MediumId_noIP_eta", MEDIUM_noIP_ETA_BINS), ("MediumId_noIP_pt", MEDIUM_noIP_PT_ETA_BINS), ("MediumId_noIP_vtx",MEDIUM_noIP_VTX_BINS)]
 #ALLBINS= [("TightId_noIP_eta",TIGHT_noIP_ETA_BINS), ("TightId_noIP_pt", TIGHT_noIP_PT_ETA_BINS), ("TightId_noIP_vtx",TIGHT_noIP_VTX_BINS)]
 
@@ -570,11 +566,64 @@ ALLBINS= [("LooseId_noIP_eta", LOOSE_noIP_ETA_BINS), ("LooseId_noIP_pt",LOOSE_no
 #Isolation for ID+tightIP
 #ALLBINS= [("TightId_tightIP_eta", TIGHT_TIGHTIP_ETA_BINS), ("TightId_tightIP_pt", TIGHT_TIGHTIP_PT_ETA_BINS), ("TightId_tightIP_vtx", TIGHT_TIGHTIP_VTX_BINS)]
 
-if len(args) > 1 and args[1] not in IDS: IDS += [ args[1] ]
+#TEST with parameters
+
+IDS = []
+ALLBINS = []
+
+if numerator == 'Id_noIP':
+    IDS = ["Loose_noIP", "Medium_noIP", "Tight_noIP"]
+    ALLBINS= [("eta", ETA_BINS), ("pt", PT_ETA_BINS), ("vtx",VTX_BINS)]
+elif numerator == 'Id_IP':
+    IDS = ["Loose_IP", "Medium_IP","Tight_IP","Tight_tightIP"]#Has to be the same as the name of the Cut
+    ALLBINS= [("eta", ETA_BINS), ("pt", PT_ETA_BINS), ("vtx",VTX_BINS)]
+##
+elif numerator == 'LooseIso_LooseId_noIP':
+    IDS = ["LooseIso4"]
+    ALLBINS= [("LooseId_noIP_eta", LOOSE_noIP_ETA_BINS), ("LooseId_noIP_pt",LOOSE_noIP_PT_ETA_BINS), ("LooseId_noIP_vtx",LOOSE_noIP_VTX_BINS)]
+elif numerator == 'LooseIso_MediumId_noIP':
+    IDS = ["LooseIso4"]
+    ALLBINS= [("MediumId_noIP_eta", MEDIUM_noIP_ETA_BINS), ("MediumId_noIP_pt", MEDIUM_noIP_PT_ETA_BINS), ("MediumId_noIP_vtx",MEDIUM_noIP_VTX_BINS)]
+elif numerator == 'LooseIso_TightId_noIP':
+    IDS = ["LooseIso4"]
+    ALLBINS= [("TightId_noIP_eta",TIGHT_noIP_ETA_BINS), ("TightId_noIP_pt", TIGHT_noIP_PT_ETA_BINS), ("TightId_noIP_vtx",TIGHT_noIP_VTX_BINS)]
+elif numerator == 'LooseIso_LooseId_IP':
+    IDS = ["LooseIso4"]
+    ALLBINS= [("LooseId_eta", LOOSE_ETA_BINS), ("LooseId_pt",LOOSE_PT_ETA_BINS), ("LooseId_vtx",LOOSE_VTX_BINS)]
+elif numerator == 'LooseIso_MediumId_IP':
+    IDS = ["LooseIso4"]
+    ALLBINS= [("MediumId_eta", MEDIUM_ETA_BINS), ("MediumId_pt", MEDIUM_PT_ETA_BINS), ("MediumId_vtx",MEDIUM_VTX_BINS)]
+elif numerator == 'LooseIso_TightId_IP':
+    IDS = ["LooseIso4"]
+    ALLBINS= [("TightId_eta", TIGHT_ETA_BINS), ("TightId_pt", TIGHT_PT_ETA_BINS), ("TightId_vtx",TIGHT_VTX_BINS)]
+elif numerator == 'LooseIso_TightId_TightIP':
+    IDS = ["LooseIso4"]
+    ALLBINS= [("TightId_tightIP_eta", TIGHT_TIGHTIP_ETA_BINS), ("TightId_tightIP_pt", TIGHT_TIGHTIP_PT_ETA_BINS), ("TightId_tightIP_vtx", TIGHT_TIGHTIP_VTX_BINS)]
+##
+elif numerator == 'TightIso_LooseId_noIP':
+    IDS = ["TightIso4"]
+    ALLBINS= [("LooseId_noIP_eta", LOOSE_noIP_ETA_BINS), ("LooseId_noIP_pt",LOOSE_noIP_PT_ETA_BINS), ("LooseId_noIP_vtx",LOOSE_noIP_VTX_BINS)]
+elif numerator == 'TightIso_MediumId_noIP':
+    IDS = ["TightIso4"]
+    ALLBINS= [("MediumId_noIP_eta", MEDIUM_noIP_ETA_BINS), ("MediumId_noIP_pt", MEDIUM_noIP_PT_ETA_BINS), ("MediumId_noIP_vtx",MEDIUM_noIP_VTX_BINS)]
+elif numerator == 'TightIso_TightId_noIP':
+    IDS = ["TightIso4"]
+    ALLBINS= [("TightId_noIP_eta",TIGHT_noIP_ETA_BINS), ("TightId_noIP_pt", TIGHT_noIP_PT_ETA_BINS), ("TightId_noIP_vtx",TIGHT_noIP_VTX_BINS)]
+elif numerator == 'TightIso_LooseId_IP':
+    IDS = ["TightIso4"]
+    ALLBINS= [("LooseId_eta", LOOSE_ETA_BINS), ("LooseId_pt",LOOSE_PT_ETA_BINS), ("LooseId_vtx",LOOSE_VTX_BINS)]
+elif numerator == 'TightIso_MediumId_IP':
+    IDS = ["TightIso4"]
+    ALLBINS= [("MediumId_eta", MEDIUM_ETA_BINS), ("MediumId_pt", MEDIUM_PT_ETA_BINS), ("MediumId_vtx",MEDIUM_VTX_BINS)]
+elif numerator == 'TightIso_TightId_IP':
+    IDS = ["TightIso4"]
+    ALLBINS= [("TightId_eta", TIGHT_ETA_BINS), ("TightId_pt", TIGHT_PT_ETA_BINS), ("TightId_vtx",TIGHT_VTX_BINS)]
+elif numerator == 'TightIso_TightId_TightIP':
+    IDS = ["TightIso4"]
+    ALLBINS= [("TightId_tightIP_eta", TIGHT_TIGHTIP_ETA_BINS), ("TightId_tightIP_pt", TIGHT_TIGHTIP_PT_ETA_BINS), ("TightId_tightIP_vtx", TIGHT_TIGHTIP_VTX_BINS)]
+
 for ID in IDS:
-    if len(args) > 1 and ID != args[1]: continue
     for X,B in ALLBINS:
-        if len(args) > 2 and X not in args[2:]: continue
         if scenario == 'data_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("DATAeff4/TnP_MuonID_%s_%s_%s.root" % (scenario, ID, X)))
         elif scenario == 'mc_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("MCeff4/TnP_MuonID_%s_%s_%s.root" % (scenario, ID, X)))
         shape = "vpvPlusExpo"
@@ -590,40 +639,40 @@ for ID in IDS:
             #parts = ID.split("_from_")
             #num = parts[0]
             #setattr(DEN, parts[1], cms.vstring("above"))
-
+    
         #compute isolation efficiency 
-        if scenario == 'data_all'
+        if scenario == 'data_all':
             if num.find("Iso4") != -1: 
                 setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                     EfficiencyCategoryAndState = cms.vstring(num,"below"),
-                    UnbinnedVariables = cms.vstring("weight"),
+                    UnbinnedVariables = cms.vstring("mass"),
                     BinnedVariables = DEN,
                     BinToPDFmap = cms.vstring(shape)
-                ))
-            #Compute id efficiency
+                    ))
+                #Compute id efficiency
             else:
                 setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                     EfficiencyCategoryAndState = cms.vstring(num,"above"),
-                    UnbinnedVariables = cms.vstring("weight"),
+                    UnbinnedVariables = cms.vstring("mass"),
                     BinnedVariables = DEN,
                     BinToPDFmap = cms.vstring(shape)
-                ))
-        elif scenario == 'mc_all'
+                    ))
+        elif scenario == 'mc_all':
             if num.find("Iso4") != -1: 
                 setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                     EfficiencyCategoryAndState = cms.vstring(num,"below"),
                     UnbinnedVariables = cms.vstring("mass","weight"),
                     BinnedVariables = DEN,
                     BinToPDFmap = cms.vstring(shape)
-                ))
-            #Compute id efficiency
+                    ))
+                #Compute id efficiency
             else:
                 setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                     EfficiencyCategoryAndState = cms.vstring(num,"above"),
                     UnbinnedVariables = cms.vstring("mass","weight"),
                     BinnedVariables = DEN,
                     BinToPDFmap = cms.vstring(shape)
-                ))
-        setattr(process, "TnP_MuonID_"+ID+"_"+X, module)        
-        setattr(process, "run_"+ID+"_"+X, cms.Path(module))
-
+                    ))
+            setattr(process, "TnP_MuonID_"+ID+"_"+X, module)        
+            setattr(process, "run_"+ID+"_"+X, cms.Path(module))
+    
