@@ -2,15 +2,15 @@ import ROOT as r
 import os
 
 def save_canvas(_folder, _file, _folder_out):
-    #_folder = 'MCeff4/'
-    #_file = 'TnP_MuonID_mc_all_TightIso4_LooseId_noIP_vtx.root' 
-    #_folder_out = 'FitPlots4/'
     _fit_folder = _file.replace('.root', '')
-    
-    if not os.path.exists(_folder_out + _fit_folder):
-        os.makedirs(_folder_out + _fit_folder)
+
+    if not os.path.exists(_folder + _folder_out):
+        os.makedirs(_folder+_folder_out)
+
+    if not os.path.exists(_folder + _folder_out + _fit_folder):
+        os.makedirs(_folder + _folder_out + _fit_folder)
         
-    _folder_out = _folder_out + _fit_folder
+    _folder_out = _folder + _folder_out + _fit_folder
     
     print 'the folder out is', _folder_out
     
@@ -47,12 +47,14 @@ def save_canvas(_folder, _file, _folder_out):
                                 canvas  = key4.ReadObj()
                                 canvas.SaveAs(_folder_out + '/' + key3.GetName() + '_TEST.pdf')
 
-_folder = 'MCeff3/'
-_folder_out = 'FitPlots4/'
+#_folder = 'MCeff4/'
+_folder = 'DATAeff4/'
+_folder_out = 'FitPlots/'
 
 dir = os.listdir(_folder)
 for file in dir:
-    save_canvas(_folder, file, _folder_out) 
+    if file.find('TnP_MuonID') != -1:
+        save_canvas(_folder, file, _folder_out) 
 
 
 

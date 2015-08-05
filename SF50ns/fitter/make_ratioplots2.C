@@ -91,20 +91,14 @@ void make_ratioplots2(TString _file = "TnP_MuonID_data_all_Tight_noIP_vtx.root",
     else if(_canvas.Contains("pt_PLOT_abseta_bin1")){_par = "_abseta_bin1";}
 
     cout<<_file<<endl;
-    TFile *f1 = TFile::Open("DATAeff3/" + _file);
-    cout<<"debug1"<<endl;
+    TFile *f1 = TFile::Open("DATAeff4/" + _file);
     TCanvas* c1 = (TCanvas*) f1->Get(_canvas);
-    cout<<"debug2"<<endl;
     TGraphAsymmErrors* eff1 = (TGraphAsymmErrors*)c1->GetPrimitive("hxy_fit_eff");
-    cout<<"debug3"<<endl;
-    TFile *f2 = TFile::Open("MCeff3/" + _file);
-    cout<<"debug4"<<endl;
+    TFile *f2 = TFile::Open("MCeff4/" + _file);
     TCanvas* c2 = (TCanvas*) f2->Get(_canvas);
-    cout<<"debug5"<<endl;
     TGraphAsymmErrors* eff2 = (TGraphAsymmErrors*)c2->GetPrimitive("hxy_fit_eff");
-    cout<<"debug6"<<endl;
 
-    TH1F* ratio = DividTGraphs(eff2, eff1);
+    TH1F* ratio = DividTGraphs(eff1, eff2);
     ratio->SetStats(0);
 
     int nbins = eff1->GetN();
@@ -114,7 +108,6 @@ void make_ratioplots2(TString _file = "TnP_MuonID_data_all_Tight_noIP_vtx.root",
     eff1->GetPoint(nbins-1,x,y);
     double x_hi = x+eff1->GetErrorXhigh(nbins-1);
 
-    //gROOT->ProcessLine(".x /afs/cern.ch/user/g/gpetrucc/cpp/tdrstyle.cc");
     TCanvas* c3 = new TCanvas("c3","c3",800,800);
     //c3->UseCurrentStyle();
     TPad *pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
@@ -174,7 +167,8 @@ void make_ratioplots2(TString _file = "TnP_MuonID_data_all_Tight_noIP_vtx.root",
     ratio->GetXaxis()->SetTitleOffset(2.5);
     ratio->GetXaxis()->SetLabelFont(63); // Absolute font size in pixel (precision 3)
     ratio->Draw();
-    c3->SaveAs("RatioPlots3/"+_par+"_"+_file);
+    //c3->SaveAs("RatioPlots3/"+_par+"_"+_file);
+    c3->SaveAs("RatioPlots4/"+_par+"_"+_file);
     //c3->SaveAs("TEST"+_file);
 
     //TFile *f_out = TFile::Open("TEST.root","recreate");

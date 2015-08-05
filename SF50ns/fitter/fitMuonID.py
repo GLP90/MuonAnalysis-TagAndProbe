@@ -524,7 +524,18 @@ TIGHT_TIGHTIP_VTX_BINS = cms.PSet(
         dzPV = cms.vdouble(-0.1, 0.1),
         )
 
-process.TnP_MuonID = Template.clone(
+if scenario == 'data_all':
+    process.TnP_MuonID = Template.clone(
+        InputFileNames = cms.vstring(
+            'root://eoscms//eos/cms/store/group/phys_muon/TagAndProbe/TnP_trees_aod747_goldenJSON.root',
+            ),
+        InputTreeName = cms.string("fitter_tree"),
+        InputDirectoryName = cms.string("tpTree"),
+        OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
+        Efficiencies = cms.PSet(),
+        )
+elif scenario == 'mc_all':
+    process.TnP_MuonID = Template.clone(
         InputFileNames = cms.vstring(
             'root://eoscms//eos/cms/store/group/phys_muon/perrin/SF50ns/TnP_trees/SmallTnP_trees_aod747_DY_withNVtxWeights.root',
             ),
@@ -533,9 +544,6 @@ process.TnP_MuonID = Template.clone(
         OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
         Efficiencies = cms.PSet(),
         )
-
-
-if scenario == 'mc_all':
     process.TnP_MuonID.WeightVariable = cms.string("weight")
     process.TnP_MuonID.Variables.weight = cms.vstring("weight","0","10","")
 
@@ -624,8 +632,8 @@ elif numerator == 'TightIso_TightId_TightIP':
 
 for ID in IDS:
     for X,B in ALLBINS:
-        if scenario == 'data_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("DATAeff4/TnP_MuonID_%s_%s_%s.root" % (scenario, ID, X)))
-        elif scenario == 'mc_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("MCeff4/TnP_MuonID_%s_%s_%s.root" % (scenario, ID, X)))
+        if scenario == 'data_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("DATAeff4/TnP_MuonID_%s_%s.root" % (ID, X)))
+        elif scenario == 'mc_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("MCeff4/TnP_MuonID_%s_%s.root" % (ID, X)))
         shape = "vpvPlusExpo"
         #change the shape and the range as a function of the selection and the variable
         if "eta" in X and not "abseta" in X: shape = "voigtPlusExpo"
@@ -634,11 +642,6 @@ for ID in IDS:
         if X.find("overall") != -1: module.binsForFit = 120 #change the bins for fit
         DEN = B.clone(); num = ID;
         if "24" in ID and hasattr(DEN,'pt') and "pt" not in X: DEN.pt[0] = 25 #change pt range
-        #Implement reliso
-        #if "_from_" in ID:
-            #parts = ID.split("_from_")
-            #num = parts[0]
-            #setattr(DEN, parts[1], cms.vstring("above"))
     
         #compute isolation efficiency 
         if scenario == 'data_all':
@@ -657,6 +660,9 @@ for ID in IDS:
                     BinnedVariables = DEN,
                     BinToPDFmap = cms.vstring(shape)
                     ))
+            setattr(process, "TnP_MuonID_"+ID+"_"+X, module)        
+            setattr(process, "run_"+ID+"_"+X, cms.Path(module))
+
         elif scenario == 'mc_all':
             if num.find("Iso4") != -1: 
                 setattr(module.Efficiencies, ID+"_"+X, cms.PSet(

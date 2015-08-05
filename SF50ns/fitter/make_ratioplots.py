@@ -68,22 +68,23 @@ r.gROOT.LoadMacro("make_ratioplots2.C+")
 
 debug = True 
 
-_path1 = '/afs/cern.ch/work/g/gaperrin/private/CMSSW_7_4_7/src/MuonAnalysis/TagAndProbe/SF50ns/fitter/DATAeff3/'
-_path2 = '/afs/cern.ch/work/g/gaperrin/private/CMSSW_7_4_7/src/MuonAnalysis/TagAndProbe/SF50ns/fitter/MCeff3/'
+_path1 = '/afs/cern.ch/work/g/gaperrin/private/CMSSW_7_4_7/src/MuonAnalysis/TagAndProbe/SF50ns/fitter/DATAeff4/'
+_path2 = '/afs/cern.ch/work/g/gaperrin/private/CMSSW_7_4_7/src/MuonAnalysis/TagAndProbe/SF50ns/fitter/MCeff4/'
 _tptree = 'tpTree'
 
 ##!! Get the list of files
 dir = os.listdir(_path1)
 for file in dir:
     print 'the file is ', file
-    if not os.path.isfile(_path2 + '/' + file):
-        if debug: print 'The file ', file, 'doesn\'t exist in ', _path2
-        continue
-    else:
-        if debug: print 'The file exists !'
-        CANVAS = getplotpath( file, _path1, _tptree)
-        for _canvas in CANVAS:
-            r.make_ratioplots2(file, _canvas)
+    if file.find('TnP_MuonID') != -1:
+        if not os.path.isfile(_path2 + '/' + file):
+            if debug: print 'The file ', file, 'doesn\'t exist in ', _path2
+            continue
+        else:
+            if debug: print 'The file exists !'
+            CANVAS = getplotpath( file, _path1, _tptree)
+            for _canvas in CANVAS:
+                r.make_ratioplots2(file, _canvas)
 
 
 
