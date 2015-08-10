@@ -155,7 +155,8 @@ PT_ETA_BINS = cms.PSet(
 )
 ETA_BINS = cms.PSet(
     pt  = cms.vdouble(20,500),
-    eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+    #eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+    eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
     tag_pt = cms.vdouble(25, 500),
@@ -209,7 +210,8 @@ LOOSE_noIP_ETA_BINS= cms.PSet(
         PF = cms.vstring("pass"),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        #eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -250,7 +252,8 @@ MEDIUM_noIP_ETA_BINS = cms.PSet(
         Medium = cms.vstring("pass"),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        #eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -299,7 +302,8 @@ TIGHT_noIP_ETA_BINS = cms.PSet(
         tkValidPixelHits = cms.vdouble(0.5, 99),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        #eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -350,7 +354,8 @@ LOOSE_ETA_BINS= cms.PSet(
         PF = cms.vstring("pass"),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        #eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -400,7 +405,8 @@ MEDIUM_ETA_BINS = cms.PSet(
         Medium = cms.vstring("pass"),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        #eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -457,7 +463,8 @@ TIGHT_ETA_BINS = cms.PSet(
         tkValidPixelHits = cms.vdouble(0.5, 99),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        #eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -518,7 +525,8 @@ TIGHT_TIGHTIP_ETA_BINS = cms.PSet(
         tkValidPixelHits = cms.vdouble(0.5, 99),
 
         pt  = cms.vdouble(20,500),
-        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        #eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
+        eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
         pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
         #tag selections
         tag_pt = cms.vdouble(25, 500),
@@ -617,9 +625,6 @@ elif scenario == 'mc_all':
 #6
 IDS = ["Tight_IP"]#Has to be the same as the name of the Cut
 ALLBINS= [("eta", ETA_BINS), ("pt", PT_ETA_BINS), ("vtx",VTX_BINS)]
-#IDS = ["TightIso4"]
-#ALLBINS= [("TightId_eta", TIGHT_ETA_BINS), ("TightId_pt", TIGHT_PT_ETA_BINS), ("TightId_vtx",TIGHT_VTX_BINS)]
-
 
 
 '''
@@ -684,12 +689,12 @@ for ID in IDS:
         elif scenario == 'mc_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("MCeff6/TnP_MuonID_%s_%s.root" % (ID, X)))
         shape = "vpvPlusExpo"
         #change the shape and the range as a function of the selection and the variable
-        if "eta" in X and not "abseta" in X: shape = "voigtPlusExpo"
-        if "pt_abseta" in X: shape = "voigtPlusExpo"
-        if X.find("pt_abseta") != -1: module.Variables.mass[1]="77";#change the invariant mass range
-        if X.find("overall") != -1: module.binsForFit = 120 #change the bins for fit
+        #if "eta" in X and not "abseta" in X: shape = "voigtPlusExpo"
+        #if "pt_abseta" in X: shape = "voigtPlusExpo"
+        #if X.find("pt_abseta") != -1: module.Variables.mass[1]="77";#change the invariant mass range
+        #if X.find("overall") != -1: module.binsForFit = 120 #change the bins for fit
         DEN = B.clone(); num = ID;
-        if "24" in ID and hasattr(DEN,'pt') and "pt" not in X: DEN.pt[0] = 25 #change pt range
+        #if "24" in ID and hasattr(DEN,'pt') and "pt" not in X: DEN.pt[0] = 25 #change pt range
     
         #compute isolation efficiency 
         if scenario == 'data_all':
