@@ -9,8 +9,8 @@ import FWCore.ParameterSet.Config as cms
 import sys
 args = sys.argv[1:]
 if (sys.argv[0] == "cmsRun"): args =sys.argv[2:]
-scenario = "data_all"
-#scenario = "mc_all"
+#scenario = "data_all"
+scenario = "mc_all"
 if len(args) > 0: scenario = args[0]
 print "Will run scenario ", scenario 
 if len(args) > 1: 
@@ -151,6 +151,7 @@ PT_ETA_BINS = cms.PSet(
     tag_pt = cms.vdouble(25, 500),
     #tag_abseta = cms.vdouble(0, 2.1),
     tag_IsoMu20 = cms.vstring("pass"),
+    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 ETA_BINS = cms.PSet(
     pt  = cms.vdouble(20,500),
@@ -160,6 +161,7 @@ ETA_BINS = cms.PSet(
     tag_pt = cms.vdouble(25, 500),
     #tag_abseta = cms.vdouble(0, 2.1),
     tag_IsoMu20 = cms.vstring("pass"),
+    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 VTX_BINS  = cms.PSet(
     pt     = cms.vdouble(  20, 500 ),
@@ -171,6 +173,7 @@ VTX_BINS  = cms.PSet(
     tag_pt = cms.vdouble(25, 500),
     #tag_abseta = cms.vdouble(0, 2.1),
     tag_IsoMu20 = cms.vstring("pass"),
+    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
 OVERALL_ABSETA = cms.PSet(
@@ -181,6 +184,7 @@ OVERALL_ABSETA = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
         )
 
     #_*_*_*_*_*_*_*_*_*_*_*_*_*
@@ -198,6 +202,7 @@ LOOSE_noIP_PT_ETA_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
         )
 
 LOOSE_noIP_ETA_BINS= cms.PSet(
@@ -210,6 +215,7 @@ LOOSE_noIP_ETA_BINS= cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
         )
 
 LOOSE_noIP_VTX_BINS = cms.PSet(
@@ -223,6 +229,7 @@ LOOSE_noIP_VTX_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
         )
 
 
@@ -236,6 +243,7 @@ MEDIUM_noIP_PT_ETA_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
         )
 
 MEDIUM_noIP_ETA_BINS = cms.PSet(
@@ -248,6 +256,7 @@ MEDIUM_noIP_ETA_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
         )
 
 MEDIUM_noIP_VTX_BINS = cms.PSet(
@@ -261,6 +270,7 @@ MEDIUM_noIP_VTX_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
         )
 
 TIGHT_noIP_PT_ETA_BINS = cms.PSet(
@@ -277,6 +287,7 @@ TIGHT_noIP_PT_ETA_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         )
 
@@ -294,6 +305,7 @@ TIGHT_noIP_ETA_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         #dB = cms.vdouble(-0.2, 0.2),
         #dzPV = cms.vdouble(-0.5, 0.5),
@@ -314,6 +326,7 @@ TIGHT_noIP_VTX_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         )
 
@@ -327,6 +340,7 @@ LOOSE_PT_ETA_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         dxyBS= cms.vdouble(-0.2, 0.2),
         dzPV = cms.vdouble(-0.5, 0.5),
@@ -342,6 +356,7 @@ LOOSE_ETA_BINS= cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         dxyBS= cms.vdouble(-0.2, 0.2),
         dzPV = cms.vdouble(-0.5, 0.5),
@@ -358,6 +373,7 @@ LOOSE_VTX_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         dxyBS= cms.vdouble(-0.2, 0.2),
         dzPV = cms.vdouble(-0.5, 0.5),
@@ -374,6 +390,7 @@ MEDIUM_PT_ETA_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         dxyBS= cms.vdouble(-0.2, 0.2),
         dzPV = cms.vdouble(-0.5, 0.5),
@@ -389,6 +406,7 @@ MEDIUM_ETA_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         dxyBS= cms.vdouble(-0.2, 0.2),
         dzPV = cms.vdouble(-0.5, 0.5),
@@ -405,6 +423,7 @@ MEDIUM_VTX_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         dxyBS= cms.vdouble(-0.2, 0.2),
         dzPV = cms.vdouble(-0.5, 0.5),
@@ -424,6 +443,7 @@ TIGHT_PT_ETA_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         dB= cms.vdouble(-0.2, 0.2),
         dzPV = cms.vdouble(-0.5, 0.5),
@@ -443,6 +463,7 @@ TIGHT_ETA_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         dB= cms.vdouble(-0.2, 0.2),
         dzPV = cms.vdouble(-0.5, 0.5),
@@ -463,6 +484,7 @@ TIGHT_VTX_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         dB= cms.vdouble(-0.2, 0.2),
         dzPV = cms.vdouble(-0.5, 0.5),
@@ -482,6 +504,7 @@ TIGHT_TIGHTIP_PT_ETA_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         dB= cms.vdouble(-0.02, 0.02),
         dzPV = cms.vdouble(-0.1, 0.1),
@@ -501,6 +524,7 @@ TIGHT_TIGHTIP_ETA_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         dB= cms.vdouble(-0.02, 0.02),
         dzPV = cms.vdouble(-0.1, 0.1),
@@ -521,6 +545,7 @@ TIGHT_TIGHTIP_VTX_BINS = cms.PSet(
         tag_pt = cms.vdouble(25, 500),
         #tag_abseta = cms.vdouble(0, 2.1),
         tag_IsoMu20 = cms.vstring("pass"),
+        tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 
         dB= cms.vdouble(-0.02, 0.02),
         dzPV = cms.vdouble(-0.1, 0.1),
@@ -589,6 +614,12 @@ elif scenario == 'mc_all':
 #IDS = ["LooseIso4"]
 #ALLBINS= [("TightId_vtx",TIGHT_VTX_BINS), ("MediumId_vtx",MEDIUM_VTX_BINS )]
 
+#6
+IDS = ["Tight_IP"]#Has to be the same as the name of the Cut
+ALLBINS= [("eta", ETA_BINS), ("pt", PT_ETA_BINS), ("vtx",VTX_BINS)]
+#IDS = ["TightIso4"]
+#ALLBINS= [("TightId_eta", TIGHT_ETA_BINS), ("TightId_pt", TIGHT_PT_ETA_BINS), ("TightId_vtx",TIGHT_VTX_BINS)]
+
 
 
 '''
@@ -649,8 +680,8 @@ elif numerator == 'TightIso_TightId_TightIP':
 
 for ID in IDS:
     for X,B in ALLBINS:
-        if scenario == 'data_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("DATAeff5/TnP_MuonID_%s_%s.root" % (ID, X)))
-        elif scenario == 'mc_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("MCeff5/TnP_MuonID_%s_%s.root" % (ID, X)))
+        if scenario == 'data_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("DATAeff6/TnP_MuonID_%s_%s.root" % (ID, X)))
+        elif scenario == 'mc_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("MCeff6/TnP_MuonID_%s_%s.root" % (ID, X)))
         shape = "vpvPlusExpo"
         #change the shape and the range as a function of the selection and the variable
         if "eta" in X and not "abseta" in X: shape = "voigtPlusExpo"
