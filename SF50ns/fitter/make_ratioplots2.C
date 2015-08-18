@@ -10,6 +10,7 @@
 #include "TGaxis.h"
 #include "tdrstyle.C"
 #include "CMS_lumi.C"
+#include "TLegendEntry.h"
 
 #include <iostream>
 
@@ -96,10 +97,10 @@ void make_ratioplots2(TString _file = "TnP_MuonID_data_all_Tight_noIP_vtx.root",
     else if(_canvas.Contains("pt_PLOT_abseta_bin1")){_par = "_abseta_bin1";}
 
     cout<<_file<<endl;
-    TFile *f1 = TFile::Open("DATAeff5/" + _file);
+    TFile *f1 = TFile::Open("DATAeff_app2MC1/" + _file);
     TCanvas* c1 = (TCanvas*) f1->Get(_canvas);
     TGraphAsymmErrors* eff1 = (TGraphAsymmErrors*)c1->GetPrimitive("hxy_fit_eff");
-    TFile *f2 = TFile::Open("MCeff5/" + _file);
+    TFile *f2 = TFile::Open("MCeff_app2MC1/" + _file);
     TCanvas* c2 = (TCanvas*) f2->Get(_canvas);
     TGraphAsymmErrors* eff2 = (TGraphAsymmErrors*)c2->GetPrimitive("hxy_fit_eff");
 
@@ -130,25 +131,42 @@ void make_ratioplots2(TString _file = "TnP_MuonID_data_all_Tight_noIP_vtx.root",
     eff1->GetXaxis()->SetLabelSize(0);
     TString _xtitle = eff1->GetXaxis()->GetTitle();
     if(_xtitle.Contains("tag_nVertices")){_xtitle = "N(primary vertices)";
-    }else if (_xtitle.Contains("eta")){_xtitle = "muon #||{#eta}";
+    }else if (_xtitle.Contains("eta")){_xtitle = "muon #eta";
     }else if (_xtitle.Contains("pt")){_xtitle = "muon p_{t} [GeV]";}
     eff1->GetXaxis()->SetTitle(_xtitle);
-    eff1->GetYaxis()->CenterTitle();
     TString _title = eff1->GetXaxis()->GetTitle();
     eff1->GetXaxis()->SetTitle("");
-    eff1->GetYaxis()->SetRangeUser(0.8001, 1.05);
-    eff1->GetYaxis()->SetTitleSize(20);
+    //eff1->GetYaxis()->SetRangeUser(0.8001, 1.05);
+    eff1->GetYaxis()->SetRangeUser(0.79, 1.1);
+    eff1->GetYaxis()->SetTitleSize(27);
     eff1->GetYaxis()->SetTitleFont(63);
-    eff1->GetYaxis()->SetTitleOffset(2);
+    eff1->GetYaxis()->SetLabelFont(43);
+    eff1->SetMarkerStyle(20);
+    eff1->GetYaxis()->SetLabelSize(20);
+    eff1->GetYaxis()->SetTitleOffset(1.5);
     eff2->Draw("P");
     eff2->SetLineColor(4);
+    eff2->SetMarkerStyle(21);
     eff2->SetMarkerColor(4);
-    TLegend* leg = new TLegend(0.7, 0.1, 0.9 , 0.3);
+    //TString _legtext = "";
+    //if(_xtitle.Contains("eta")){_legtext = "#mu p_{t} #geq 22 [GeV]";} 
+    TLegend* leg = new TLegend(0.2, 0.05, 0.5 , 0.25);
+    //leg->AddEntry((TObject*)0, _legtext, "");
+    //leg->AddEntry((TObject*)0, "", "");
+    //leg->SetHeader("Loose ID, p_{T} #geq 22 GeV");
+    leg->SetHeader("Tight ID, p_{T} #geq 22 GeV");
+    TLegendEntry *header = (TLegendEntry*)leg->GetListOfPrimitives()->First();
+    //header->SetTextAlign(22);
+    header->SetTextColor(1);
+    header->SetTextFont(43);
+    header->SetTextSize(20);
     leg->AddEntry(eff1, "Data", "LP");
     leg->AddEntry(eff2, "MC","LP");
+    //leg->AddEntry(eff1, "MadGraph aMC@NLO", "LP");
+    //leg->AddEntry(eff2, "LO MadGraph","LP");
     leg->SetBorderSize(0.);
     leg->SetTextFont(43);
-    leg->SetTextSize(25);
+    leg->SetTextSize(20);
     leg->Draw();
     _file.ReplaceAll("root","pdf");
     TGaxis *axis = new TGaxis( -5, 20, -5, 220, 20,220,510,"");
@@ -159,7 +177,7 @@ void make_ratioplots2(TString _file = "TnP_MuonID_data_all_Tight_noIP_vtx.root",
     c3->cd();
     TPad *pad2 = new TPad("pad2", "pad2", 0, 0., 1, 0.3);
     pad2->SetTopMargin(0.0); 
-    pad2->SetBottomMargin(0.2); 
+    pad2->SetBottomMargin(0.35); 
     pad2->SetGridy(); 
     pad2->Draw();
     pad2->cd();
@@ -168,34 +186,44 @@ void make_ratioplots2(TString _file = "TnP_MuonID_data_all_Tight_noIP_vtx.root",
     ratio->SetLineColor(1);
     ratio->SetMarkerStyle(20);
     ratio->SetMarkerColor(1);
-    ratio->GetYaxis()->SetRangeUser(0.9,1.0999);
+    //ratio->GetYaxis()->SetRangeUser(0.9,1.0999);
+    ratio->GetYaxis()->SetRangeUser(0.95,1.04999);
+    //ratio->GetYaxis()->SetRangeUser(0.98,1.01999);
     ratio->GetYaxis()->SetTitle("Data/MC");
+    //ratio->GetYaxis()->SetTitle("aMC@NLO/LO");
     ratio->GetYaxis()->SetNdivisions(505);
-    ratio->GetYaxis()->SetTitleSize(20);
     ratio->GetYaxis()->SetLabelSize(20);
     ratio->GetYaxis()->SetTitleFont(63);
-    ratio->GetYaxis()->SetTitleOffset(1.55);
-    ratio->GetYaxis()->SetLabelFont(63); // Absolute font size in pixel (precision 3)
-    ratio->GetXaxis()->SetTitleSize(25);
+    ratio->GetYaxis()->SetTitleOffset(1.5);
+    ratio->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+    ratio->GetYaxis()->SetTitleSize(27);
+    ratio->GetXaxis()->SetTitleSize(27);
     ratio->GetXaxis()->SetLabelSize(20);
     ratio->GetXaxis()->SetTitle(_title);
     ratio->GetXaxis()->SetTitleFont(63);
-    ratio->GetXaxis()->SetTitleOffset(2.5);
-    ratio->GetXaxis()->SetLabelFont(63); // Absolute font size in pixel (precision 3)
+    ratio->GetXaxis()->SetTitleSize(27);
+    ratio->GetXaxis()->SetTitleOffset(3);
+    ratio->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
     ratio->Draw();
+    CMS_lumi(pad1, 4, 11);
+    c3->Update();
+
     //c3->SaveAs("RatioPlots3/"+_par+"_"+_file);
     //c3->SaveAs("RatioPlots4/"+_par+"_"+_file);
     //c3->SaveAs("RatioPlots5/"+_par+"_"+_file);
+    //c3->SaveAs("RatioPlots6/"+_par+"_"+_file);
+    //c3->SaveAs("RatioPlots_app/"+_par+"_"+_file);
+    c3->SaveAs("RatioPlots_app2MC1/"+_par+"_"+_file);
+    //c3->SaveAs("RatioPlots_app2MC2/"+_par+"_"+_file);
+    //c3->SaveAs("MCRatioPlots/"+_par+"_"+_file);
 
-    CMS_lumi(pad1, 4, 11);
-    c3->Update();
     //c3->RedrawAxis();
     //c3->GetFrame()->Draw();
 
 
-    TFile *f_out = TFile::Open("TEST.root","recreate");
-    f_out->cd();
-    c3->Write();
+    //TFile *f_out = TFile::Open("TEST.root","recreate");
+    //f_out->cd();
+    //c3->Write();
 
 }
 

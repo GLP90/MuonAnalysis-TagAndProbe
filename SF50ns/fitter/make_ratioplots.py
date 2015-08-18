@@ -62,14 +62,13 @@ def getplotpath(_file, _path, _tptree):
 
 
 r.gROOT.LoadMacro("make_ratioplots2.C+")
-#r.make_ratioplots2('TnP_MuonID_data_all_Loose_noIP_eta.root','tpTree/Loose_noIP_eta/fit_eff_plots/eta_PLOT_pt_bin0_&_tag_IsoMu20_pass')
+#r.make_ratioplots2('TnP_MuonID_Loose_noIP_eta.root','tpTree/Loose_noIP_eta/fit_eff_plots/eta_PLOT_pt_bin0_&_tag_IsoMu20_pass')
 #r.make_ratioplots2("TnP_MuonID_data_all_Tight_noIP_vtx.root", "tpTree/Tight_noIP_vtx/fit_eff_plots/tag_nVertices_PLOT_tag_IsoMu20_pass")
-
 
 debug = True 
 
-_path1 = '/afs/cern.ch/work/g/gaperrin/private/CMSSW_7_4_7/src/MuonAnalysis/TagAndProbe/SF50ns/fitter/DATAeff4/'
-_path2 = '/afs/cern.ch/work/g/gaperrin/private/CMSSW_7_4_7/src/MuonAnalysis/TagAndProbe/SF50ns/fitter/MCeff4/'
+_path1 = '/afs/cern.ch/work/g/gaperrin/private/CMSSW_7_4_7/src/MuonAnalysis/TagAndProbe/SF50ns/fitter/DATAeff_app2MC1/'
+_path2 = '/afs/cern.ch/work/g/gaperrin/private/CMSSW_7_4_7/src/MuonAnalysis/TagAndProbe/SF50ns/fitter/MCeff_app2MC1/'
 _tptree = 'tpTree'
 
 ##!! Get the list of files
@@ -80,11 +79,14 @@ for file in dir:
         if not os.path.isfile(_path2 + '/' + file):
             if debug: print 'The file ', file, 'doesn\'t exist in ', _path2
             continue
+        
         else:
             if debug: print 'The file exists !'
             CANVAS = getplotpath( file, _path1, _tptree)
             for _canvas in CANVAS:
                 r.make_ratioplots2(file, _canvas)
+                
+                
 
 
 

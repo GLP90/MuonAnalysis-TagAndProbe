@@ -9,8 +9,8 @@ import FWCore.ParameterSet.Config as cms
 import sys
 args = sys.argv[1:]
 if (sys.argv[0] == "cmsRun"): args =sys.argv[2:]
-#scenario = "data_all"
-scenario = "mc_all"
+scenario = "data_all"
+#scenario = "mc_all"
 if len(args) > 0: scenario = args[0]
 print "Will run scenario ", scenario 
 if len(args) > 1: 
@@ -62,6 +62,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         PF    = cms.vstring("PF Muon", "dummy[pass=1,fail=0]"),
         TM    = cms.vstring("Tracker Muon", "dummy[pass=1,fail=0]"),
         Medium   = cms.vstring("Medium Id. Muon", "dummy[pass=1,fail=0]"),
+        Tight2012 = cms.vstring("Tight Id. Muon", "dummy[pass=1,fail=0]"),
         #Variables for Tight2012
         GlbPT  = cms.vstring("Global Muon Prompt Tight')", "dummy[pass=1,fail=0]"),
         tag_IsoMu20 = cms.vstring("PF Muon", "dummy[pass=1,fail=0]"),
@@ -142,6 +143,15 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     #Denominators and Binning
     #_*_*_*_*_*_*_*_*_*_*_*_*
 
+PT_BINS = cms.PSet(
+    pt     = cms.vdouble(20, 30, 40, 60, 140),
+    abseta = cms.vdouble(  0.0, 2.4),
+    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+    #tag selections
+    tag_pt = cms.vdouble(25, 500),
+    tag_IsoMu20 = cms.vstring("pass"),
+    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
+)
 PT_ETA_BINS = cms.PSet(
     #pt     = cms.vdouble(20, 30, 40, 50, 60, 70, 80, 90, 100),
     pt     = cms.vdouble(20, 30, 40, 60, 140),
@@ -623,8 +633,10 @@ elif scenario == 'mc_all':
 #ALLBINS= [("TightId_vtx",TIGHT_VTX_BINS), ("MediumId_vtx",MEDIUM_VTX_BINS )]
 
 #6
-IDS = ["Tight_IP"]#Has to be the same as the name of the Cut
-ALLBINS= [("eta", ETA_BINS), ("pt", PT_ETA_BINS), ("vtx",VTX_BINS)]
+IDS = ["Tight_IP", "Tight2012"]#Has to be the same as the name of the Cut
+#IDS = ["Tight2012"]#Has to be the same as the name of the Cut
+ALLBINS= [("eta", ETA_BINS), ("pt", PT_ETA_BINS), ("vtx",VTX_BINS), ("pt_no_eta_bin",PT_BINS)]
+#ALLBINS= [("pt_no_eta_bin",PT_BINS)]
 
 
 '''
@@ -685,8 +697,10 @@ elif numerator == 'TightIso_TightId_TightIP':
 
 for ID in IDS:
     for X,B in ALLBINS:
-        if scenario == 'data_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("DATAeff6/TnP_MuonID_%s_%s.root" % (ID, X)))
-        elif scenario == 'mc_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("MCeff6/TnP_MuonID_%s_%s.root" % (ID, X)))
+        #if scenario == 'data_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("DATAeff6/TnP_MuonID_new_multi_%s_%s.root" % (ID, X)))
+        #elif scenario == 'mc_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("MCeff6/TnP_MuonID_new_multi_%s_%s.root" % (ID, X)))
+        if scenario == 'data_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("DATAeff7/TnP_MuonID_%s_%s.root" % (ID, X)))
+        elif scenario == 'mc_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("MCeff7/TnP_MuonID_%s_%s.root" % (ID, X)))
         shape = "vpvPlusExpo"
         #change the shape and the range as a function of the selection and the variable
         #if "eta" in X and not "abseta" in X: shape = "voigtPlusExpo"
@@ -706,6 +720,13 @@ for ID in IDS:
                     BinToPDFmap = cms.vstring(shape)
                     ))
                 #Compute id efficiency
+            elif num.find("Tight2012") != -1:
+                setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
+                    EfficiencyCategoryAndState = cms.vstring(num,"pass"),
+                    UnbinnedVariables = cms.vstring("mass"),
+                    BinnedVariables = DEN,
+                    BinToPDFmap = cms.vstring(shape)
+                    ))
             else:
                 setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                     EfficiencyCategoryAndState = cms.vstring(num,"above"),
@@ -720,11 +741,17 @@ for ID in IDS:
             if num.find("Iso4") != -1: 
                 setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                     EfficiencyCategoryAndState = cms.vstring(num,"below"),
-                    UnbinnedVariables = cms.vstring("mass","weight"),
                     BinnedVariables = DEN,
                     BinToPDFmap = cms.vstring(shape)
                     ))
                 #Compute id efficiency
+            elif num.find("Tight2012") != -1:
+                setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
+                    EfficiencyCategoryAndState = cms.vstring(num,"pass"),
+                    UnbinnedVariables = cms.vstring("mass","weight"),
+                    BinnedVariables = DEN,
+                    BinToPDFmap = cms.vstring(shape)
+                    ))
             else:
                 setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                     EfficiencyCategoryAndState = cms.vstring(num,"above"),

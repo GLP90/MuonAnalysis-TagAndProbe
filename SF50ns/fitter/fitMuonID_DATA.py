@@ -529,7 +529,7 @@ TIGHT_TIGHTIP_VTX_BINS = cms.PSet(
 
 process.TnP_MuonID = Template.clone(
         InputFileNames = cms.vstring(
-            'root://eoscms//eos/cms/store/group/phys_muon/TagAndProbe/TnP_trees_aod747_DY.root',
+            'root://eoscms//eos/cms/store/group/phys_muon/TagAndProbe/TnP_trees_aod747_goldenJSON.root',
             ),
         InputTreeName = cms.string("fitter_tree"),
         InputDirectoryName = cms.string("tpTree"),
@@ -549,6 +549,10 @@ process.TnP_MuonID.Variables.weight = cms.vstring("weight","0","10","")
 #IDS = ["LooseIso4"]
 #IDS = ["TightIso4"]
 
+#TEST
+#IDS = ["Loose_noIP"]
+IDS = ["TightIso4"]
+
 #BIN
 
 #Identifications
@@ -566,6 +570,12 @@ process.TnP_MuonID.Variables.weight = cms.vstring("weight","0","10","")
 
 #Isolation for ID+tightIP
 #ALLBINS= [("TightId_tightIP_eta", TIGHT_TIGHTIP_ETA_BINS), ("TightId_tightIP_pt", TIGHT_TIGHTIP_PT_ETA_BINS), ("TightId_tightIP_vtx", TIGHT_TIGHTIP_VTX_BINS)]
+
+#TEST
+#ALLBINS= [("eta", ETA_BINS)]
+ALLBINS= [("TightId_tightIP_eta", TIGHT_TIGHTIP_ETA_BINS)]
+
+
 
 if len(args) > 1 and args[1] not in IDS: IDS += [ args[1] ]
 for ID in IDS:
@@ -591,8 +601,8 @@ for ID in IDS:
         if num.find("Iso4") != -1: 
             setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring(num,"below"),
-                UnbinnedVariables = cms.vstring("mass","weight"),
-                #UnbinnedVariables = cms.vstring("weight"),
+                #UnbinnedVariables = cms.vstring("mass","weight"),
+                UnbinnedVariables = cms.vstring("mass"),
                 BinnedVariables = DEN,
                 BinToPDFmap = cms.vstring(shape)
             ))
@@ -600,8 +610,8 @@ for ID in IDS:
         else:
             setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring(num,"above"),
-                UnbinnedVariables = cms.vstring("mass","weight"),
-                #UnbinnedVariables = cms.vstring("weight"),
+                #UnbinnedVariables = cms.vstring("mass","weight"),
+                UnbinnedVariables = cms.vstring("mass"),
                 BinnedVariables = DEN,
                 BinToPDFmap = cms.vstring(shape)
             ))

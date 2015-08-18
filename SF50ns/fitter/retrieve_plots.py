@@ -42,8 +42,8 @@ def save_canvas(_folder, _file, _folder_out):
                 r.gDirectory.cd("..")
             r.gDirectory.cd("..")
 
-#_folder = 'MCeff4/'
-_folder = 'MCeff4/'
+#_folder = 'DATAeff_app2MC2/'
+_folder = 'MCeff_app2MC2/'
 _folder_out = 'FitPlots/'
 
 dir = os.listdir(_folder)
