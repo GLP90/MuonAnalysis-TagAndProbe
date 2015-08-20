@@ -21,7 +21,9 @@ import os
 if "CMSSW_7_4_" in os.environ['CMSSW_VERSION']:
     process.GlobalTag.globaltag = cms.string('MCRUN2_74_V7')
     process.source.fileNames = [
-        '/store/relval/CMSSW_7_4_6/RelValZMM_13/GEN-SIM-RECO/PU50ns_MCRUN2_74_V8-v2/00000/0CE0AB97-2E1A-E511-A324-0025905A607E.root',
+        #50 ns MC 13 TeV LO MAdgraph
+        '/store/mc/RunIISpring15DR74/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v1/40000/005FF8BC-B134-E511-9458-0002C92958E8.root'
+        #'/store/relval/CMSSW_7_4_6/RelValZMM_13/GEN-SIM-RECO/PU50ns_MCRUN2_74_V8-v2/00000/0CE0AB97-2E1A-E511-A324-0025905A607E.root',
         #'/store/relval/CMSSW_7_4_6/RelValZMM_13/GEN-SIM-RECO/PU50ns_MCRUN2_74_V8-v2/00000/0E3FF274-2C1A-E511-9FC5-0025905A60D2.root',
         #'/store/relval/CMSSW_7_4_6/RelValZMM_13/GEN-SIM-RECO/PU50ns_MCRUN2_74_V8-v2/00000/68042E12-471B-E511-B16E-0025905A60B4.root',
         #'/store/relval/CMSSW_7_4_6/RelValZMM_13/GEN-SIM-RECO/PU50ns_MCRUN2_74_V8-v2/00000/860D8B15-251A-E511-B97A-0025905A612C.root',
@@ -587,7 +589,7 @@ process.RandomNumberGeneratorService.tkTracksNoZ  = cms.PSet( initialSeed = cms.
 process.RandomNumberGeneratorService.tkTracksNoZ0 = cms.PSet( initialSeed = cms.untracked.uint32(81) )
 
 
-process.TFileService = cms.Service("TFileService", fileName = cms.string("tnpZ_MC.root"))
+process.TFileService = cms.Service("TFileService", fileName = cms.string("tnpZ_MC2.root"))
 
 if True: # enable and do cmsRun tp_from_aod_MC.py /eos/path/to/run/on [ extra_postfix ] to run on all files in that eos path 
     import sys
@@ -600,8 +602,8 @@ if True: # enable and do cmsRun tp_from_aod_MC.py /eos/path/to/run/on [ extra_po
             files = subprocess.check_output([ "/afs/cern.ch/project/eos/installation/0.3.15/bin/eos.select", "ls", scenario ])
             process.source.fileNames = [ scenario+"/"+f for f in files.split() ]
             import os.path
-            process.TFileService.fileName = "tnpZ_MC_%s.root" % os.path.basename(scenario)
+            process.TFileService.fileName = "tnpZ_MC2_%s.root" % os.path.basename(scenario)
         else:
-            process.TFileService.fileName = "tnpZ_MC_%s.root" % scenario
+            process.TFileService.fileName = "tnpZ_MC2_%s.root" % scenario
     if len(args) > 1:
         process.TFileService.fileName = process.TFileService.fileName.value().replace(".root", ".%s.root" % args[1])
