@@ -6,11 +6,11 @@ import FWCore.ParameterSet.Config as cms
 ###   - data_all (default)  
 ###   - signal_mc
 
-import sys
+import sys, os
 args = sys.argv[1:]
 if (sys.argv[0] == "cmsRun"): args =sys.argv[2:]
-#scenario = "data_all"
-scenario = "mc_all"
+scenario = "data_all"
+#scenario = "mc_all"
 if len(args) > 0: scenario = args[0]
 print "Will run scenario ", scenario 
 if len(args) > 1: 
@@ -33,7 +33,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 
     Variables = cms.PSet(
         #Added MC weight
-        #weight = cms.vstring("weight","0","10",""),
+        weight = cms.vstring("weight","0","10",""),
         #
         mass = cms.vstring("Tag-muon Mass", "70", "130", "GeV/c^{2}"),
         pt = cms.vstring("muon p_{T}", "0", "1000", "GeV/c"),
@@ -206,25 +206,37 @@ if scenario == 'data_all':
 elif scenario == 'mc_all':
     process.TnP_MuonID = Template.clone(
         InputFileNames = cms.vstring(
-            #'root://eoscms//eos/cms/store/group/phys_muon/perrin/SF50ns/TnP_trees/SmallTnP_trees_DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8tnpZ_MC.root',
-            'SmallTnP_trees_aod74X_DY.root'
+            'root://eoscms//eos/cms/store/group/phys_muon/perrin/SF50ns/TnP_trees/SmallTree_TnP_trees_aod747_DY_LOmadgraph_withNVtxWeights.root',
             ),
         InputTreeName = cms.string("fitter_tree"),
         InputDirectoryName = cms.string("tpTree"),
         OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
         Efficiencies = cms.PSet(),
         )
-    #process.TnP_MuonID.WeightVariable = cms.string("weight")
-    #process.TnP_MuonID.Variables.weight = cms.vstring("weight","0","10","")
+    process.TnP_MuonID.WeightVariable = cms.string("weight")
+    process.TnP_MuonID.Variables.weight = cms.vstring("weight","0","10","")
 
 
 IDS = ["Tight_IP","Loose_noIP"]
 ALLBINS= [("eta", ETA_BINS)]
 
+_path = '/afs/cern.ch/work/g/gaperrin/private/CMSSW_7_4_7/src/MuonAnalysis/TagAndProbe/SF50ns/fitter/Efficiencies'
+_dir = 'LO1'
+
 for ID in IDS:
     for X,B in ALLBINS:
-        if scenario == 'data_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("DATAeff_app2MC2/TnP_MuonID_%s_%s.root" % (ID, X)))
-        elif scenario == 'mc_all': module = process.TnP_MuonID.clone(OutputFileName = cms.string("MC1eff/TnP_MuonID_%s_%s.root" % (ID, X)))
+        if scenario == 'data_all': 
+            _path_dir = _path + '/Dataeff' + '_' + _dir
+            if not os.path.exists(_path_dir):
+                print 'Creating directory'  
+                os.makedirs(_path_dir)
+            module = process.TnP_MuonID.clone(OutputFileName = cms.string(_path_dir + "/TnP_MuonID_%s_%s.root" % (ID, X)))
+        elif scenario == 'mc_all': 
+            _path_dir = _path + '/MCeff' + '_' + _dir
+            if not os.path.exists(_path_dir):
+                print 'Creating directory'  
+                os.makedirs(_path_dir)
+            module = process.TnP_MuonID.clone(OutputFileName = cms.string(_path_dir + "/TnP_MuonID_%s_%s.root" % (ID, X)))
         shape = "vpvPlusExpo"
         #change the shape and the range as a function of the selection and the variable
         #if "eta" in X and not "abseta" in X: shape = "voigtPlusExpo"
