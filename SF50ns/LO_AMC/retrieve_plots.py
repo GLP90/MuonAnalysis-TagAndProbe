@@ -33,7 +33,12 @@ def save_canvas(_folder, _file, _folder_out):
                                 #print 'gonna save the canvas'
                                 canvas  = key4.ReadObj()
                                 #print 'The name o_object is', _folder_out + '/' + key3.GetName() + '.pdf'
-                                canvas.SaveAs(_folder_out + '/' + key3.GetName() + '.pdf')
+                                _plot = key3.GetName()
+                                if _folder_out.find("_vtx_bin"):
+                                    _plot = _plot[_plot.find('tag_nVertices'):]
+                                    _plot = _plot[:_plot.find('tag_nVertices') + 19:]
+                                #canvas.SaveAs(_folder_out + '/' + key3.GetName() + '.pdf')
+                                canvas.SaveAs(_folder_out + '/' + _plot + '.pdf')
                         r.gDirectory.cd("..")
                 r.gDirectory.cd("..")
             r.gDirectory.cd("..")
@@ -64,7 +69,8 @@ if not os.path.exists(_folder + '/FitPlots'):
 dir = os.listdir(_folder)
 for file in dir:
     if file.find('TnP_MuonID') != -1:
-        save_canvas(_folder, file, _folder_out) 
+        if file.find("tightip_vtx_bin1_24") != -1:
+            save_canvas(_folder, file, _folder_out) 
 
 
 

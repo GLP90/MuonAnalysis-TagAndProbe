@@ -88,6 +88,8 @@ TH1F* DividTGraphs(TGraphAsymmErrors* gr1, TGraphAsymmErrors* gr2){
 void make_ratioplots(TString _file, TString _canvas, TString _path1, TString _path2, TString _output){
 
     setTDRStyle();
+    gROOT->SetBatch(kTRUE);
+
 
     TString _par = "";
     if(_canvas.Contains("pt_PLOT_abseta_bin0")){_par = "_abseta_bin0";}
