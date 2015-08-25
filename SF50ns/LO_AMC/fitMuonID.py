@@ -18,6 +18,10 @@ mc_sample = "LO"
 if len(args) > 1: 
     mc_sample = args[1]
     print 'The MC sample is', mc_sample 
+id_bins = '1'
+if len(args) > 2: 
+    id_bins = args[2]
+    print 'id_bins is', id_bins
 
 
 process = cms.Process("TagProbe")
@@ -67,7 +71,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         Tight2012 = cms.vstring("Tight Id. Muon", "dummy[pass=1,fail=0]"),
         #Variables for Tight2012
         GlbPT  = cms.vstring("Global Muon Prompt Tight')", "dummy[pass=1,fail=0]"),
-        tag_IsoMu20 = cms.vstring("PF Muon", "dummy[pass=1,fail=0]"),
+        tag_IsoMu24_eta2p1 = cms.vstring("tag trigger", "dummy[pass=1,fail=0]"),
 
 
     ),
@@ -152,8 +156,9 @@ ETA_BINS = cms.PSet(
     eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -163,8 +168,9 @@ VTX_BINS_ETA24  = cms.PSet(
     tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -173,8 +179,9 @@ PT_ALLETA_BINS1 = cms.PSet(
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -183,8 +190,9 @@ PT_ALLETA_BINS2 = cms.PSet(
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -193,8 +201,9 @@ PT_ETA_BINS1 = cms.PSet(
     abseta = cms.vdouble(  0.0, 1.2, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
     
 )
@@ -204,8 +213,9 @@ PT_ETA_BINS2 = cms.PSet(
     abseta = cms.vdouble(  0.0, 1.2, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -218,8 +228,9 @@ LOOSE_ETA_BINS = cms.PSet(
     eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -231,8 +242,9 @@ LOOSE_VTX_BINS_ETA24  = cms.PSet(
     tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -243,8 +255,9 @@ LOOSE_PT_ALLETA_BINS1 = cms.PSet(
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -255,8 +268,9 @@ LOOSE_PT_ALLETA_BINS2 = cms.PSet(
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -267,8 +281,9 @@ LOOSE_PT_ETA_BINS1 = cms.PSet(
     abseta = cms.vdouble(  0.0, 1.2, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
     
 )
@@ -280,8 +295,9 @@ LOOSE_PT_ETA_BINS2 = cms.PSet(
     abseta = cms.vdouble(  0.0, 1.2, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 #For ISO on Tight id
@@ -299,8 +315,9 @@ TIGHTIP_ETA_BINS = cms.PSet(
     eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -318,8 +335,9 @@ TIGHTIP_VTX_BINS_ETA24  = cms.PSet(
     tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -336,8 +354,9 @@ TIGHTIP_PT_ALLETA_BINS1 = cms.PSet(
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -354,8 +373,9 @@ TIGHTIP_PT_ALLETA_BINS2 = cms.PSet(
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -372,8 +392,9 @@ TIGHTIP_PT_ETA_BINS1 = cms.PSet(
     abseta = cms.vdouble(  0.0, 1.2, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
     
 )
@@ -391,8 +412,9 @@ TIGHTIP_PT_ETA_BINS2 = cms.PSet(
     abseta = cms.vdouble(  0.0, 1.2, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
+    tag_abseta = cms.vdouble(0, 2.1), 
     tag_pt = cms.vdouble(25, 500),
-    tag_IsoMu20 = cms.vstring("pass"),
+    tag_IsoMu24_eta2p1 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 
@@ -432,104 +454,75 @@ elif scenario == 'mc_all':
 
 #Loose ID
 
-#ID_BINS = [
-#(("Loose_noIP"), ("eta", ETA_BINS)),
-#(("Loose_noIP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
-#(("Loose_noIP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
-#(("Loose_noIP"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
-#(("Loose_noIP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
-#(("Loose_noIP"), ("pt_spliteta_bin2", PT_ETA_BINS2))
-#]
+if id_bins == '1':
+    ID_BINS = [
+    (("Loose_noIP"), ("eta", ETA_BINS)),
+    (("Loose_noIP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
+    (("Loose_noIP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
+    (("Loose_noIP"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
+    (("Loose_noIP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
+    (("Loose_noIP"), ("pt_spliteta_bin2", PT_ETA_BINS2))
+    ]
 
 #Tight ID
 
-#ID_BINS = [
-#(("Tight_IP"), ("eta", ETA_BINS)),
-#(("Tight_IP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
-#(("Tight_IP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
-#(("Tight_IP"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
-#(("Tight_IP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
-#(("Tight_IP"), ("pt_spliteta_bin2", PT_ETA_BINS2))
-#]
+if id_bins == '2':
+    ID_BINS = [
+    (("Tight_IP"), ("eta", ETA_BINS)),
+    (("Tight_IP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
+    (("Tight_IP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
+    (("Tight_IP"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
+    (("Tight_IP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
+    (("Tight_IP"), ("pt_spliteta_bin2", PT_ETA_BINS2))
+    ]
 
 #Loose Iso
 
-#ID_BINS = [
-#(("LooseIso4"), ("loose_eta", LOOSE_ETA_BINS)),
-#(("LooseIso4"), ("loose_vtx_bin1_24", LOOSE_VTX_BINS_ETA24 )),
-#(("LooseIso4"), ("loose_pt_alleta_bin1", LOOSE_PT_ALLETA_BINS1)),
-#(("LooseIso4"), ("loose_pt_alleta_bin2", LOOSE_PT_ALLETA_BINS2)),
-#(("LooseIso4"), ("loose_pt_spliteta_bin1", LOOSE_PT_ETA_BINS1)),
-#(("LooseIso4"), ("loose_pt_spliteta_bin2", LOOSE_PT_ETA_BINS2))
-#]
+if id_bins == '3':
+    ID_BINS = [
+    (("LooseIso4"), ("loose_eta", LOOSE_ETA_BINS)),
+    (("LooseIso4"), ("loose_vtx_bin1_24", LOOSE_VTX_BINS_ETA24 )),
+    (("LooseIso4"), ("loose_pt_alleta_bin1", LOOSE_PT_ALLETA_BINS1)),
+    (("LooseIso4"), ("loose_pt_alleta_bin2", LOOSE_PT_ALLETA_BINS2)),
+    (("LooseIso4"), ("loose_pt_spliteta_bin1", LOOSE_PT_ETA_BINS1)),
+    (("LooseIso4"), ("loose_pt_spliteta_bin2", LOOSE_PT_ETA_BINS2))
+    ]
 
-#ID_BINS = [
-#(("LooseIso4"), ("tightip_eta", TIGHTIP_ETA_BINS)),
-#(("LooseIso4"), ("tightip_vtx_bin1_24", TIGHTIP_VTX_BINS_ETA24 )),
-#(("LooseIso4"), ("tightip_pt_alleta_bin1", TIGHTIP_PT_ALLETA_BINS1)),
-#(("LooseIso4"), ("tightip_pt_alleta_bin2", TIGHTIP_PT_ALLETA_BINS2)),
-#(("LooseIso4"), ("tightip_pt_spliteta_bin1", TIGHTIP_PT_ETA_BINS1)),
-#(("LooseIso4"), ("tightip_pt_spliteta_bin2", TIGHTIP_PT_ETA_BINS2))
-#]
+if id_bins == '4':
+    ID_BINS = [
+    (("LooseIso4"), ("tightip_eta", TIGHTIP_ETA_BINS)),
+    (("LooseIso4"), ("tightip_vtx_bin1_24", TIGHTIP_VTX_BINS_ETA24 )),
+    (("LooseIso4"), ("tightip_pt_alleta_bin1", TIGHTIP_PT_ALLETA_BINS1)),
+    (("LooseIso4"), ("tightip_pt_alleta_bin2", TIGHTIP_PT_ALLETA_BINS2)),
+    (("LooseIso4"), ("tightip_pt_spliteta_bin1", TIGHTIP_PT_ETA_BINS1)),
+    (("LooseIso4"), ("tightip_pt_spliteta_bin2", TIGHTIP_PT_ETA_BINS2))
+    ]
 
 #Tight Iso
 
-#ID_BINS = [
-#(("TightIso4"), ("tightip_eta", TIGHTIP_ETA_BINS)),
-#(("TightIso4"), ("tightip_vtx_bin1_24", TIGHTIP_VTX_BINS_ETA24 )),
-#(("TightIso4"), ("tightip_pt_alleta_bin1", TIGHTIP_PT_ALLETA_BINS1)),
-#(("TightIso4"), ("tightip_pt_alleta_bin2", TIGHTIP_PT_ALLETA_BINS2)),
-#(("TightIso4"), ("tightip_pt_spliteta_bin1", TIGHTIP_PT_ETA_BINS1)),
-#(("TightIso4"), ("tightip_pt_spliteta_bin2", TIGHTIP_PT_ETA_BINS2))
-#]
+if id_bins == '5':
+    ID_BINS = [
+    (("TightIso4"), ("tightip_eta", TIGHTIP_ETA_BINS)),
+    (("TightIso4"), ("tightip_vtx_bin1_24", TIGHTIP_VTX_BINS_ETA24 )),
+    (("TightIso4"), ("tightip_pt_alleta_bin1", TIGHTIP_PT_ALLETA_BINS1)),
+    (("TightIso4"), ("tightip_pt_alleta_bin2", TIGHTIP_PT_ALLETA_BINS2)),
+    (("TightIso4"), ("tightip_pt_spliteta_bin1", TIGHTIP_PT_ETA_BINS1)),
+    (("TightIso4"), ("tightip_pt_spliteta_bin2", TIGHTIP_PT_ETA_BINS2))
+    ]
 
-#All
-
-#ID_BINS = [
-#(("Loose_noIP"), ("eta", ETA_BINS)),
-#(("Loose_noIP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
-#(("Loose_noIP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
-#(("Loose_noIP"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
-#(("Loose_noIP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
-#(("Loose_noIP"), ("pt_spliteta_bin2", PT_ETA_BINS2)),
-#(("Tight_IP"), ("eta", ETA_BINS)),
-#(("Tight_IP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
-#(("Tight_IP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
-#(("Tight_IP"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
-#(("Tight_IP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
-#(("Tight_IP"), ("pt_spliteta_bin2", PT_ETA_BINS2)),
-#(("LooseIso4"), ("loose_eta", LOOSE_ETA_BINS)),
-#(("LooseIso4"), ("loose_vtx_bin1_24", LOOSE_VTX_BINS_ETA24 )),
-#(("LooseIso4"), ("loose_pt_alleta_bin1", LOOSE_PT_ALLETA_BINS1)),
-#(("LooseIso4"), ("loose_pt_alleta_bin2", LOOSE_PT_ALLETA_BINS2)),
-#(("LooseIso4"), ("loose_pt_spliteta_bin1", LOOSE_PT_ETA_BINS1)),
-#(("LooseIso4"), ("loose_pt_spliteta_bin2", LOOSE_PT_ETA_BINS2)),
-#(("LooseIso4"), ("tightip_eta", TIGHTIP_ETA_BINS)),
-#(("LooseIso4"), ("tightip_vtx_bin1_24", TIGHTIP_VTX_BINS_ETA24 )),
-#(("LooseIso4"), ("tightip_pt_alleta_bin1", TIGHTIP_PT_ALLETA_BINS1)),
-#(("LooseIso4"), ("tightip_pt_alleta_bin2", TIGHTIP_PT_ALLETA_BINS2)),
-#(("LooseIso4"), ("tightip_pt_spliteta_bin1", TIGHTIP_PT_ETA_BINS1)),
-#(("LooseIso4"), ("tightip_pt_spliteta_bin2", TIGHTIP_PT_ETA_BINS2)),
-#(("TightIso4"), ("tightip_eta", TIGHTIP_ETA_BINS)),
-#(("TightIso4"), ("tightip_vtx_bin1_24", TIGHTIP_VTX_BINS_ETA24 )),
-#(("TightIso4"), ("tightip_pt_alleta_bin1", TIGHTIP_PT_ALLETA_BINS1)),
-#(("TightIso4"), ("tightip_pt_alleta_bin2", TIGHTIP_PT_ALLETA_BINS2)),
-#(("TightIso4"), ("tightip_pt_spliteta_bin1", TIGHTIP_PT_ETA_BINS1)),
-#(("TightIso4"), ("tightip_pt_spliteta_bin2", TIGHTIP_PT_ETA_BINS2))
-#]
 
 #Other
 
 #Tight ID
 
-ID_BINS = [
-(("Tight_2012"), ("eta", ETA_BINS)),
-(("Tight_2012"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
-(("Tight_2012"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
-(("Tight_2012"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
-(("Tight_2012"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
-(("Tight_2012"), ("pt_spliteta_bin2", PT_ETA_BINS2))
-]
+#ID_BINS = [
+#(("Tight_2012"), ("eta", ETA_BINS)),
+#(("Tight_2012"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
+#(("Tight_2012"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
+#(("Tight_2012"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
+#(("Tight_2012"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
+#(("Tight_2012"), ("pt_spliteta_bin2", PT_ETA_BINS2))
+#]
 
 for ID, ALLBINS in ID_BINS:
     X = ALLBINS[0]
