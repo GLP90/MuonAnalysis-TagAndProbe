@@ -19,7 +19,7 @@ TH1F* DividTGraphs(TGraphAsymmErrors* gr1, TGraphAsymmErrors* gr2){
 
     int nbins = gr1->GetN();
     double xbins[nbins+1];
-    cout<<"The number of bins is "<<nbins<<endl;
+    //cout<<"The number of bins is "<<nbins<<endl;
 
     for(int i = 0;  i < nbins; ++i){
 
@@ -35,11 +35,11 @@ TH1F* DividTGraphs(TGraphAsymmErrors* gr1, TGraphAsymmErrors* gr2){
             // x_hi = gr1->GetErrorXhigh(i-1);
             xbins[i] = x-x_low;
             xbins[i+1] = x+x_hi;
-            cout << "lower edge xbins["<<i<<"]=" << xbins[i] << " y=" << y<< endl;
-            cout << "final higher edge xbins["<<i+1<<"]=" <<xbins[i+1] << endl;
+            //cout << "lower edge xbins["<<i<<"]=" << xbins[i] << " y=" << y<< endl;
+            //cout << "final higher edge xbins["<<i+1<<"]=" <<xbins[i+1] << endl;
         }else{
             xbins[i] = x-x_low;
-            cout << "lower edge xbins["<<i<<"]=" << xbins[i] << " y=" << y<< endl;
+            //cout << "lower edge xbins["<<i<<"]=" << xbins[i] << " y=" << y<< endl;
         }
     }
 
@@ -85,7 +85,7 @@ TH1F* DividTGraphs(TGraphAsymmErrors* gr1, TGraphAsymmErrors* gr2){
 }
 
 
-void make_ratioplots(TString _file, TString _canvas, TString _path1, TString _path2, TString _output){
+int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _path2, TString _output){
 
     setTDRStyle();
     gROOT->SetBatch(kTRUE);
@@ -95,12 +95,10 @@ void make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pa
     if(_canvas.Contains("pt_PLOT_abseta_bin0")){_par = "_abseta_bin0";}
     else if(_canvas.Contains("pt_PLOT_abseta_bin1")){_par = "_abseta_bin1";}
 
-    cout<<_file<<endl;
-    //TFile *f1 = TFile::Open("DATAeff_app2MC1/" + _file);
+    //cout<<_file<<endl;
     TFile *f1 = TFile::Open(_path1 + _file);
     TCanvas* c1 = (TCanvas*) f1->Get(_canvas);
     TGraphAsymmErrors* eff1 = (TGraphAsymmErrors*)c1->GetPrimitive("hxy_fit_eff");
-    //TFile *f2 = TFile::Open("MCeff_app2MC1/" + _file);
     TFile *f2 = TFile::Open(_path2 + _file);
     TCanvas* c2 = (TCanvas*) f2->Get(_canvas);
     TGraphAsymmErrors* eff2 = (TGraphAsymmErrors*)c2->GetPrimitive("hxy_fit_eff");
@@ -116,14 +114,11 @@ void make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pa
     double x_hi = x+eff1->GetErrorXhigh(nbins-1);
 
     TCanvas* c3 = new TCanvas("c3","c3");
-    //c3->UseCurrentStyle();
     TPad *pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
     pad1->SetBottomMargin(0.); 
     pad1->SetTopMargin(0.1); 
     pad1->Draw();
     pad1->cd();
-    //c3->Divide(1,2);
-    //c3->cd(1);
     eff1->Draw("AP");
     eff1->SetTitle("");
     eff1->GetYaxis()->SetTitle("Efficiency");
@@ -149,14 +144,80 @@ void make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pa
     eff2->SetLineColor(4);
     eff2->SetMarkerStyle(21);
     eff2->SetMarkerColor(4);
-    //TString _legtext = "";
-    //if(_xtitle.Contains("eta")){_legtext = "#mu p_{t} #geq 22 [GeV]";} 
-    TLegend* leg = new TLegend(0.2, 0.05, 0.5 , 0.25);
-    //leg->AddEntry((TObject*)0, _legtext, "");
-    //leg->AddEntry((TObject*)0, "", "");
+    TString _legtext = "";
+
+    if(_canvas.Contains("/Loose_noIP_eta")){
+    _legtext = "Loose Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/Loose_noIP_vtx_bin")){
+    _legtext = "Loose Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/Loose_noIP_pt_alleta_bin")){
+    _legtext = "Loose Id, #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/Loose_noIP_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
+    _legtext = "Loose Id, #||{#eta} #leq 1.2";
+    }else if(_canvas.Contains("/Loose_noIP_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
+    _legtext = "Loose Id, 1.2 < #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/Tight_IP_eta")){
+    _legtext = "Tight Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/Tight_IP_vtx_bin")){
+    _legtext = "Tight Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/Tight_IP_pt_alleta_bin")){
+    _legtext = "Tight Id, #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/Tight_IP_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
+    _legtext = "Tight Id, #||{#eta} #leq 1.2";
+    }else if(_canvas.Contains("/Tight_IP_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
+    _legtext = "Tight Id, 1.2 < #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/LooseIso4_loose_eta")){
+    _legtext = "Loose Iso/Loose Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/LooseIso4_loose_vtx_bin")){
+    _legtext = "Loose Iso/Loose Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/LooseIso4_loose_pt_alleta_bin")){
+    _legtext = "Loose Iso/Loose Id, #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/LooseIso4_loose_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
+    _legtext = "Loose Iso/Loose Id, #||{#eta} #leq 1.2";
+    }else if(_canvas.Contains("/LooseIso4_loose_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
+    _legtext = "Loose Iso/Loose Id, 1.2 < #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/LooseIso4_tightip_eta")){
+    _legtext = "Loose Iso/Tight Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/LooseIso4_tightip_vtx_bin")){
+    _legtext = "Loose Iso/Tight Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/LooseIso4_tightip_pt_alleta_bin")){
+    _legtext = "Loose Iso/Tight Id, #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/LooseIso4_tightip_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
+    _legtext = "Loose Iso/Tight Id, #||{#eta} #leq 1.2";
+    }else if(_canvas.Contains("/LooseIso4_tightip_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
+    _legtext = "Loose Iso/Tight Id, 1.2 < #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/TightIso4_loose_eta")){
+    _legtext = "Tight Iso/Loose Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/TightIso4_loose_vtx_bin")){
+    _legtext = "Tight Iso/Loose Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/TightIso4_loose_pt_alleta_bin")){
+    _legtext = "Tight Iso/Loose Id, #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/TightIso4_loose_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
+    _legtext = "Tight Iso/Loose Id, #||{#eta} #leq 1.2";
+    }else if(_canvas.Contains("/TightIso4_loose_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
+    _legtext = "Tight Iso/Loose Id, 1.2 < #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/TightIso4_tightip_eta")){
+    _legtext = "Tight Iso/Tight Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/TightIso4_tightip_vtx_bin")){
+    _legtext = "Tight Iso/Tight Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/TightIso4_tightip_pt_alleta_bin")){
+    _legtext = "Tight Iso/Tight Id, #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/TightIso4_tightip_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
+    _legtext = "Tight Iso/Tight Id, #||{#eta} #leq 1.2";
+    }else if(_canvas.Contains("/TightIso4_tightip_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
+    _legtext = "Tight Iso/Tight Id, 1.2 < #||{#eta} #leq 2.4";
+    }else{
+        std::cout<<"=============================="<<std::endl;
+        std::cout<<"ERROR: No corresponding legend"<<std::endl;
+        std::cout<<"=============================="<<std::endl;
+        return 1;
+    }
+
+    TLegend* leg = new TLegend(0.45, 0.65, 0.75 , 0.85);
     //leg->SetHeader("Loose ID, p_{T} #geq 22 GeV");
     //leg->SetHeader("Tight ID, p_{T} #geq 20 GeV");
-    leg->SetHeader("p_{T} #geq 20 GeV");
+    //leg->SetHeader("p_{T} #geq 20 GeV");
+    leg->SetHeader(_legtext);
     TLegendEntry *header = (TLegendEntry*)leg->GetListOfPrimitives()->First();
     //header->SetTextAlign(22);
     header->SetTextColor(1);
@@ -164,8 +225,6 @@ void make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pa
     header->SetTextSize(20);
     leg->AddEntry(eff1, "Data", "LP");
     leg->AddEntry(eff2, "MC","LP");
-    //leg->AddEntry(eff1, "MadGraph aMC@NLO", "LP");
-    //leg->AddEntry(eff2, "LO MadGraph","LP");
     leg->SetBorderSize(0.);
     leg->SetTextFont(43);
     leg->SetTextSize(20);
@@ -192,7 +251,6 @@ void make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pa
     ratio->GetYaxis()->SetRangeUser(0.95,1.04999);
     //ratio->GetYaxis()->SetRangeUser(0.98,1.01999);
     ratio->GetYaxis()->SetTitle("Data/MC");
-    //ratio->GetYaxis()->SetTitle("aMC@NLO/LO");
     ratio->GetYaxis()->SetNdivisions(505);
     ratio->GetYaxis()->SetLabelSize(20);
     ratio->GetYaxis()->SetTitleFont(63);

@@ -485,43 +485,56 @@ elif scenario == 'mc_all':
 
 #All
 
+#ID_BINS = [
+#(("Loose_noIP"), ("eta", ETA_BINS)),
+#(("Loose_noIP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
+#(("Loose_noIP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
+#(("Loose_noIP"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
+#(("Loose_noIP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
+#(("Loose_noIP"), ("pt_spliteta_bin2", PT_ETA_BINS2)),
+#(("Tight_IP"), ("eta", ETA_BINS)),
+#(("Tight_IP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
+#(("Tight_IP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
+#(("Tight_IP"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
+#(("Tight_IP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
+#(("Tight_IP"), ("pt_spliteta_bin2", PT_ETA_BINS2)),
+#(("LooseIso4"), ("loose_eta", LOOSE_ETA_BINS)),
+#(("LooseIso4"), ("loose_vtx_bin1_24", LOOSE_VTX_BINS_ETA24 )),
+#(("LooseIso4"), ("loose_pt_alleta_bin1", LOOSE_PT_ALLETA_BINS1)),
+#(("LooseIso4"), ("loose_pt_alleta_bin2", LOOSE_PT_ALLETA_BINS2)),
+#(("LooseIso4"), ("loose_pt_spliteta_bin1", LOOSE_PT_ETA_BINS1)),
+#(("LooseIso4"), ("loose_pt_spliteta_bin2", LOOSE_PT_ETA_BINS2)),
+#(("LooseIso4"), ("tightip_eta", TIGHTIP_ETA_BINS)),
+#(("LooseIso4"), ("tightip_vtx_bin1_24", TIGHTIP_VTX_BINS_ETA24 )),
+#(("LooseIso4"), ("tightip_pt_alleta_bin1", TIGHTIP_PT_ALLETA_BINS1)),
+#(("LooseIso4"), ("tightip_pt_alleta_bin2", TIGHTIP_PT_ALLETA_BINS2)),
+#(("LooseIso4"), ("tightip_pt_spliteta_bin1", TIGHTIP_PT_ETA_BINS1)),
+#(("LooseIso4"), ("tightip_pt_spliteta_bin2", TIGHTIP_PT_ETA_BINS2)),
+#(("TightIso4"), ("tightip_eta", TIGHTIP_ETA_BINS)),
+#(("TightIso4"), ("tightip_vtx_bin1_24", TIGHTIP_VTX_BINS_ETA24 )),
+#(("TightIso4"), ("tightip_pt_alleta_bin1", TIGHTIP_PT_ALLETA_BINS1)),
+#(("TightIso4"), ("tightip_pt_alleta_bin2", TIGHTIP_PT_ALLETA_BINS2)),
+#(("TightIso4"), ("tightip_pt_spliteta_bin1", TIGHTIP_PT_ETA_BINS1)),
+#(("TightIso4"), ("tightip_pt_spliteta_bin2", TIGHTIP_PT_ETA_BINS2))
+#]
+
+#Other
+
+#Tight ID
+
 ID_BINS = [
-(("Loose_noIP"), ("eta", ETA_BINS)),
-(("Loose_noIP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
-(("Loose_noIP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
-(("Loose_noIP"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
-(("Loose_noIP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
-(("Loose_noIP"), ("pt_spliteta_bin2", PT_ETA_BINS2)),
-(("Tight_IP"), ("eta", ETA_BINS)),
-(("Tight_IP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
-(("Tight_IP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
-(("Tight_IP"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
-(("Tight_IP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
-(("Tight_IP"), ("pt_spliteta_bin2", PT_ETA_BINS2)),
-(("LooseIso4"), ("loose_eta", LOOSE_ETA_BINS)),
-(("LooseIso4"), ("loose_vtx_bin1_24", LOOSE_VTX_BINS_ETA24 )),
-(("LooseIso4"), ("loose_pt_alleta_bin1", LOOSE_PT_ALLETA_BINS1)),
-(("LooseIso4"), ("loose_pt_alleta_bin2", LOOSE_PT_ALLETA_BINS2)),
-(("LooseIso4"), ("loose_pt_spliteta_bin1", LOOSE_PT_ETA_BINS1)),
-(("LooseIso4"), ("loose_pt_spliteta_bin2", LOOSE_PT_ETA_BINS2)),
-(("LooseIso4"), ("tightip_eta", TIGHTIP_ETA_BINS)),
-(("LooseIso4"), ("tightip_vtx_bin1_24", TIGHTIP_VTX_BINS_ETA24 )),
-(("LooseIso4"), ("tightip_pt_alleta_bin1", TIGHTIP_PT_ALLETA_BINS1)),
-(("LooseIso4"), ("tightip_pt_alleta_bin2", TIGHTIP_PT_ALLETA_BINS2)),
-(("LooseIso4"), ("tightip_pt_spliteta_bin1", TIGHTIP_PT_ETA_BINS1)),
-(("LooseIso4"), ("tightip_pt_spliteta_bin2", TIGHTIP_PT_ETA_BINS2)),
-(("TightIso4"), ("tightip_eta", TIGHTIP_ETA_BINS)),
-(("TightIso4"), ("tightip_vtx_bin1_24", TIGHTIP_VTX_BINS_ETA24 )),
-(("TightIso4"), ("tightip_pt_alleta_bin1", TIGHTIP_PT_ALLETA_BINS1)),
-(("TightIso4"), ("tightip_pt_alleta_bin2", TIGHTIP_PT_ALLETA_BINS2)),
-(("TightIso4"), ("tightip_pt_spliteta_bin1", TIGHTIP_PT_ETA_BINS1)),
-(("TightIso4"), ("tightip_pt_spliteta_bin2", TIGHTIP_PT_ETA_BINS2))
+(("Tight_2012"), ("eta", ETA_BINS)),
+(("Tight_2012"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
+(("Tight_2012"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
+(("Tight_2012"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
+(("Tight_2012"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
+(("Tight_2012"), ("pt_spliteta_bin2", PT_ETA_BINS2))
 ]
 
 for ID, ALLBINS in ID_BINS:
     X = ALLBINS[0]
     B = ALLBINS[1]
-    _output = os.getcwd() + '/Efficiency1'
+    _output = os.getcwd() + '/Efficiency2'
     if not os.path.exists(_output):
         print 'Creating Efficiency directory where the fits are stored'  
         os.makedirs(_output)

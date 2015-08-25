@@ -50,24 +50,24 @@ import sys, os
 args = sys.argv[1:]
 iteration = '1'
 if len(args) > 0: iteration =  args[0]
-print "The iteration is ", iteration
+#print "The iteration is ", iteration
 mc_sample = "LO"
 if len(args) > 1: mc_sample =  args[1]
-print "The mc sample is ", mc_sample
+#print "The mc sample is ", mc_sample
 
 _output = os.getcwd() + '/RatioPlots' + iteration
 if not os.path.exists(_output): 
-    print "Creating folder ", '/RatioPlots' + iteration
+    #print "Creating folder ", '/RatioPlots' + iteration
     os.makedirs(_output)
 _output += "/DATA_MC" + mc_sample + "/"
 if not os.path.exists(_output + "/DATA_MC" + mc_sample):
-    print "Creating folder ", "/DATA_MC" + mc_sample
+    #print "Creating folder ", "/DATA_MC" + mc_sample
     os.makedirs(_output + "/DATA_MC" + mc_sample)
 
 
 
 r.gROOT.LoadMacro("make_ratioplots.C+")
-debug = True 
+debug = False 
 
 _path1 = os.getcwd() + "/Efficiency" + iteration + "/DATAeff/"
 _path2 = os.getcwd() + "/Efficiency" + iteration + "/MC"+ mc_sample + "eff/"
@@ -76,7 +76,7 @@ _tptree = 'tpTree'
 ##!! Get the list of files
 dir = os.listdir(_path1)
 for file in dir:
-    print 'the file is ', file
+    #print 'the file is ', file
     if file.find('TnP_MuonID') != -1:
         if not os.path.isfile(_path2 + '/' + file):
             if debug: print 'The file ', file, 'doesn\'t exist in ', _path2
@@ -87,4 +87,4 @@ for file in dir:
             CANVAS = getplotpath( file, _path1, _tptree)
             for _canvas in CANVAS:
                 r.make_ratioplots(file, _canvas, _path1, _path2, _output)
-
+                #print 'the canvas is ', _canvas
