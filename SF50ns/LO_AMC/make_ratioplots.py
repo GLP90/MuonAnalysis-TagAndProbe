@@ -86,5 +86,5 @@ for file in dir:
             if debug: print 'The file exists !'
             CANVAS = getplotpath( file, _path1, _tptree)
             for _canvas in CANVAS:
+                print 'the canvas is ', _canvas
                 r.make_ratioplots(file, _canvas, _path1, _path2, _output)
-                #print 'the canvas is ', _canvas

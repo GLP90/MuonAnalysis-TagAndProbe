@@ -210,7 +210,7 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
         std::cout<<"=============================="<<std::endl;
         std::cout<<"ERROR: No corresponding legend"<<std::endl;
         std::cout<<"=============================="<<std::endl;
-        return 1;
+        //return 1;
     }
 
     TLegend* leg = new TLegend(0.45, 0.65, 0.75 , 0.85);
@@ -277,6 +277,8 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     //TFile *f_out = TFile::Open("TEST.root","recreate");
     //f_out->cd();
     //c3->Write();
+
+    return 0;
 
 }
 
