@@ -67,7 +67,6 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         Glb   = cms.vstring("Global", "dummy[pass=1,fail=0]"),
         PF    = cms.vstring("PF Muon", "dummy[pass=1,fail=0]"),
         TM    = cms.vstring("Tracker Muon", "dummy[pass=1,fail=0]"),
-        Medium   = cms.vstring("Medium Id. Muon", "dummy[pass=1,fail=0]"),
         Tight2012 = cms.vstring("Tight Id. Muon", "dummy[pass=1,fail=0]"),
         #Variables for Tight2012
         GlbPT  = cms.vstring("Global Muon Prompt Tight')", "dummy[pass=1,fail=0]"),
@@ -77,32 +76,21 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     ),
 
     Expressions = cms.PSet(
-        #IP Cuts
-        IPLooseVar = cms.vstring("IPLooseVar", "abs(dxyBS)<0.2 && abs(dzPV)<0.5", "dxyBS", "dzPV"),
-        IPTightVar = cms.vstring("IPTightVar", "abs(dxyBS)<0.02 && abs(dzPV)<0.1", "dxyBS", "dzPV"),
         #ID Cuts
         Loose_noIPVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) ", "PF", "Glb", "TM"),
-        Medium_noIPVar= cms.vstring("Medium_noIPVar", "Medium==1", "Medium"),
-        Tight_noIPVar = cms.vstring("Tight_noIPVar", "PF==1 && numberOfMatchedStations>1 && GlbPT==1 && tkTrackerLay>5 && tkValidPixelHits>0", "PF", "numberOfMatchedStations", "GlbPT", "tkTrackerLay", "tkValidPixelHits"),
         Tight2012Var = cms.vstring("Tight2012Var", "Tight2012 == 1", "Tight2012"),
         #IP+ID Cuts
-        LooseVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) && IPLooseVar==1", "PF", "Glb", "TM","IPLooseVar"),
-        MediumVar= cms.vstring("MediumVar", "Medium==1 && IPLooseVar==1", "Medium", "IPLooseVar"),
         TightVar = cms.vstring("TightVar", "PF==1 && numberOfMatchedStations>1 && GlbPT==1 && tkTrackerLay>5 && tkValidPixelHits>0 && abs(dB) < 0.2 && abs(dzPV) < 0.5", "PF", "numberOfMatchedStations", "GlbPT", "tkTrackerLay", "tkValidPixelHits", "dB", "dzPV"),
-        Tight_tightIPVar = cms.vstring("Tight_tightIPVar", "PF==1 && numberOfMatchedStations>1 && GlbPT==1 && tkTrackerLay>5 && tkValidPixelHits>0 && IPTightVar==1", "PF", "numberOfMatchedStations", "GlbPT", "tkTrackerLay", "tkValidPixelHits", "IPTightVar"),
+        Tight2Var = cms.vstring("Tight2Var", "PF==1 && numberOfMatchedStations>1 && GlbPT==1 && tkTrackerLay>5 && tkValidPixelHits>0 && abs(dB) < 0.2", "PF", "numberOfMatchedStations", "GlbPT", "tkTrackerLay", "tkValidPixelHits", "dB"),
     ),
 
     Cuts = cms.PSet(
-        #noIP ids
+        #Loose id
         Loose_noIP = cms.vstring("Loose_noIP", "Loose_noIPVar", "0.5"),
-        Medium_noIP = cms.vstring("Medium_noIP", "Medium_noIPVar", "0.5"),
-        Tight_noIP = cms.vstring("Tightid_noIP", "Tight_noIPVar", "0.5"),
-        #IP ID Cuts
-        Loose_IP = cms.vstring("Loose_IP", "LooseVar", "0.5"),
-        Medium_IP = cms.vstring("Medium_IP", "MediumVar", "0.5"),
+        #Tight id 
         Tight_IP = cms.vstring("Tight_IP", "TightVar", "0.5"),
-        Tight_2012 = cms.vstring("Tight_IP", "Tight2012Var", "0.5"),
-        Tight_tightIP = cms.vstring("Tight_tightIP", "Tight_tightIPVar", "0.5"),
+        Tight2_IP = cms.vstring("Tight2_IP", "Tight2Var", "0.5"),
+        Tight_2012 = cms.vstring("Tight_2012", "Tight2012Var", "0.5"),
         #Isolations
         LooseIso4 = cms.vstring("LooseIso4" ,"combRelIsoPF04dBeta", "0.25"),
         TightIso4 = cms.vstring("TightIso4" ,"combRelIsoPF04dBeta", "0.15"),
@@ -112,7 +100,6 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     PDFs = cms.PSet(
         voigtPlusExpo = cms.vstring(
             "Voigtian::signal(mass, mean[90,80,100], width[2.495], sigma[3,1,20])",
-            "Exponential::backgroundPass(mass, lp[0,-5,5])",
             "Exponential::backgroundFail(mass, lf[0,-5,5])",
             "efficiency[0.9,0,1]",
             "signalFractionInPassing[0.9]"
@@ -454,6 +441,7 @@ elif scenario == 'mc_all':
 
 #Loose ID
 
+'''
 if id_bins == '1':
     ID_BINS = [
     (("Loose_noIP"), ("eta", ETA_BINS)),
@@ -509,25 +497,34 @@ if id_bins == '5':
     (("TightIso4"), ("tightip_pt_spliteta_bin1", TIGHTIP_PT_ETA_BINS1)),
     (("TightIso4"), ("tightip_pt_spliteta_bin2", TIGHTIP_PT_ETA_BINS2))
     ]
+    '''
 
 
 #Other
 
 #Tight ID
+ID_BINS = [
+(("Tight_2012"), ("eta", ETA_BINS)),
+(("Tight_2012"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
+(("Tight_2012"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
+(("Tight_2012"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
+(("Tight_2012"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
+(("Tight_2012"), ("pt_spliteta_bin2", PT_ETA_BINS2))
+]
 
 #ID_BINS = [
-#(("Tight_2012"), ("eta", ETA_BINS)),
-#(("Tight_2012"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
-#(("Tight_2012"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
-#(("Tight_2012"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
-#(("Tight_2012"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
-#(("Tight_2012"), ("pt_spliteta_bin2", PT_ETA_BINS2))
+#(("Tight2_IP"), ("eta", ETA_BINS)),
+#(("Tight2_IP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
+#(("Tight2_IP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
+#(("Tight2_IP"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
+#(("Tight2_IP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
+#(("Tight2_IP"), ("pt_spliteta_bin2", PT_ETA_BINS2))
 #]
 
 for ID, ALLBINS in ID_BINS:
     X = ALLBINS[0]
     B = ALLBINS[1]
-    _output = os.getcwd() + '/Efficiency3'
+    _output = os.getcwd() + '/Efficiency2'
     if not os.path.exists(_output):
         print 'Creating Efficiency directory where the fits are stored'  
         os.makedirs(_output)
