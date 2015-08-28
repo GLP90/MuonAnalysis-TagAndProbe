@@ -25,13 +25,9 @@ if len(args) > 2:
 
 
 process = cms.Process("TagProbe")
-
 process.load('FWCore.MessageService.MessageLogger_cfi')
-
 process.source = cms.Source("EmptySource")
-
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
-
 
 Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         NumCPU = cms.uint32(1),
@@ -53,6 +49,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         dB = cms.vstring("dB", "-1000", "1000", ""),
         dzPV = cms.vstring("dzPV", "-1000", "1000", ""),
         dxyBS = cms.vstring("dxyBS", "-1000", "1000", ""),
+        SIP = cms.vstring("SIP", "-1000", "1000", ""),
         pair_probeMultiplicity = cms.vstring("pair_probeMultiplicity", "0","30",""),
         ),
 
