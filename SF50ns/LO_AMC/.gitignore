@@ -1,0 +1,10 @@
+core.*
+Efficiency*/
+RatioPlots*/
+*.d
+*.pcm
+*.so
+*.swo
+*.swn
+*.swm
+*.swl
