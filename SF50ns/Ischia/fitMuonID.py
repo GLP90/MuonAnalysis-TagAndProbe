@@ -508,10 +508,7 @@ for ID, ALLBINS in ID_BINS:
         elif data_sample == "50nsB":
             _output += '/DATA50nsBeff'
     elif scenario == 'mc_all':
-        if mc_sample == 'LO': 
-             _output += '/MCLOeff'
-        elif mc_sample == 'NLO': 
-             _output += '/MCNLOeff'
+        _output += '/MC25ns'
     if not os.path.exists(_output):
         os.makedirs(_output)
     module = process.TnP_MuonID.clone(OutputFileName = cms.string(_output + "/TnP_MuonID_%s_%s.root" % (ID, X)))
