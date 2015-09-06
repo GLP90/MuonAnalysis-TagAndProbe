@@ -59,9 +59,11 @@ _output = os.getcwd() + '/RatioPlots' + iteration
 if not os.path.exists(_output): 
     os.makedirs(_output)
 _output += "/DATA_MC" + mc_sample + "/"
-if not os.path.exists(_output + "/DATA_MC" + mc_sample):
-    os.makedirs(_output + "/DATA_MC" + mc_sample)
+print '_output is ', _output
+if not os.path.exists(_output):
+    os.makedirs(_output)
     os.makedirs(_output + "/SF")
+
 
 
 

@@ -13,7 +13,7 @@
 #include "TLegendEntry.h"
 
 #include <iostream>
-#include <ofstream>
+//#include <ofstream>
 
 //!! To compute SF = MC/Data
 TH1F* DividTGraphs(TGraphAsymmErrors* gr1, TGraphAsymmErrors* gr2){
@@ -137,71 +137,20 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     eff2->SetMarkerColor(4);
     TString _legtext = "";
 
-    if(_canvas.Contains("/Loose_noIP_eta")){
+    if(_canvas.Contains("/PF_eta")){
     _legtext = "Loose Id, p_{T} #geq 20 GeV";
-    }else if(_canvas.Contains("/Loose_noIP_vtx_bin")){
+    }else if(_canvas.Contains("/PF_vtx_bin")){
     _legtext = "Loose Id, p_{T} #geq 20 GeV";
-    }else if(_canvas.Contains("/Loose_noIP_pt_alleta_bin")){
+    }else if(_canvas.Contains("/PF_pt_alleta_bin")){
     _legtext = "Loose Id, #||{#eta} #leq 2.4";
-    }else if(_canvas.Contains("/Loose_noIP_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
+    }else if(_canvas.Contains("/PF_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
     _legtext = "Loose Id, #||{#eta} #leq 1.2";
-    }else if(_canvas.Contains("/Loose_noIP_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
+    }else if(_canvas.Contains("/PF_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
     _legtext = "Loose Id, 1.2 < #||{#eta} #leq 2.4";
-    }else if(_canvas.Contains("/Tight_IP_eta")){
-    _legtext = "Tight Id, p_{T} #geq 20 GeV";
-    }else if(_canvas.Contains("/Tight_IP_vtx_bin")){
-    _legtext = "Tight Id, p_{T} #geq 20 GeV";
-    }else if(_canvas.Contains("/Tight_IP_pt_alleta_bin")){
-    _legtext = "Tight Id, #||{#eta} #leq 2.4";
-    }else if(_canvas.Contains("/Tight_IP_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
-    _legtext = "Tight Id, #||{#eta} #leq 1.2";
-    }else if(_canvas.Contains("/Tight_IP_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
-    _legtext = "Tight Id, 1.2 < #||{#eta} #leq 2.4";
-    }else if(_canvas.Contains("/LooseIso4_loose_eta")){
-    _legtext = "Loose Iso/Loose Id, p_{T} #geq 20 GeV";
-    }else if(_canvas.Contains("/LooseIso4_loose_vtx_bin")){
-    _legtext = "Loose Iso/Loose Id, p_{T} #geq 20 GeV";
-    }else if(_canvas.Contains("/LooseIso4_loose_pt_alleta_bin")){
-    _legtext = "Loose Iso/Loose Id, #||{#eta} #leq 2.4";
-    }else if(_canvas.Contains("/LooseIso4_loose_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
-    _legtext = "Loose Iso/Loose Id, #||{#eta} #leq 1.2";
-    }else if(_canvas.Contains("/LooseIso4_loose_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
-    _legtext = "Loose Iso/Loose Id, 1.2 < #||{#eta} #leq 2.4";
-    }else if(_canvas.Contains("/LooseIso4_tightip_eta")){
-    _legtext = "Loose Iso/Tight Id, p_{T} #geq 20 GeV";
-    }else if(_canvas.Contains("/LooseIso4_tightip_vtx_bin")){
-    _legtext = "Loose Iso/Tight Id, p_{T} #geq 20 GeV";
-    }else if(_canvas.Contains("/LooseIso4_tightip_pt_alleta_bin")){
-    _legtext = "Loose Iso/Tight Id, #||{#eta} #leq 2.4";
-    }else if(_canvas.Contains("/LooseIso4_tightip_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
-    _legtext = "Loose Iso/Tight Id, #||{#eta} #leq 1.2";
-    }else if(_canvas.Contains("/LooseIso4_tightip_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
-    _legtext = "Loose Iso/Tight Id, 1.2 < #||{#eta} #leq 2.4";
-    }else if(_canvas.Contains("/TightIso4_loose_eta")){
-    _legtext = "Tight Iso/Loose Id, p_{T} #geq 20 GeV";
-    }else if(_canvas.Contains("/TightIso4_loose_vtx_bin")){
-    _legtext = "Tight Iso/Loose Id, p_{T} #geq 20 GeV";
-    }else if(_canvas.Contains("/TightIso4_loose_pt_alleta_bin")){
-    _legtext = "Tight Iso/Loose Id, #||{#eta} #leq 2.4";
-    }else if(_canvas.Contains("/TightIso4_loose_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
-    _legtext = "Tight Iso/Loose Id, #||{#eta} #leq 1.2";
-    }else if(_canvas.Contains("/TightIso4_loose_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
-    _legtext = "Tight Iso/Loose Id, 1.2 < #||{#eta} #leq 2.4";
-    }else if(_canvas.Contains("/TightIso4_tightip_eta")){
-    _legtext = "Tight Iso/Tight Id, p_{T} #geq 20 GeV";
-    }else if(_canvas.Contains("/TightIso4_tightip_vtx_bin")){
-    _legtext = "Tight Iso/Tight Id, p_{T} #geq 20 GeV";
-    }else if(_canvas.Contains("/TightIso4_tightip_pt_alleta_bin")){
-    _legtext = "Tight Iso/Tight Id, #||{#eta} #leq 2.4";
-    }else if(_canvas.Contains("/TightIso4_tightip_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
-    _legtext = "Tight Iso/Tight Id, #||{#eta} #leq 1.2";
-    }else if(_canvas.Contains("/TightIso4_tightip_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
-    _legtext = "Tight Iso/Tight Id, 1.2 < #||{#eta} #leq 2.4";
     }else{
         std::cout<<"=============================="<<std::endl;
         std::cout<<"ERROR: No corresponding legend"<<std::endl;
         std::cout<<"=============================="<<std::endl;
-        //return 1;
     }
 
     TLegend* leg = new TLegend(0.45, 0.65, 0.75 , 0.85);
@@ -266,8 +215,8 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     //Write SF into file
     //_*_*_*_*_*_*_*_*_*
 
-    ofstream myfile;
-    myfile.open(_output + 
+    //ofstream myfile;
+    //myfile.open(_output + 
 
 
     return 0;

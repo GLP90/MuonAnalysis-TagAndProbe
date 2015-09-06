@@ -34,10 +34,9 @@ def save_canvas(_folder, _file, _folder_out):
                                 canvas  = key4.ReadObj()
                                 #print 'The name o_object is', _folder_out + '/' + key3.GetName() + '.pdf'
                                 _plot = key3.GetName()
-                                if _folder_out.find("_vtx_bin"):
-                                    _plot = _plot[_plot.find('tag_nVertices'):]
-                                    _plot = _plot[:_plot.find('tag_nVertices') + 19:]
-                                #canvas.SaveAs(_folder_out + '/' + key3.GetName() + '.pdf')
+                                #if _folder_out.find("_vtx_bin"):
+                                    #_plot = _plot[_plot.find('tag_nVertices'):]
+                                    #_plot = _plot[:_plot.find('tag_nVertices') + 19:]
                                 canvas.SaveAs(_folder_out + '/' + _plot + '.pdf')
                         r.gDirectory.cd("..")
                 r.gDirectory.cd("..")
@@ -56,6 +55,8 @@ mc_sample = "LO"
 if len(args) > 2: mc_sample =  args[2]
 print "The mc sample is ", mc_sample
 
+_folder = ''
+
 if scenario == 'data_all': _folder = os.getcwd() + '/Efficiency' + iteration + "/DATAeff" + "/"
 elif scenario == 'mc_all': _folder = os.getcwd() + '/Efficiency' + iteration + "/MC" + mc_sample + "eff" + "/"
 
@@ -69,8 +70,7 @@ if not os.path.exists(_folder + '/FitPlots'):
 dir = os.listdir(_folder)
 for file in dir:
     if file.find('TnP_MuonID') != -1:
-        if file.find("tightip_vtx_bin1_24") != -1:
-            save_canvas(_folder, file, _folder_out) 
+        save_canvas(_folder, file, _folder_out) 
 
 
 
