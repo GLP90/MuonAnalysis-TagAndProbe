@@ -56,10 +56,11 @@ mc_sample = "LO"
 if len(args) > 2: mc_sample =  args[2]
 print "The mc sample is ", mc_sample
 
+_folder =''
 if scenario == 'data_all': _folder = os.getcwd() + '/Efficiency' + iteration + "/DATAeff" + "/"
 elif scenario == 'mc_all': _folder = os.getcwd() + '/Efficiency' + iteration + "/MC" + mc_sample + "eff" + "/"
 
-print 'the folder is', _folder
+#print 'the folder is', _folder
     
 _folder_out = _folder +  'FitPlots/'
 print "folder_out is ", _folder_out
@@ -69,7 +70,7 @@ if not os.path.exists(_folder + '/FitPlots'):
 dir = os.listdir(_folder)
 for file in dir:
     if file.find('TnP_MuonID') != -1:
-        if file.find("tightip_vtx_bin1_24") != -1:
+        #if file.find("tightip_vtx_bin1_24") != -1:
             save_canvas(_folder, file, _folder_out) 
 
 

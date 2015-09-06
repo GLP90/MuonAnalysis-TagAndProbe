@@ -32,11 +32,11 @@ def save_canvas(_folder, _file, _folder_out):
                             if key4.GetName() == 'fit_canvas' and str(c4).find('TCanvas') != -1:
                                 #print 'gonna save the canvas'
                                 canvas  = key4.ReadObj()
-                                #print 'The name o_object is', _folder_out + '/' + key3.GetName() + '.pdf'
+                                #print 'The name of the folder out is', _folder_out + '/' + key3.GetName() + '.pdf'
                                 _plot = key3.GetName()
-                                if _folder_out.find("_vtx_bin"):
-                                    _plot = _plot[_plot.find('tag_nVertices'):]
-                                    _plot = _plot[:_plot.find('tag_nVertices') + 19:]
+                                #if _folder_out.find("_vtx_bin") == -1:
+                                    #_plot = _plot[_plot.find('tag_nVertices'):]
+                                    #_plot = _plot[:_plot.find('tag_nVertices') + 19:]
                                 #canvas.SaveAs(_folder_out + '/' + key3.GetName() + '.pdf')
                                 canvas.SaveAs(_folder_out + '/' + _plot + '.pdf')
                         r.gDirectory.cd("..")
