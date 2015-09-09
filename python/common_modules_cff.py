@@ -77,16 +77,14 @@ staToTkMatchNoJPsi = staToTkMatch.clone(matched = 'tkTracksNoJPsi')
 staToTkMatchNoBestJPsi = staToTkMatch.clone(matched = 'tkTracksNoBestJPsi')
 staToTkMatchNoZ = staToTkMatch.clone(matched = 'tkTracksNoZ')
 
+preTkMatchSequenceJPsi = cms.Sequence( pCutTracks + tkTracks + tkTracksNoJPsi + tkTracksNoBestJPsi )
 staToTkMatchSequenceJPsi = cms.Sequence(
-    pCutTracks + 
-    tkTracks           * staToTkMatch           +
-    tkTracksNoJPsi     * staToTkMatchNoJPsi     +
-    tkTracksNoBestJPsi * staToTkMatchNoBestJPsi 
+    preTkMatchSequenceJPsi * staToTkMatch * staToTkMatchNoJPsi * staToTkMatchNoBestJPsi     
 )
+
+preTkMatchSequenceZ = cms.Sequence( pCutTracks + tkTracks + tkTracksNoZ )
 staToTkMatchSequenceZ = cms.Sequence(
-    pCutTracks +
-    tkTracks    * staToTkMatch    +
-    tkTracksNoZ * staToTkMatchNoZ     
+    preTkMatchSequenceZ * staToTkMatch * staToTkMatchNoZ     
 )
 
 #########################################################################################
@@ -119,6 +117,34 @@ probeMuonsIsoSequence = cms.Sequence(
     ) * probeMuonsIsoValueMaps
 )
 
+muonMiniIsoCharged = cms.EDProducer("MuonMiniIso",
+    probes = cms.InputTag("probeMuons"),
+    pfCandidates = cms.InputTag("pfAllChargedHadronsPFBRECO"),
+    dRCandProbeVeto = cms.double(0.0001),
+    CandPtThreshold = cms.double(0.0),
+)
+
+muonMiniIsoPUCharged = cms.EDProducer("MuonMiniIso",
+    probes = cms.InputTag("probeMuons"),
+    pfCandidates = cms.InputTag("pfPileUpAllChargedParticlesPFBRECO"),
+    dRCandProbeVeto = cms.double(0.0001),
+    CandPtThreshold = cms.double(0.0),
+)
+
+muonMiniIsoNeutrals = cms.EDProducer("MuonMiniIso",
+    probes = cms.InputTag("probeMuons"),
+    pfCandidates = cms.InputTag("pfAllNeutralHadronsPFBRECO"),
+    dRCandProbeVeto = cms.double(0.01),
+    CandPtThreshold = cms.double(1.0),
+)
+
+muonMiniIsoPhotons = cms.EDProducer("MuonMiniIso",
+    probes = cms.InputTag("probeMuons"),
+    pfCandidates = cms.InputTag("pfAllPhotonsPFBRECO"),
+    dRCandProbeVeto = cms.double(0.01),
+    CandPtThreshold = cms.double(0.5),
+)
+
 
 #########################################################################################
 ##        Other modules                                                                ##
@@ -134,6 +160,18 @@ probeMultiplicity = cms.EDProducer("ProbeMulteplicityProducer",
    #pairCut  = cms.string(""),  # count only probes whose pairs satisfy this cut
    #probeCut = cms.string(""),  # count only probes satisfying this cut
 )
+probeMultiplicityTMGM = cms.EDProducer("ProbeMulteplicityProducer",
+   pairs = cms.InputTag("tpPairs"),
+   #pairCut  = cms.string(""),  # count only probes whose pairs satisfy this cut
+   probeCut = cms.string("isTrackerMuon || isGlobalMuon"),  # count only probes satisfying this cut
+)
+probeMultiplicityPt10M60140 = cms.EDProducer("ProbeMulteplicityProducer",
+   pairs = cms.InputTag("tpPairs"),
+   pairCut  = cms.string("mass > 60 && mass < 140"),  # count only probes whose pairs satisfy this cut
+   probeCut = cms.string("pt > 10"),  # count only probes satisfying this cut
+)
+probeMultiplicities = cms.Sequence(probeMultiplicity  + probeMultiplicityTMGM + probeMultiplicityPt10M60140)
+
 
 bestPairByZMass = cms.EDProducer("BestPairByMass",
     pairs = cms.InputTag("tpPairs"),
@@ -161,9 +199,19 @@ newTunePVals = cms.EDProducer("HighPtMuonsInfo",
     src = cms.InputTag("tpPairs"),
 )
 
+genWeightInfo = cms.EDProducer("GenWeightInfo",
+    pairTag= cms.InputTag("tpPairs"),
+    genInfoTag= cms.InputTag("generator")
+)
+
 l1hltprescale = cms.EDProducer("ComputeL1HLTPrescales",
     probes = cms.InputTag("tagMuons"),
     hltConfig = cms.string("HLT"),
     hltPaths = cms.vstring("HLT_Mu17_v", "HLT_Mu8_v"),
+)
+
+goodGenMuons = cms.EDFilter("GenParticleSelector",
+    src = cms.InputTag("genParticles"),
+    cut = cms.string("abs(pdgId) == 13 && pt > 3 && abs(eta) < 2.4 && status == 1 && isPromptFinalState")
 )
 
