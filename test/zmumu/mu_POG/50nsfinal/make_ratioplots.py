@@ -53,23 +53,38 @@ def getparameter(_file):
 
 import sys, os
 args = sys.argv[1:]
-comparison = 'mcdata'
-if len(args) > 0: comparison =  args[0]
+
 iteration = '1'
-if len(args) > 1: iteration =  args[1]
-bspace = '50nsB'
-if len(args) > 1: bspace = args[2]
-print 'bspace is', bspace
-#mcOrder = 'LO'
-mcOrder = 'NLO'
-#mcOrder = 'LONLO'
-if len(args) > 2: mcOrder = args[3]
-print 'mcOrder is', mcOrder 
+if len(args) > 0: iteration =  args[0]
+print 'iteration is', iteration
+scenario1 = 'DATA'
+if len(args) > 1: scenario1 =  args[1]
+print 'scenario1 is', scenario1 
+bspace1 = '50ns'
+if len(args) > 2: bspace1 = args[2]
+print 'bspace1 is', bspace1
+run1 = '2015B'
+if len(args) > 3: run1 = args[3]
+print 'run1 is', run1 
+order1 = ''
+if len(args) > 4 and scenario1 == 'MC': order1 = args[4]
+print 'order1 is', order1 
+scenario2 = 'DATA'
+if len(args) > 5: scenario2 =  args[5]
+print 'scenario2 is', scenario2 
+bspace2 = '50ns'
+if len(args) > 6: bspace2 = args[6]
+print 'bspace2 is', bspace2
+run2 = '2015B'
+if len(args) > 7: run2 = args[7]
+print 'run2 is', run2 
+order2 = ''
+if len(args) > 8 and scenario2 == 'MC': order2 = args[8]
+print 'order2 is', order2 
+
 _output = os.getcwd() + '/RatioPlots' + iteration
 if not os.path.exists(_output): 
     os.makedirs(_output)
-if comparison == 'mcdata': _output += "/DATA_MC" + bspace + mcOrder + "/"
-elif comparison == 'mcmc': _output += "/MC_MC" + bspace + mcOrder + "/"
 print '_output is ', _output
 if not os.path.exists(_output):
     os.makedirs(_output)
@@ -79,38 +94,19 @@ debug = True
 
 inputeff = os.getcwd() + "/Efficiency" + iteration 
 
-_path1 = ''
-_path2 = ''
+_path1 = os.getcwd() + "/Efficiency" + iteration + '/' + scenario1 + bspace1 + run1 + order1 + '/'
+_path2 = os.getcwd() + "/Efficiency" + iteration + '/' + scenario2 + bspace2 + run2 + order2 + '/'
 
-if comparison == 'mcdata':
-    if bspace == '50nsB':
-        if mcOrder == 'LO':
-            _path1 = os.getcwd() + "/Efficiency" + iteration + '/DATA50nsBeff/'
-            _path2 = os.getcwd() + "/Efficiency" + iteration + '/MC50nsLO/'
-        elif mcOrder == 'NLO':
-            _path1 = os.getcwd() + "/Efficiency" + iteration + '/DATA50nsBeff/'
-            _path2 = os.getcwd() + "/Efficiency" + iteration + '/MC50nsNLO/'
-    if bspace == '50nsC':
-        if mcOrder == 'LO':
-            _path1 = os.getcwd() + "/Efficiency" + iteration + '/DATA50nsCeff/'
-            _path2 = os.getcwd() + "/Efficiency" + iteration + '/MC50nsLO/'
-        elif mcOrder == 'NLO':
-            _path1 = os.getcwd() + "/Efficiency" + iteration + '/DATA50nsCeff/'
-            _path2 = os.getcwd() + "/Efficiency" + iteration + '/MC50nsNLO/'
-    elif bspace == '25ns':
-        if mcOrder == 'LO':
-            _path1 = os.getcwd() + "/Efficiency" + iteration + '/DATA25nseff/'
-            _path2 = os.getcwd() + "/Efficiency" + iteration + '/MC25nsLO/'
-        elif mcOrder == 'NLO':
-            _path1 = os.getcwd() + "/Efficiency" + iteration + '/DATA25nseff/'
-            _path2 = os.getcwd() + "/Efficiency" + iteration + '/MC25nsNLO/'
-elif comparison == 'mcmc':
-    if bspace.find('50ns') != -1:
-            _path1 = os.getcwd() + "/Efficiency" + iteration + '/MC50nsLO/'
-            _path2 = os.getcwd() + "/Efficiency" + iteration + '/MC50nsNLO/'
-    elif bspace.find('25ns') != -1:
-            _path1 = os.getcwd() + "/Efficiency" + iteration + '/MC25nsLO/'
-            _path2 = os.getcwd() + "/Efficiency" + iteration + '/MC25nsNLO/'
+comparison = 'mcdata'
+if scenario1 == scenario2 and scenario1 == 'DATA': comparison = 'mcdata'
+elif scenario1 == scenario2 and scenario1 == 'MC': comparison = 'mcmc'
+
+_output += '/' + scenario1 + bspace1 + run1 + order1 + '_' + scenario2 + bspace2 + run2 + order2 +'/'
+if not os.path.exists(_output): 
+    os.makedirs(_output)
+print '_output is ', _output
+if not os.path.exists(_output):
+    os.makedirs(_output)
 
 print 'path1 is', _path1
 print 'path2 is', _path2

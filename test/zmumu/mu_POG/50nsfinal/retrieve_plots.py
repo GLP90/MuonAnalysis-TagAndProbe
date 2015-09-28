@@ -45,28 +45,28 @@ def save_canvas(_folder, _file, _folder_out):
 
 import sys, os
 args = sys.argv[1:]
-scenario = "data_all"
+#scenario = "data_all"
 #scenario = "mc_all"
-if len(args) > 0: scenario = args[0]
-print "The scenario is ", scenario 
-iteration = '1'
-if len(args) > 1: iteration =  args[1]
+#if len(args) > 0: scenario = args[0]
+#print "The scenario is ", scenario 
+iteration = '2'
+if len(args) > 0: iteration =  args[0]
 print "The iteration is ", iteration
-data_sample = "25ns"
+#data_sample = "25ns"
 #data_sample = "50nsC"
 #data_sample = "50nsB"
-if len(args) > 2: data_sample =  args[2]
-print "The data sample is ", data_sample
+#if len(args) > 2: data_sample =  args[2]
+#print "The data sample is ", data_sample
 
-_folder =''
-if scenario == 'data_all':
-    if data_sample == "25ns":
-        _folder = os.getcwd() + '/Efficiency' + iteration + '/DATA25nseff/'
-    elif data_sample == "50nsC":
-        _folder = os.getcwd() + '/Efficiency' + iteration + '/DATA50nsCeff/'
-    elif data_sample == "50nsB":
-        _folder = os.getcwd() + '/Efficiency' + iteration + '/DATA50nsBeff/'
-elif scenario == 'mc_all': _folder = os.getcwd() + '/Efficiency' + iteration + '/MC25ns/'
+#_sample = '/DATA50ns2015B/'
+_sample = '/DATA50ns2015C/'
+#_sample = '/MC50ns2015BNLO/'
+#_sample = '/MC50ns2015BLO/'
+#_sample = '/MC50ns2015CNLO/'
+#_sample = '/MC50ns2015CLO/'
+
+_folder = ''
+_folder = os.getcwd() + '/Efficiency' + iteration + _sample
 
 _folder_out = _folder +  'FitPlots/'
 print "folder_out is ", _folder_out

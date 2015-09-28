@@ -230,6 +230,25 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     header->SetTextColor(1);
     header->SetTextFont(43);
     header->SetTextSize(20);
+    TString _leg1 = "";
+    TString _leg2 = "";
+    if(_path1.Contains("DATA")) _leg1 = "data";
+    else if(_path1.Contains("MC")){ 
+        if(_path1.Contains("NLO")) _leg1 = "MC NLO"; 
+        else if(_path1.Contains("LO")) _leg1 = "MC LO";
+    }
+    
+    if(_path2.Contains("DATA")) _leg2 = "data";
+    else if(_path2.Contains("MC")){ 
+        if(_path2.Contains("NLO")) _leg2 = "MC NLO";
+        else if(_path2.Contains("LO")) _leg2 = "MC LO";
+    }
+    
+
+    leg->AddEntry(eff1, _leg1, "LP");
+    leg->AddEntry(eff2, _leg2,"LP");
+    
+    /*
     if (comparison == "mcdata"){
     leg->AddEntry(eff1, "Data", "LP");
     leg->AddEntry(eff2, "MC","LP");
@@ -238,6 +257,7 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     leg->AddEntry(eff1, "LO", "LP");
     leg->AddEntry(eff2, "NLO","LP");
     } 
+    */
     leg->SetBorderSize(0.);
     leg->SetTextFont(43);
     leg->SetTextSize(20);
