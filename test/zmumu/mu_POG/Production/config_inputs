@@ -1,0 +1,3 @@
+#25ns 2015C
+config.General.requestName = 'DATA_25ns'
+config.General.workArea = 'crab_tnp_2015B_25ns'
