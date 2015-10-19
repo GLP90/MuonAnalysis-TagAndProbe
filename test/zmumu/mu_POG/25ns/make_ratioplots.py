@@ -38,14 +38,15 @@ def getplotpath(_file, _path, _tptree):
     return CANVAS
 
 def getparameter(_file):
-
     _par = [] 
     if _file.find('_eta') != -1: _par.append('eta_PLOT')
     elif _file.find('pt_alleta') != -1: _par.append('pt_PLOT')
     elif _file.find('pt_spliteta') != -1: 
         _par.append('pt_PLOT_abseta_bin0')
         _par.append('pt_PLOT_abseta_bin1')
+    elif _file.find('pt_highabseta') != -1:_par.append('pt_PLOT')
     elif _file.find('_vtx') != -1: _par.append('tag_nVertices_PLOT')
+    elif _file.find('_phi') != -1: _par.append('phi_PLOT')
     else: 
         print "@ERROR: parameter not found !"
         sys.exit()
@@ -53,6 +54,8 @@ def getparameter(_file):
 
 import sys, os
 args = sys.argv[1:]
+
+print 'starting making ratio plots'
 
 iteration = '1'
 if len(args) > 0: iteration =  args[0]
@@ -85,7 +88,7 @@ print 'order2 is', order2
 _output = os.getcwd() + '/RatioPlots' + iteration
 if not os.path.exists(_output): 
     os.makedirs(_output)
-print '_output is ', _output
+#print '_output is ', _output
 if not os.path.exists(_output):
     os.makedirs(_output)
 
@@ -104,25 +107,26 @@ elif scenario1 == scenario2 and scenario1 == 'MC': comparison = 'mcmc'
 _output += '/' + scenario1 + bspace1 + run1 + order1 + '_' + scenario2 + bspace2 + run2 + order2 +'/'
 if not os.path.exists(_output): 
     os.makedirs(_output)
-print '_output is ', _output
+#print '_output is ', _output
 if not os.path.exists(_output):
     os.makedirs(_output)
 
-print 'path1 is', _path1
-print 'path2 is', _path2
+#print 'path1 is', _path1
+#print 'path2 is', _path2
 _tptree = 'tpTree'
 
 ##!! Get the list of files
 dir = os.listdir(_path1)
 for file in dir:
     #print 'the file is ', file
-    if file.find('TnP_MuonID') != -1:
+    if file.find('TnP_MuonID') != -1: 
         if not os.path.isfile(_path2 + '/' + file):
             if debug: print 'The file ', file, 'doesn\'t exist in ', _path2
             continue
         else:
             if debug: print 'The file', file, 'exists !'
             CANVAS = getplotpath( file, _path1, _tptree)
+            print "hello"
             print "CANVAS is", CANVAS
             for _canvas in CANVAS:
                 print 'will retrieve the canvas ', _canvas

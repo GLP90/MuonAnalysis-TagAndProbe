@@ -118,8 +118,9 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     eff1->GetXaxis()->SetLabelSize(0);
     TString _xtitle = eff1->GetXaxis()->GetTitle();
     if(_xtitle.Contains("tag_nVertices")){_xtitle = "N(primary vertices)";
-    }else if (_xtitle.Contains("eta")){_xtitle = "muon #eta";
-    }else if (_xtitle.Contains("pt")){_xtitle = "muon p_{t} [GeV]";}
+    }else if (_xtitle.Contains("phi")){_xtitle = "muon #phi";}
+    else if (_xtitle.Contains("eta")){_xtitle = "muon #eta";}
+    else if (_xtitle.Contains("pt")){_xtitle = "muon p_{t} [GeV]";}
     eff1->GetXaxis()->SetTitle(_xtitle);
     TString _title = eff1->GetXaxis()->GetTitle();
     eff1->GetXaxis()->SetTitle("");
@@ -149,14 +150,24 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
         _legtext = "Loose Id, 1.2 < #||{#eta} #leq 2.4";
     }else if(_canvas.Contains("/Medium_noIP_eta")){
         _legtext = "Medium Id, p_{T} #geq 20 GeV";
-    }else if(_canvas.Contains("/Medium_noIP_vtx_bin")){
+    }else if(_canvas.Contains("/Medium_noIP_vtx")){
+        if(_canvas.Contains("/Medium_noIP_vtx_bin_vtx_highabseta")){
+        _legtext = "Medium Id, p_{T} #geq 20 GeV, #||{#eta} #geq 2.1";
+        }else if(_canvas.Contains("/Medium_noIP_vtx_bin")){
         _legtext = "Medium Id, p_{T} #geq 20 GeV";
+        }
     }else if(_canvas.Contains("/Medium_noIP_pt_alleta_bin")){
         _legtext = "Medium Id, #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/Medium_noIP_phi_loweta")){
+        _legtext = "Medium Id, -2.4 #leq #eta #leq -2.1";
+    }else if(_canvas.Contains("/Medium_noIP_phi_higheta")){
+        _legtext = "Medium Id, 2.1 #leq #eta #leq 2.4";
     }else if(_canvas.Contains("/Medium_noIP_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
         _legtext = "Medium Id, #||{#eta} #leq 1.2";
     }else if(_canvas.Contains("/Medium_noIP_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
         _legtext = "Medium Id, 1.2 < #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/Medium_noIP_pt_highabseta")){
+        _legtext = "Medium Id, p_{T} #geq 20 GeV, #||{#eta} #geq 2.1";
     }else if(_canvas.Contains("/Tight2012_zIPCut_eta")){
         _legtext = "Tight Id, p_{T} #geq 20 GeV";
     }else if(_canvas.Contains("/Tight2012_zIPCut_vtx_bin")){
@@ -217,6 +228,16 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
         _legtext = "Tight Iso/Tight Id, #||{#eta} #leq 1.2";
     }else if(_canvas.Contains("/TightIso4_tightip_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
         _legtext = "Tight Iso/Tight Id, 1.2 < #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/TightIso4_medium_eta")){
+        _legtext = "Loose Iso/Medium Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/TightIso4_medium_vtx_bin")){
+        _legtext = "Loose Iso/Medium Id, p_{T} #geq 20 GeV";
+    }else if(_canvas.Contains("/TightIso4_medium_pt_alleta_bin")){
+        _legtext = "Loose Iso/Medium Id, #||{#eta} #leq 2.4";
+    }else if(_canvas.Contains("/TightIso4_medium_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin0")){
+        _legtext = "Loose Iso/Medium Id, #||{#eta} #leq 1.2";
+    }else if(_canvas.Contains("/TightIso4_medium_pt_spliteta_bin") && _canvas.Contains("pt_PLOT_abseta_bin1")){
+        _legtext = "Loose Iso/Medium Id, 1.2 < #||{#eta} #leq 2.4";
     }else{
         std::cout<<"=============================="<<std::endl;
         std::cout<<"ERROR: No corresponding legend"<<std::endl;
