@@ -19,7 +19,7 @@ run = '2015D'
 if len(args) > 3: 
     run  = args[3]
 print 'run is', run
-id_bins = '1'
+id_bins = '9'
 if len(args) > 4: 
     id_bins = args[4]
 print 'id_bins is', id_bins
@@ -32,24 +32,6 @@ if len(args) > 5:
 print 'order is', order
 
 #scenario = "mc_all"
-'''
-#scenario = "mc_all"
-if len(args) > 0: scenario = args[0]
-print "Will run scenario ", scenario 
-sample = "LO"
-#sample = "NLO"
-#sample = "25ns"
-#sample = "50nsC"
-#sample = "50nsB"
-if len(args) > 1: 
-    sample = args[1]
-print 'sample is', sample 
-id_bins = '1'
-if len(args) > 2: 
-    id_bins = args[2]
-print 'id_bins is', id_bins
-'''
-
 
 process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
@@ -144,6 +126,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 #Denominators and Binning
 #_*_*_*_*_*_*_*_*_*_*_*_*
 #For ID
+
 ETA_BINS = cms.PSet(
     pt  = cms.vdouble(20, 500),
     eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
@@ -164,16 +147,7 @@ VTX_BINS_ETA24  = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 PT_ALLETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 50, 60, 80),
-    abseta = cms.vdouble(  0.0, 2.4),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
-PT_ALLETA_BINS2 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 55, 80),
+    pt     = cms.vdouble(20, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
@@ -182,7 +156,7 @@ PT_ALLETA_BINS2 = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 PT_ETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 50, 60, 80),
+    pt     = cms.vdouble(20, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 1.2, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
@@ -191,9 +165,40 @@ PT_ETA_BINS1 = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
     
 )
-PT_ETA_BINS2 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 55, 80),
-    abseta = cms.vdouble(  0.0, 1.2, 2.4),
+#Additional study for Medium ID (in selected eta region)
+PHI_LOWETA = cms.PSet(
+    pt     = cms.vdouble(20, 500),
+    eta = cms.vdouble(-2.4, -2.1),
+    phi =  cms.vdouble(-3.1416, -2.618, -2.0944, -1.5708, -1.0472, -0.5236, 0, 0.5236, 1.0472, 1.5708, 2.0944, 2.618, 3.1416),
+    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+    #tag selections
+    tag_pt = cms.vdouble(21, 500),
+    tag_IsoMu20 = cms.vstring("pass"), 
+    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
+)
+PHI_HIGHETA = cms.PSet(
+    pt     = cms.vdouble(20, 500),
+    eta = cms.vdouble(2.1, 2.4),
+    phi =  cms.vdouble(-3.1416, -2.618, -2.0944, -1.5708, -1.0472, -0.5236, 0, 0.5236, 1.0472, 1.5708, 2.0944, 2.618, 3.1416),
+    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+    #tag selections
+    tag_pt = cms.vdouble(21, 500),
+    tag_IsoMu20 = cms.vstring("pass"), 
+    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
+)
+PT_HIGHABSETA = cms.PSet(
+    pt     = cms.vdouble(20, 30, 40, 50, 60, 80, 120, 200),
+    abseta = cms.vdouble(2.1, 2.4),
+    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+    #tag selections
+    tag_pt = cms.vdouble(21, 500),
+    tag_IsoMu20 = cms.vstring("pass"), 
+    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
+)
+VTX_HIGHABSETA  = cms.PSet(
+    pt     = cms.vdouble( 20, 500 ),
+    abseta = cms.vdouble(2.1, 2.4),
+    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
     tag_pt = cms.vdouble(21, 500),
@@ -224,17 +229,7 @@ LOOSE_VTX_BINS_ETA24  = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 LOOSE_PT_ALLETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 50, 60, 80),
-    abseta = cms.vdouble(  0.0, 2.4),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    PF = cms.vstring("pass"), 
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
-LOOSE_PT_ALLETA_BINS2 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 55, 80),
+    pt     = cms.vdouble(20, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     PF = cms.vstring("pass"), 
@@ -244,7 +239,7 @@ LOOSE_PT_ALLETA_BINS2 = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 LOOSE_PT_ETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 50, 60, 80),
+    pt     = cms.vdouble(20, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 1.2, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     PF = cms.vstring("pass"), 
@@ -253,16 +248,6 @@ LOOSE_PT_ETA_BINS1 = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
     
-)
-LOOSE_PT_ETA_BINS2 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 55, 80),
-    abseta = cms.vdouble(  0.0, 1.2, 2.4),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    PF = cms.vstring("pass"), 
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 #MEDIUM
 MEDIUM_ETA_BINS = cms.PSet(
@@ -287,17 +272,7 @@ MEDIUM_VTX_BINS_ETA24  = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 MEDIUM_PT_ALLETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 50, 60, 80),
-    abseta = cms.vdouble(  0.0, 2.4),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    Medium = cms.vstring("pass"), 
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
-MEDIUM_PT_ALLETA_BINS2 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 55, 80),
+    pt     = cms.vdouble(20, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     Medium = cms.vstring("pass"), 
@@ -307,7 +282,7 @@ MEDIUM_PT_ALLETA_BINS2 = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 MEDIUM_PT_ETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 50, 60, 80),
+    pt     = cms.vdouble(20, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 1.2, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     Medium = cms.vstring("pass"), 
@@ -316,16 +291,6 @@ MEDIUM_PT_ETA_BINS1 = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
     
-)
-MEDIUM_PT_ETA_BINS2 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 55, 80),
-    abseta = cms.vdouble(  0.0, 1.2, 2.4),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    Medium = cms.vstring("pass"), 
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 #TIGHT
 TIGHT_ETA_BINS = cms.PSet(
@@ -352,18 +317,7 @@ TIGHT_VTX_BINS_ETA24  = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 TIGHT_PT_ALLETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 50, 60, 80),
-    abseta = cms.vdouble(  0.0, 2.4),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    Tight2012 = cms.vstring("pass"), 
-    dzPV = cms.vdouble(-0.5, 0.5),
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
-TIGHT_PT_ALLETA_BINS2 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 55, 80),
+    pt     = cms.vdouble(20, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     Tight2012 = cms.vstring("pass"), 
@@ -374,7 +328,7 @@ TIGHT_PT_ALLETA_BINS2 = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 TIGHT_PT_ETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 50, 60, 80),
+    pt     = cms.vdouble(20, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 1.2, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     Tight2012 = cms.vstring("pass"), 
@@ -385,18 +339,6 @@ TIGHT_PT_ETA_BINS1 = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
     
 )
-TIGHT_PT_ETA_BINS2 = cms.PSet(
-    pt     = cms.vdouble(20, 30, 40, 55, 80),
-    abseta = cms.vdouble(  0.0, 1.2, 2.4),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    Tight2012 = cms.vstring("pass"), 
-    dzPV = cms.vdouble(-0.5, 0.5),
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
-
 if scenario == 'data_all':
     if bs == '25ns':
         if run == '2015C':
@@ -508,7 +450,7 @@ elif scenario == 'mc_all':
                 if order== 'LO':
                     process.TnP_MuonID = Template.clone(
                     InputFileNames = cms.vstring(
-                        '/afs/cern.ch/work/g/gaperrin/private/TnP/TnP_v3/CMSSW_7_4_10/src/MuonAnalysis/TagAndProbe/test/zmumu/mu_POG/25ns/tnpZ_MC_25ns_madgraphMLM-pythia8_v3_withNVtxWeights_SmallTree.root'
+                        '/afs/cern.ch/work/g/gaperrin/private/TnP/TnP_v3/CMSSW_7_4_10/src/MuonAnalysis/TagAndProbe/test/zmumu/mu_POG/25ns/tnpZ_MC_25ns_madgraphMLM-pythia8_v3_SmallTree_withNVtxWeights.root'
                         ),
                     InputTreeName = cms.string("fitter_tree"),
                     InputDirectoryName = cms.string("tpTree"),
@@ -520,7 +462,7 @@ elif scenario == 'mc_all':
                 elif order == 'NLO':
                     process.TnP_MuonID = Template.clone(
                     InputFileNames = cms.vstring(
-                    '/afs/cern.ch/work/g/gaperrin/private/TnP/TnP_v3/CMSSW_7_4_10/src/MuonAnalysis/TagAndProbe/test/zmumu/mu_POG/25ns/tnpZ_MC_25ns_amcatnloFXFX-pythia8_v3_withNVtxWeights_SmallTree_WithWeights.root'
+                    '/afs/cern.ch/work/g/gaperrin/private/TnP/TnP_v3/CMSSW_7_4_10/src/MuonAnalysis/TagAndProbe/test/zmumu/mu_POG/25ns/tnpZ_MC_25ns_amcatnloFXFX-pythia8_SmallTree_withNVtxWeights_WithWeights.root'
                         ),
                     InputTreeName = cms.string("fitter_tree"),
                     InputDirectoryName = cms.string("tpTree"),
@@ -541,9 +483,7 @@ if id_bins == '1':
     (("Loose_noIP"), ("eta", ETA_BINS)),
     (("Loose_noIP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
     (("Loose_noIP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
-    #(("Loose_noIP"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
     (("Loose_noIP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
-    #(("Loose_noIP"), ("pt_spliteta_bin2", PT_ETA_BINS2))
     ]
 #Medium ID
 if id_bins == '2':
@@ -551,9 +491,7 @@ if id_bins == '2':
     (("Medium_noIP"), ("eta", ETA_BINS)),
     (("Medium_noIP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
     (("Medium_noIP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
-    #(("Medium_noIP"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
     (("Medium_noIP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
-    #(("Medium_noIP"), ("pt_spliteta_bin2", PT_ETA_BINS2))
     ]
 #Tight ID
 if id_bins == '3':
@@ -561,9 +499,16 @@ if id_bins == '3':
     (("Tight2012_zIPCut"), ("eta", ETA_BINS)),
     (("Tight2012_zIPCut"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
     (("Tight2012_zIPCut"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
-    #(("Tight2012_zIPCut"), ("pt_alleta_bin2", PT_ALLETA_BINS2)),
     (("Tight2012_zIPCut"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
-    #(("Tight2012_zIPCut"), ("pt_spliteta_bin2", PT_ETA_BINS2))
+    ]
+#Additional studies on Medium ID (in selected eta region)
+#Medium ID
+if id_bins == '9':
+    ID_BINS = [
+    (("Medium_noIP"), ("phi_loweta", PHI_LOWETA)),
+    (("Medium_noIP"), ("phi_higheta", PHI_HIGHETA )),
+    (("Medium_noIP"), ("pt_highabseta", PT_HIGHABSETA)),
+    (("Medium_noIP"), ("vtx_highabseta", VTX_HIGHABSETA)),
     ]
 #_*_*_*_*_*_*_*_*_*_*
 #ISOs
@@ -574,27 +519,21 @@ if id_bins == '4':
     (("LooseIso4"), ("loose_eta", LOOSE_ETA_BINS)),
     (("LooseIso4"), ("loose_vtx_bin1_24", LOOSE_VTX_BINS_ETA24 )),
     (("LooseIso4"), ("loose_pt_alleta_bin1", LOOSE_PT_ALLETA_BINS1)),
-    #(("LooseIso4"), ("loose_pt_alleta_bin2", LOOSE_PT_ALLETA_BINS2)),
     (("LooseIso4"), ("loose_pt_spliteta_bin1", LOOSE_PT_ETA_BINS1)),
-    #(("LooseIso4"), ("loose_pt_spliteta_bin2", LOOSE_PT_ETA_BINS2))
     ]
 if id_bins == '5':
     ID_BINS = [
     (("LooseIso4"), ("medium_eta", MEDIUM_ETA_BINS)),
     (("LooseIso4"), ("medium_vtx_bin1_24", MEDIUM_VTX_BINS_ETA24 )),
     (("LooseIso4"), ("medium_pt_alleta_bin1", MEDIUM_PT_ALLETA_BINS1)),
-    #(("LooseIso4"), ("medium_pt_alleta_bin2", MEDIUM_PT_ALLETA_BINS2)),
     (("LooseIso4"), ("medium_pt_spliteta_bin1", MEDIUM_PT_ETA_BINS1)),
-    #(("LooseIso4"), ("medium_pt_spliteta_bin2", MEDIUM_PT_ETA_BINS2))
     ]
 if id_bins == '6':
     ID_BINS = [
     (("LooseIso4"), ("tightip_eta", TIGHT_ETA_BINS)),
     (("LooseIso4"), ("tightip_vtx_bin1_24", TIGHT_VTX_BINS_ETA24 )),
     (("LooseIso4"), ("tightip_pt_alleta_bin1", TIGHT_PT_ALLETA_BINS1)),
-    #(("LooseIso4"), ("tightip_pt_alleta_bin2", TIGHT_PT_ALLETA_BINS2)),
     (("LooseIso4"), ("tightip_pt_spliteta_bin1", TIGHT_PT_ETA_BINS1)),
-    #(("LooseIso4"), ("tightip_pt_spliteta_bin2", TIGHT_PT_ETA_BINS2))
     ]
 #Tight Iso
 if id_bins == '7':
@@ -602,24 +541,20 @@ if id_bins == '7':
     (("TightIso4"), ("tightip_eta", TIGHT_ETA_BINS)),
     (("TightIso4"), ("tightip_vtx_bin1_24", TIGHT_VTX_BINS_ETA24 )),
     (("TightIso4"), ("tightip_pt_alleta_bin1", TIGHT_PT_ALLETA_BINS1)),
-    #(("TightIso4"), ("tightip_pt_alleta_bin2", TIGHT_PT_ALLETA_BINS2)),
     (("TightIso4"), ("tightip_pt_spliteta_bin1", TIGHT_PT_ETA_BINS1)),
-    #(("TightIso4"), ("tightip_pt_spliteta_bin2", TIGHT_PT_ETA_BINS2))
     ]
 if id_bins == '8':
     ID_BINS = [
     (("TightIso4"), ("medium_eta", MEDIUM_ETA_BINS)),
     (("TightIso4"), ("medium_vtx_bin1_24", MEDIUM_VTX_BINS_ETA24 )),
     (("TightIso4"), ("medium_pt_alleta_bin1", MEDIUM_PT_ALLETA_BINS1)),
-    #(("TightIso4"), ("medium_pt_alleta_bin2", MEDIUM_PT_ALLETA_BINS2)),
     (("TightIso4"), ("medium_pt_spliteta_bin1", MEDIUM_PT_ETA_BINS1)),
-    #(("TightIso4"), ("medium_pt_spliteta_bin2", MEDIUM_PT_ETA_BINS2))
     ]
 
 for ID, ALLBINS in ID_BINS:
     X = ALLBINS[0]
     B = ALLBINS[1]
-    _output = os.getcwd() + '/Efficiency3'
+    _output = os.getcwd() + '/Efficiency4'
     if not os.path.exists(_output):
         print 'Creating Efficiency directory where the fits are stored'  
         os.makedirs(_output)
