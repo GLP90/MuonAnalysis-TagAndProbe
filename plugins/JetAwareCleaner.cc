@@ -110,10 +110,8 @@ const edm::EventSetup & iSetup) const {
   for(unsigned int ij=0;ij<jets->size();ij++) {
     reco::PFJetRef jet(jets,ij);
     
-    // double jecL1L2L3Res = correctorL1L2L3Res->correction(jet->p4());
-    // double jecL1 = correctorL1->correction(jet->p4());
-    double jecL1L2L3Res = 1;
-    double jecL1 = 1;
+    double jecL1L2L3Res = correctorL1L2L3Res->correction(*jet);
+    double jecL1 = correctorL1->correction(*jet);
     
     reco::Candidate::LorentzVector p4J=jet->p4();
     bool mlep=false;
@@ -124,6 +122,7 @@ const edm::EventSetup & iSetup) const {
         if( (p4J-(*leptons)[it->first].p4()).Rho()<dRCandProbeVeto_ ) { p4J=(*leptons)[it->first].p4(); break;} //protection against jets built only with a lepton
         p4J -= (*leptons)[it->first].p4()/jecL1;
         p4J *= jecL1L2L3Res;
+        p4J += (*leptons)[it->first].p4();
         break;
       }
     }//matched lepton loop
