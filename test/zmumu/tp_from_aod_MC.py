@@ -19,7 +19,7 @@ process.load("Configuration.StandardSequences.Reconstruction_cff")
 
 import os
 if "CMSSW_7_4_" in os.environ['CMSSW_VERSION']:
-    process.GlobalTag.globaltag = cms.string('MCRUN2_74_V7')
+    process.GlobalTag.globaltag = cms.string('MCRUN2_74_V9')
     process.source.fileNames = [
         #50 ns MC 13 TeV LO MAdgraph
         '/store/mc/RunIISpring15DR74/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v1/40000/005FF8BC-B134-E511-9458-0002C92958E8.root'
@@ -137,11 +137,17 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
         dxyBS = cms.InputTag("muonDxyPVdzmin","dxyBS"),
         dxyPVdzmin = cms.InputTag("muonDxyPVdzmin","dxyPVdzmin"),
         dzPV = cms.InputTag("muonDxyPVdzmin","dzPV"),
+        PtRatio= cms.InputTag("AddPtRatioPtRel","PtRatio"),
+        PtRel= cms.InputTag("AddPtRatioPtRel","PtRel"),
         radialIso = cms.InputTag("radialIso"), 
-        miniIsoCharged = cms.InputTag("muonMiniIsoCharged"), 
-        miniIsoPUCharged = cms.InputTag("muonMiniIsoPUCharged"), 
-        miniIsoNeutrals = cms.InputTag("muonMiniIsoNeutrals"), 
-        miniIsoPhotons = cms.InputTag("muonMiniIsoPhotons"), 
+        miniIsoCharged = cms.InputTag("muonMiniIsoCharged","miniIso"), 
+        activity_miniIsoCharged = cms.InputTag("muonMiniIsoCharged","activity"), 
+        miniIsoPUCharged = cms.InputTag("muonMiniIsoPUCharged","miniIso"), 
+        activity_miniIsoPUCharged = cms.InputTag("muonMiniIsoPUCharged","activity"), 
+        miniIsoNeutrals = cms.InputTag("muonMiniIsoNeutrals","miniIso"), 
+        activity_miniIsoNeutrals = cms.InputTag("muonMiniIsoNeutrals","activity"), 
+        miniIsoPhotons = cms.InputTag("muonMiniIsoPhotons","miniIso"), 
+        activity_miniIsoPhotons = cms.InputTag("muonMiniIsoPhotons","activity"), 
         nSplitTk  = cms.InputTag("splitTrackTagger"),
     ),
     flags = cms.PSet(
@@ -221,13 +227,19 @@ process.miniIsoSeq = cms.Sequence(
     process.muonMiniIsoPhotons 
 )
 
+# process.load("JetMETCorrections.Configuration.JetCorrectionProducersAllAlgos_cff")
+# process.ak4PFCHSJetsL1L2L3 = process.ak4PFCHSJetsL1.clone( correctors = ['ak4PFCHSL1FastL2L3'] )
+
 process.extraProbeVariablesSeq = cms.Sequence(
     process.probeMuonsIsoSequence +
     process.computeCorrectedIso + 
     process.mvaIsoVariablesSeq * process.mvaIsoVariablesTag * process.radialIso +
     process.splitTrackTagger +
     process.muonDxyPVdzmin + 
-    process.miniIsoSeq
+    process.miniIsoSeq +
+    # process.ak4PFCHSJetsL1L2L3 +
+    process.ak4PFCHSL1FastL2L3CorrectorChain * process.jetAwareCleaner +
+    process.AddPtRatioPtRel
 )
 
 process.tnpSimpleSequence = cms.Sequence(
