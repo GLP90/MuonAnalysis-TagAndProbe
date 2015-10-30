@@ -437,6 +437,7 @@ elif scenario == 'mc_all':
 #Choose Numerator/Denominator
 #_*_*_*_*_*_*_*_*_*_*_*_*_*_*
 
+ID_BINS = []
 
 #_*_
 #IDs
@@ -547,7 +548,6 @@ if id_bins == '10':
 #Produce the efficiency .root files
 #_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
 
-ID_BINS = []
 
 for ID, ALLBINS in ID_BINS:
     X = ALLBINS[0]
