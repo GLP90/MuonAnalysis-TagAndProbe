@@ -43,7 +43,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     SaveWorkspace = cms.bool(False),
 
     Variables = cms.PSet(
-        weight = cms.vstring("weight","0","10",""),
+        weight = cms.vstring("weight","-100","100",""),
         mass = cms.vstring("Tag-muon Mass", "70", "130", "GeV/c^{2}"),
         pt = cms.vstring("muon p_{T}", "0", "1000", "GeV/c"),
         eta    = cms.vstring("muon #eta", "-2.5", "2.5", ""),
@@ -407,7 +407,7 @@ elif scenario == 'mc_all':
                     Efficiencies = cms.PSet(),
                     )
                     process.TnP_MuonID.WeightVariable = cms.string("weight")
-                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","0","10","")
+                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
                 elif order == 'NLO':
                     process.TnP_MuonID = Template.clone(
                     InputFileNames = cms.vstring(
@@ -419,7 +419,7 @@ elif scenario == 'mc_all':
                     Efficiencies = cms.PSet(),
                     )
                     process.TnP_MuonID.WeightVariable = cms.string("weight")
-                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","0","10","")
+                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
         elif run == '2015C':
                 if order== 'LO':
                     process.TnP_MuonID = Template.clone(
@@ -432,7 +432,7 @@ elif scenario == 'mc_all':
                     Efficiencies = cms.PSet(),
                     )
                     process.TnP_MuonID.WeightVariable = cms.string("weight")
-                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","0","10","")
+                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
                 elif order == 'NLO':
                     process.TnP_MuonID = Template.clone(
                     InputFileNames = cms.vstring(
@@ -444,7 +444,7 @@ elif scenario == 'mc_all':
                     Efficiencies = cms.PSet(),
                     )
                     process.TnP_MuonID.WeightVariable = cms.string("weight")
-                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","0","10","")
+                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
     elif bs == '25ns':
         if run == '2015D':
                 if order== 'LO':
@@ -458,7 +458,7 @@ elif scenario == 'mc_all':
                     Efficiencies = cms.PSet(),
                     )
                     process.TnP_MuonID.WeightVariable = cms.string("weight")
-                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","0","10","")
+                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
                 elif order == 'NLO':
                     process.TnP_MuonID = Template.clone(
                     InputFileNames = cms.vstring(
@@ -470,7 +470,7 @@ elif scenario == 'mc_all':
                     Efficiencies = cms.PSet(),
                     )
                     process.TnP_MuonID.WeightVariable = cms.string("weight")
-                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","0","10","")
+                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
 
 ID_BINS = []
 
@@ -554,7 +554,7 @@ if id_bins == '8':
 for ID, ALLBINS in ID_BINS:
     X = ALLBINS[0]
     B = ALLBINS[1]
-    _output = os.getcwd() + '/Efficiency4'
+    _output = os.getcwd() + '/Efficiency_newNLOweight'
     if not os.path.exists(_output):
         print 'Creating Efficiency directory where the fits are stored'  
         os.makedirs(_output)

@@ -49,7 +49,7 @@ args = sys.argv[1:]
 #scenario = "mc_all"
 #if len(args) > 0: scenario = args[0]
 #print "The scenario is ", scenario 
-iteration = '4'
+iteration = '_newNLOweight'
 if len(args) > 0: iteration =  args[0]
 print "The iteration is ", iteration
 #data_sample = "25ns"
@@ -58,9 +58,9 @@ print "The iteration is ", iteration
 #if len(args) > 2: data_sample =  args[2]
 #print "The data sample is ", data_sample
 
-#_sample = '/DATA25ns2015D/'
-#_sample = '/MC25ns2015DLO/'
 _sample = '/MC25ns2015DNLO/'
+#_sample = '/MC25ns2015DLO/'
+#_sample = '/MC25ns2015DNLO/'
 
 
 _folder = ''
