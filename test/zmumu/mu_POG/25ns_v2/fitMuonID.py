@@ -5,9 +5,9 @@ import FWCore.ParameterSet.Config as cms
 ###
 ###
 
-import sys, os
+import sys, os, shutil
 args = sys.argv[1:]
-iteration = 'test_tree_path_v2'
+iteration = 'TEST'
 if len(args) > 1: iteration = args[1]
 print "The iteration is", iteration
 id_bins = '1'
@@ -16,45 +16,9 @@ print 'id_bins is', id_bins
 scenario = "data_all"
 if len(args) > 3: scenario = args[3]
 print "Will run scenario ", scenario
-bs = '25ns'
-if len(args) > 4: bs = args[4]
-print 'the bunch spacing is', bs
-run = 'data1'
-if len(args) > 5: run  = args[5]
-print 'run is', run
-#for MC
-order = 'LO'
-if len(args) > 6:
-    if scenario == 'data_all':
-        print "@WARINING: no order variable is necessasry for data"
-        order = args[6]
-print 'order is', order
-
-
-#import sys, os
-#args = sys.argv[1:]
-#scenario = "data_all"
-#if len(args) > 1: scenario = args[1]
-#print "Will run scenario ", scenario 
-#bs = '25ns'
-#if len(args) > 2: 
-#    bs = args[2]
-#print 'the bunch spacing is', bs 
-#run = 'data1' 
-#if len(args) > 3: 
-#    run  = args[3]
-#print 'run is', run
-#id_bins = '1'
-#if len(args) > 4: 
-#    id_bins = args[4]
-#print 'id_bins is', id_bins
-##for MC
-#order = 'LO'
-#if len(args) > 5: 
-#    if scenario == 'data_all':
-#        print "@WARINING: no order variable is necessasry for data"
-#    order = args[5]
-#print 'order is', order
+sample = 'JSON1280'
+if len(args) > 4: sample = args[4]
+print 'the sample is', sample 
 
 process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
@@ -372,12 +336,9 @@ TIGHT_PT_ETA_BINS1 = cms.PSet(
     
 )
 if scenario == 'data_all':
-    if run == 'data1':
+    if sample == 'JSON1280':
         process.TnP_MuonID = Template.clone(
             InputFileNames = cms.vstring(
-                #'root://eoscms//eos/cms/store/group/phys_muon/TagAndProbe/trees_Data_25ns_run2015D_v3p2/tnpZ_Data_25ns_run2015D_v3p2_part1.root',
-                #'root://eoscms//eos/cms/store/group/phys_muon/TagAndProbe/trees_Data_25ns_run2015D_v3p2/tnpZ_Data_25ns_run2015D_v3p2_part2.root',
-                #'root://eoscms//eos/cms/store/group/phys_muon/TagAndProbe/trees_Data_25ns_run2015D_v3p2/tnpZ_Data_25ns_run2015D_v3p2_part3.root'
                 'tnpZ_Data_25ns_run2015D_v3p2.root'
                 ),
             InputTreeName = cms.string("fitter_tree"),
@@ -386,84 +347,18 @@ if scenario == 'data_all':
             Efficiencies = cms.PSet(),
             )
 elif scenario == 'mc_all':
-    if bs == '50ns':
-        if run == '2015B':
-                if order== 'LO':
-                    process.TnP_MuonID = Template.clone(
-                    InputFileNames = cms.vstring(
-                        'root://eoscms//eos/cms/store/group/phys_muon/perrin/v3/SmallTree_TnP_trees_aod747_DY_LOmadgraph_50ns_withFixes_withNVtxWeights_2015B.root'
-                        ),
-                    InputTreeName = cms.string("fitter_tree"),
-                    InputDirectoryName = cms.string("tpTree"),
-                    OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
-                    Efficiencies = cms.PSet(),
-                    )
-                    process.TnP_MuonID.WeightVariable = cms.string("weight")
-                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
-                elif order == 'NLO':
-                    process.TnP_MuonID = Template.clone(
-                    InputFileNames = cms.vstring(
-                    'root://eoscms//eos/cms/store/group/phys_muon/perrin/v3/SmallTree_TnP_trees_aod747_DY_amcatnlo_50ns_withFixes_withNVtxWeights_WithWeights_2015B.root'
-                        ),
-                    InputTreeName = cms.string("fitter_tree"),
-                    InputDirectoryName = cms.string("tpTree"),
-                    OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
-                    Efficiencies = cms.PSet(),
-                    )
-                    process.TnP_MuonID.WeightVariable = cms.string("weight")
-                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
-        elif run == '2015C':
-                if order== 'LO':
-                    process.TnP_MuonID = Template.clone(
-                    InputFileNames = cms.vstring(
-                        'root://eoscms//eos/cms/store/group/phys_muon/perrin/v3/SmallTree_TnP_trees_aod747_DY_LOmadgraph_50ns_withFixes_withNVtxWeights_2015C.root'
-                        ),
-                    InputTreeName = cms.string("fitter_tree"),
-                    InputDirectoryName = cms.string("tpTree"),
-                    OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
-                    Efficiencies = cms.PSet(),
-                    )
-                    process.TnP_MuonID.WeightVariable = cms.string("weight")
-                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
-                elif order == 'NLO':
-                    process.TnP_MuonID = Template.clone(
-                    InputFileNames = cms.vstring(
-                    'root://eoscms//eos/cms/store/group/phys_muon/perrin/v3/SmallTree_TnP_trees_aod747_DY_amcatnlo_50ns_withFixes_withNVtxWeights_WithWeights_2015C.root'
-                        ),
-                    InputTreeName = cms.string("fitter_tree"),
-                    InputDirectoryName = cms.string("tpTree"),
-                    OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
-                    Efficiencies = cms.PSet(),
-                    )
-                    process.TnP_MuonID.WeightVariable = cms.string("weight")
-                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
-    elif bs == '25ns':
-        if run == '2015D':
-                if order== 'LO':
-                    process.TnP_MuonID = Template.clone(
-                    InputFileNames = cms.vstring(
-                        '/afs/cern.ch/work/g/gaperrin/private/TnP/TnP_v3/CMSSW_7_4_10/src/MuonAnalysis/TagAndProbe/test/zmumu/mu_POG/25ns/tnpZ_MC_25ns_madgraphMLM-pythia8_v3_SmallTree_withNVtxWeights.root'
-                        ),
-                    InputTreeName = cms.string("fitter_tree"),
-                    InputDirectoryName = cms.string("tpTree"),
-                    OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
-                    Efficiencies = cms.PSet(),
-                    )
-                    process.TnP_MuonID.WeightVariable = cms.string("weight")
-                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
-                elif order == 'NLO':
-                    process.TnP_MuonID = Template.clone(
-                    InputFileNames = cms.vstring(
-                    '/afs/cern.ch/work/g/gaperrin/private/TnP/TnP_v3/CMSSW_7_4_10/src/MuonAnalysis/TagAndProbe/test/zmumu/mu_POG/25ns/tnpZ_MC_25ns_amcatnloFXFX-pythia8_SmallTree_withNVtxWeights_WithWeights.root'
-                        ),
-                    InputTreeName = cms.string("fitter_tree"),
-                    InputDirectoryName = cms.string("tpTree"),
-                    OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
-                    Efficiencies = cms.PSet(),
-                    )
-                    process.TnP_MuonID.WeightVariable = cms.string("weight")
-                    process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
-
+    if sample == 'NLO':
+         process.TnP_MuonID = Template.clone(
+         InputFileNames = cms.vstring(
+             'tnpZ_MC_25ns_amcatnloFXFX-pythia8_v3p2_WithWeights.root'
+             ),
+         InputTreeName = cms.string("fitter_tree"),
+         InputDirectoryName = cms.string("tpTree"),
+         OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
+         Efficiencies = cms.PSet(),
+         )
+         process.TnP_MuonID.WeightVariable = cms.string("weight")
+         process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
 ID_BINS = []
 
 #_*_*_*_*_*_*_*_*_*_*
@@ -546,19 +441,21 @@ if id_bins == '9':
 for ID, ALLBINS in ID_BINS:
     X = ALLBINS[0]
     B = ALLBINS[1]
-    _output = os.getcwd() + '/Efficiency' + iteration
+    _output = os.getcwd() + '/Efficiency_' + iteration
     if not os.path.exists(_output):
-        print 'Creating Efficiency directory where the fits are stored'  
+        print 'Creating', '/Efficiency_' + iteration,'directory where the fits are stored'  
         os.makedirs(_output)
     if scenario == 'data_all':
-        _output += '/DATA' + bs + run
+        _output += '/DATA' + '_' + sample
     elif scenario == 'mc_all':
-        _output += '/MC' + bs + run + order
+        _output += '/MC' + '_' + sample
     if not os.path.exists(_output):
         os.makedirs(_output)
     module = process.TnP_MuonID.clone(OutputFileName = cms.string(_output + "/TnP_%s.root" % (X)))
-    #shape = "vpvPlusExpo"
-    shape = "vpvPlusCheb"
+    #save the fitconfig in the plot directory
+    shutil.copyfile(os.getcwd()+'/fitMuonID.py',_output+'/fitMuonID.py')
+    shape = "vpvPlusExpo"
+    #shape = "vpvPlusCheb"
     DEN = B.clone(); num = ID;
 
     #compute isolation efficiency 
