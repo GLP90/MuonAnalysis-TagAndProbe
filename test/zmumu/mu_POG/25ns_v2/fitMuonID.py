@@ -104,8 +104,8 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
             "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,3,10])",
             "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
-            "RooChebychev::backgroundPass(mass, {a0[0.5,0,1], a1[0.5,0,1],a2[0.5,0,1]})",
-            "RooChebychev::backgroundFail(mass, {a0[0.5,0,1], a1[0.5,0,1],a2[0.5,0,1]})",
+            "RooChebychev::backgroundPass(mass, {a0[0.5,0,1], a1[0.5,0,1],a2[0.5,0,1],a3[0.5,0,1]})",
+            "RooChebychev::backgroundFail(mass, {a0[0.5,0,1], a1[0.5,0,1],a2[0.5,0,1],a3[0.5,0,1]})",
             "efficiency[0.9,0.7,1]",
             "signalFractionInPassing[0.9]"
         )
@@ -454,8 +454,8 @@ for ID, ALLBINS in ID_BINS:
     module = process.TnP_MuonID.clone(OutputFileName = cms.string(_output + "/TnP_%s.root" % (X)))
     #save the fitconfig in the plot directory
     shutil.copyfile(os.getcwd()+'/fitMuonID.py',_output+'/fitMuonID.py')
-    shape = "vpvPlusExpo"
-    #shape = "vpvPlusCheb"
+    #shape = "vpvPlusExpo"
+    shape = "vpvPlusCheb"
     DEN = B.clone(); num = ID;
 
     #compute isolation efficiency 
