@@ -104,8 +104,15 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
             "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,3,10])",
             "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
-            "RooChebychev::backgroundPass(mass, {a0[0.5,0,1], a1[0.5,0,1],a2[0.5,0,1],a3[0.5,0,1]})",
-            "RooChebychev::backgroundFail(mass, {a0[0.5,0,1], a1[0.5,0,1],a2[0.5,0,1],a3[0.5,0,1]})",
+            #par3
+            "RooChebychev::backgroundPass(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25]})",
+            "RooChebychev::backgroundFail(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25]})",
+            #4th
+            #"RooChebychev::backgroundPass(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25],a3[0.,-0.4,0.2]})",
+            #"RooChebychev::backgroundFail(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25],a3[0.,-0.4,0.2]})",
+            #par4(Hugues)
+            #"RooChebychev::backgroundPass(mass, {a0[0.,-1,1], a1[0.,-1,1],a2[0.,-1,0.]})",
+            #"RooChebychev::backgroundFail(mass, {a0[0.,-1,1], a1[0.,-1,1],a2[0.,-1,0.]})",
             "efficiency[0.9,0.7,1]",
             "signalFractionInPassing[0.9]"
         )
@@ -143,7 +150,10 @@ VTX_BINS_ETA24  = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 PT_ALLETA_BINS1 = cms.PSet(
+    #Main
     pt     = cms.vdouble(20, 30, 40, 50, 60, 80, 120, 200),
+    #For testing bkg function
+    #pt     = cms.vdouble(60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
@@ -152,7 +162,10 @@ PT_ALLETA_BINS1 = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
 PT_ETA_BINS1 = cms.PSet(
+    #Main
     pt     = cms.vdouble(20, 30, 40, 50, 60, 80, 120, 200),
+    #For testing bkg function
+    #pt     = cms.vdouble(60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 1.2, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
@@ -437,6 +450,13 @@ if id_bins == '9':
     (("TightIso4"), ("NUM_TightRelIso_DEN_MediumID_PAR_pt_alleta_bin1", MEDIUM_PT_ALLETA_BINS1)),
     (("TightIso4"), ("NUM_TightRelIso_DEN_MediumID_PAR_pt_spliteta_bin1", MEDIUM_PT_ETA_BINS1)),
     ]
+#Jobs to studie the bkg fit funciton on TightID
+if id_bins == '10': ID_BINS = [(("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS1))]
+if id_bins == '11': ID_BINS = [(("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS1))]
+if id_bins == '12': ID_BINS = [(("Loose_noIP"), ("NUM_LooseID_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS1))]
+if id_bins == '13': ID_BINS = [(("Loose_noIP"), ("NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS1))]
+if id_bins == '14': ID_BINS = [(("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS1))]
+if id_bins == '15': ID_BINS = [(("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS1))]
 
 for ID, ALLBINS in ID_BINS:
     X = ALLBINS[0]
@@ -454,9 +474,18 @@ for ID, ALLBINS in ID_BINS:
     module = process.TnP_MuonID.clone(OutputFileName = cms.string(_output + "/TnP_%s.root" % (X)))
     #save the fitconfig in the plot directory
     shutil.copyfile(os.getcwd()+'/fitMuonID.py',_output+'/fitMuonID.py')
-    #shape = "vpvPlusExpo"
-    shape = "vpvPlusCheb"
+    shape = cms.vstring("vpvPlusExpo")
+    #shape = "vpvPlusCheb"
+    if not "Iso" in ID:  #customize only for ID
+        print 'len B.pt is', len(B.pt)
+        if (len(B.pt)==8):  #customize only when the pT have the high pt bins
+            #print 'It seems that B.pt == 8'
+            #shape = cms.vstring("vpvPlusExpo","abseta_bin*__*__pt_bin4__*","vpvPlusCheb","abseta_bin*__*__pt_bin5__*","vpvPlusCheb","abseta_bin*__*__pt_bin6__*","vpvPlusCheb")
+            #shape = cms.vstring("vpvPlusExpo","*pt_bin4__tag_combRelIsoPF04dBeta*","vpvPlusCheb","*pt_bin5__tag_combRelIsoPF04dBeta*","vpvPlusCheb","*pt_bin6__tag_combRelIsoPF04dBeta*","vpvPlusCheb")
+            shape = cms.vstring("vpvPlusExpo","*pt_bin4*","vpvPlusCheb","*pt_bin5*","vpvPlusCheb","*pt_bin6*","vpvPlusCheb")
+            #shape = cms.vstring("vpvPlusExpo","*","vpvPlusCheb","*","vpvPlusCheb","*","vpvPlusCheb")
     DEN = B.clone(); num = ID;
+    
 
     #compute isolation efficiency 
     if scenario == 'data_all':
@@ -465,14 +494,16 @@ for ID, ALLBINS in ID_BINS:
                 EfficiencyCategoryAndState = cms.vstring(num,"below"),
                 UnbinnedVariables = cms.vstring("mass"),
                 BinnedVariables = DEN,
-                BinToPDFmap = cms.vstring(shape)
+                #BinToPDFmap = cms.vstring(shape)
+                BinToPDFmap = shape
                 ))
         else:
             setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring(num,"above"),
                 UnbinnedVariables = cms.vstring("mass"),
                 BinnedVariables = DEN,
-                BinToPDFmap = cms.vstring(shape)
+                #BinToPDFmap = cms.vstring(shape)
+                BinToPDFmap = shape
                 ))
         setattr(process, "TnP_MuonID_"+ID+"_"+X, module)        
         setattr(process, "run_"+ID+"_"+X, cms.Path(module))
@@ -482,14 +513,16 @@ for ID, ALLBINS in ID_BINS:
                 EfficiencyCategoryAndState = cms.vstring(num,"below"),
                 UnbinnedVariables = cms.vstring("mass","weight"),
                 BinnedVariables = DEN,
-                BinToPDFmap = cms.vstring(shape)
+                #BinToPDFmap = cms.vstring(shape)
+                BinToPDFmap = shape
                 ))
         else:
             setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring(num,"above"),
                 UnbinnedVariables = cms.vstring("mass","weight"),
                 BinnedVariables = DEN,
-                BinToPDFmap = cms.vstring(shape)
+                #BinToPDFmap = cms.vstring(shape)
+                BinToPDFmap = shape
                 ))
         setattr(process, "TnP_MuonID_"+ID+"_"+X, module)        
         setattr(process, "run_"+ID+"_"+X, cms.Path(module))
