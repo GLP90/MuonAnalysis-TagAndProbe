@@ -39,11 +39,14 @@ def getplotpath(_file, _path, _tptree):
 
 def getparameter(_file):
     _par = [] 
-    if _file.find('_eta') != -1: _par.append('eta_PLOT')
+    if _file.find('PAR_eta') != -1: _par.append('eta_PLOT')
+    elif _file.find('coarse_eta') != -1: _par.append('abseta_PLOT')
     elif _file.find('pt_alleta') != -1: _par.append('pt_PLOT')
     elif _file.find('pt_spliteta') != -1: 
         _par.append('pt_PLOT_abseta_bin0')
         _par.append('pt_PLOT_abseta_bin1')
+        _par.append('pt_PLOT_abseta_bin2')
+        _par.append('pt_PLOT_abseta_bin3')
     elif _file.find('pt_highabseta') != -1:_par.append('pt_PLOT')
     elif _file.find('_vtx') != -1: _par.append('tag_nVertices_PLOT')
     elif _file.find('_phi') != -1: _par.append('phi_PLOT')
@@ -66,34 +69,6 @@ print 'sample1 is', sample1
 sample2 = 'sample2'
 if len(args) > 2: sample2 = args[2]
 print 'sample2 is', sample2
-
-#iteration = '1'
-#if len(args) > 0: iteration =  args[0]
-#print 'iteration is', iteration
-#scenario1 = 'DATA'
-#if len(args) > 1: scenario1 =  args[1]
-#print 'scenario1 is', scenario1 
-#bspace1 = '50ns'
-#if len(args) > 2: bspace1 = args[2]
-#print 'bspace1 is', bspace1
-#run1 = '2015B'
-#if len(args) > 3: run1 = args[3]
-#print 'run1 is', run1 
-#order1 = ''
-#if len(args) > 4 and scenario1 == 'MC': order1 = args[4]
-#print 'order1 is', order1 
-#scenario2 = 'DATA'
-#if len(args) > 5: scenario2 =  args[5]
-#print 'scenario2 is', scenario2 
-#bspace2 = '50ns'
-#if len(args) > 6: bspace2 = args[6]
-#print 'bspace2 is', bspace2
-#run2 = '2015B'
-#if len(args) > 7: run2 = args[7]
-#print 'run2 is', run2 
-#order2 = ''
-#if len(args) > 8 and scenario2 == 'MC': order2 = args[8]
-#print 'order2 is', order2 
 
 _output = os.getcwd() + '/RatioPlots' + iteration
 if not os.path.exists(_output): 

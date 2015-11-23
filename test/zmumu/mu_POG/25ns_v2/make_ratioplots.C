@@ -85,6 +85,8 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     TString _par = "";
     if(_canvas.Contains("pt_PLOT_abseta_bin0")){_par = "abseta_bin0";}
     else if(_canvas.Contains("pt_PLOT_abseta_bin1")){_par = "abseta_bin1";}
+    else if(_canvas.Contains("pt_PLOT_abseta_bin2")){_par = "abseta_bin2";}
+    else if(_canvas.Contains("pt_PLOT_abseta_bin3")){_par = "abseta_bin3";}
 
     //cout<<_file<<endl;
     TFile *f1 = TFile::Open(_path1 + _file);
