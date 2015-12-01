@@ -53,26 +53,11 @@ args = sys.argv[1:]
 iteration = '1'
 if len(args) > 0: iteration =  args[0]
 print "The iteration is ", iteration
-<<<<<<< HEAD
-_sample = 'MC25ns2015DNLO'
+_sample = '/DATA25ns2015D/'
+#_sample = '/MC25ns2015DLO/'
+#_sample = '/MC25ns2015DNLO/'
 if len(args) > 1: _sample =  args[1]
 print "The sample is", _sample 
-=======
-#data_sample = "25ns"
-#data_sample = "50nsC"
-#data_sample = "50nsB"
-#if len(args) > 2: data_sample =  args[2]
-#print "The data sample is ", data_sample
-
-#_sample = '/DATA25ns2015D/'
-_sample = '/MC25ns2015DLO/'
-#_sample = '/MC25ns2015DNLO/'
-
-
-_folder = ''
-_folder = os.getcwd() + '/Efficiency' + iteration + _sample
->>>>>>> d5fe57ebf96c5c81b2db6bdabd2c557822cd74e9
-
 _folder = os.getcwd() + '/Efficiency' + iteration + '/' + _sample + '/'
 _folder_out = _folder +  'FitPlots/'
 if not os.path.exists(_folder + '/FitPlots'):
@@ -80,7 +65,7 @@ if not os.path.exists(_folder + '/FitPlots'):
 
 dir = os.listdir(_folder)
 for file in dir:
-    if file.find('TnP_') != -1:
+    if(file.find('TnP_') != -1 and os.stat(_folder + file).st_size > 9999):
         print 'hello'
         save_canvas(_folder, file, _folder_out) 
 

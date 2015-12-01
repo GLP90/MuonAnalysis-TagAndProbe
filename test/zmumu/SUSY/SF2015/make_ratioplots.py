@@ -25,24 +25,32 @@ def getplotpath(_file, _path, _tptree):
                 print 'plot is', plot.GetName()
                 for par in PAR:
                     if plot.GetName().startswith(par):
-                        print '============\n'
-                        print 'name checked'
-                        print '============\n'
+                        print 'xxxxxxxxxxxxxxxxx'
+                        print "making ratio for ", plot
+                        print 'xxxxxxxxxxxxxxxxx'
                         _canvas = _tptree + '/' + key.GetName() + '/fit_eff_plots' +'/' + plot.GetName() 
                         CANVAS.append(_canvas)
     return CANVAS
 
 def getparameter(_file):
     _par = [] 
-    if _file.find('_eta') != -1: _par.append('eta_PLOT')
-    elif _file.find('pt_alleta') != -1: _par.append('pt_PLOT')
-    elif _file.find('pt_spliteta') != -1: 
+    if _file.find('VAR_eta') != -1: _par.append('eta_PLOT')
+    elif _file.find('VAR_pt') != -1: _par.append('pt_PLOT')
+    elif _file.find('VAR_map_pt_eta') != -1: 
         _par.append('pt_PLOT_abseta_bin0')
         _par.append('pt_PLOT_abseta_bin1')
+        _par.append('pt_PLOT_abseta_bin2')
+        _par.append('pt_PLOT_abseta_bin3')
     elif _file.find('pt_highabseta') != -1:_par.append('pt_PLOT')
-    elif _file.find('_vtx') != -1: _par.append('tag_nVertices_PLOT')
+    elif _file.find('VAR_vtx') != -1: _par.append('tag_nVertices_PLOT')
     elif _file.find('_phi') != -1: _par.append('phi_PLOT')
-    elif _file.find('activity') != -1: _par.append('pfCombRelActivitydBCorr_PLOT')
+    elif _file.find('VAR_map_activity_eta') != -1: 
+        _par.append('pfCombRelActivitydBCorr_PLOT_abseta_bin0')
+        _par.append('pfCombRelActivitydBCorr_PLOT_abseta_bin1')
+    elif _file.find('VAR_map_activity_pt') != -1: 
+        _par.append('pfCombRelActivitydBCorr_PLOT_pt_bin0')
+        _par.append('pfCombRelActivitydBCorr_PLOT_pt_bin1')
+        _par.append('pfCombRelActivitydBCorr_PLOT_pt_bin2')
     else: 
         print "@ERROR: parameter not found !"
         sys.exit()

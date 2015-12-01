@@ -37,6 +37,11 @@ TH1F* DividTGraphs(TGraphAsymmErrors* gr1, TGraphAsymmErrors* gr2){
         }
     }
 
+    //hack to move the last data point in the rel activity plots to visible range if we show the plot only up to 10
+    for(int i = 0; i < nbins+1; i++){
+        if(xbins[i] == 9999){xbins[i]=9;}
+    }
+
     TH1F *h0 = new TH1F("h0","h0",nbins,xbins);
     TH1F *h1 = new TH1F("h1","h1",nbins,xbins);
 
@@ -69,7 +74,12 @@ TH1F* DividTGraphs(TGraphAsymmErrors* gr1, TGraphAsymmErrors* gr2){
 
     //ratio histogram
     h[0]->Divide(h[1]);
+    //for (int k = 0; k < nbins+1; ++k){
+    //    cout << "        " << h[0]->GetBinContent(k) << endl;
+    //}
+    
     delete h[1];
+
 
     return h[0]; 
 
@@ -83,8 +93,18 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
 
 
     TString _par = "";
-    if(_canvas.Contains("pt_PLOT_abseta_bin0")){_par = "abseta_bin0";}
-    else if(_canvas.Contains("pt_PLOT_abseta_bin1")){_par = "abseta_bin1";}
+    if(_canvas.Contains("pt_PLOT_abseta_bin0")){_par = "MapPtEta_abseta_bin0";}
+    else if(_canvas.Contains("pt_PLOT_abseta_bin1")){_par = "MapPtEta_abseta_bin1";}
+    else if(_canvas.Contains("pt_PLOT_abseta_bin2")){_par = "MapPtEta_abseta_bin2";}
+    else if(_canvas.Contains("pt_PLOT_abseta_bin3")){_par = "MapPtEta_abseta_bin3";}
+    else if(_canvas.Contains("VAR_eta")){_par = "";}
+    else if(_canvas.Contains("VAR_pt")){_par = "";}
+    else if(_canvas.Contains("VAR_vtx")){_par = "";}
+    else if(_canvas.Contains("pfCombRelActivitydBCorr_PLOT_pt_bin0")){_par = "MapActPt_pt_bin0";}
+    else if(_canvas.Contains("pfCombRelActivitydBCorr_PLOT_pt_bin1")){_par = "MapActPt_pt_bin1";}
+    else if(_canvas.Contains("pfCombRelActivitydBCorr_PLOT_pt_bin2")){_par = "MapActPt_pt_bin2";}
+    else if(_canvas.Contains("pfCombRelActivitydBCorr_PLOT_abseta_bin0")){_par = "MapActEta_abseta_bin0";}
+    else if(_canvas.Contains("pfCombRelActivitydBCorr_PLOT_abseta_bin1")){_par = "MapActEta_abseta_bin1";}
 
     //cout<<_file<<endl;
     TFile *f1 = TFile::Open(_path1 + _file);
@@ -95,6 +115,8 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     TGraphAsymmErrors* eff2 = (TGraphAsymmErrors*)c2->GetPrimitive("hxy_fit_eff");
 
     TH1F* ratio = DividTGraphs(eff1, eff2);
+
+    ratio->SetDirectory(0);
     ratio->SetStats(0);
 
     int nbins = eff1->GetN();
@@ -110,10 +132,19 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     pad1->SetTopMargin(0.1); 
     pad1->Draw();
     pad1->cd();
-    eff1->Draw("AP");
-    eff1->SetTitle("");
-    eff1->GetYaxis()->SetTitle("Efficiency");
-    eff1->GetXaxis()->SetRangeUser(x_low, x_hi);
+    float eff_min = 0.785;
+    float eff_max = 1.15;
+    TString axistitle =  eff1->GetXaxis()->GetTitle();
+    TH1F* hr;
+    if( axistitle == "pfCombRelActivitydBCorr"){
+        hr = pad1->DrawFrame(0.001,0.07,10.01,1.50);
+    }
+    else{
+        hr = pad1->DrawFrame(x_low,eff_min,x_hi,eff_max);
+    }
+    hr->SetTitle("");
+    hr->GetYaxis()->SetTitle("Efficiency");
+    hr->GetXaxis()->SetRangeUser(x_low, x_hi);
     eff1->GetXaxis()->SetLabelOffset(999);
     eff1->GetXaxis()->SetLabelSize(0);
     TString _xtitle = eff1->GetXaxis()->GetTitle();
@@ -124,25 +155,73 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     else if (_xtitle.Contains("pfCombAbsActivitydBCorr")){_xtitle = "Abs Activity";}
     else if (_xtitle.Contains("pfCombRelActivitydBCorr")){_xtitle = "Rel Activity";}
     else{_xtitle = "Rel Activity";}
+    hr->GetXaxis()->SetTitle(_xtitle);
     eff1->GetXaxis()->SetTitle(_xtitle);
+    
     TString _title = eff1->GetXaxis()->GetTitle();
     if(_xtitle == "Rel Activity"){
-       pad1->SetLogx();
+        pad1->SetLogx();
+        eff1->GetXaxis()->SetRangeUser(0.001, 10.01);
     }
-    eff1->GetXaxis()->SetTitle("");
-    eff1->GetYaxis()->SetRangeUser(0.885, 1.05);
-    eff1->GetYaxis()->SetTitleSize(27);
-    eff1->GetYaxis()->SetTitleFont(63);
-    eff1->GetYaxis()->SetLabelFont(43);
-    eff1->SetMarkerStyle(20);
-    eff1->GetYaxis()->SetLabelSize(20);
-    eff1->GetYaxis()->SetTitleOffset(1.5);
+    hr->GetXaxis()->SetTitle("");
+    if(_xtitle == "Rel Activity"){
+        eff1->GetYaxis()->SetRangeUser(0.07, 1.50);
+    }   
+    else{
+        hr->GetYaxis()->SetRangeUser(eff_min, eff_max);
+    }
+    hr->GetYaxis()->SetTitleSize(27);
+    hr->GetYaxis()->SetTitleFont(63);
+    hr->GetYaxis()->SetLabelFont(43);
+    hr->SetMarkerStyle(20);
+    hr->GetYaxis()->SetLabelSize(20);
+    hr->GetYaxis()->SetTitleOffset(1.5);
+    eff1->Draw("P");
     eff2->Draw("P");
     eff2->SetLineColor(4);
     eff2->SetMarkerStyle(21);
     eff2->SetMarkerColor(4);
-    TString _legtext = "";
+    TString _legtext1 = "";
+    TString _legtext2 = "";
+    
+    if(_canvas.Contains("NUM_LooseID_DENOM")){    _legtext1 = ""   ; }
+    else if(_canvas.Contains("NUM_MediumID_DENOM")){    _legtext1 = ""   ; }
+    else if(_canvas.Contains("NUM_TightIP2D_DENOM")){    _legtext1 = "TightIP2D / "   ; }
+    else if(_canvas.Contains("NUM_TightIP3D_DENOM")){    _legtext1 = "TightIP3D / "   ; }
+    else if(_canvas.Contains("NUM_MiniIsoLoose_DENOM")){    _legtext1 = "MiniIso loose / "   ; }
+    else if(_canvas.Contains("NUM_MiniIsoTight_DENOM")){    _legtext1 = "MiniIso tight / "   ; }
+    else if(_canvas.Contains("NUM_MultiIsoMedium_DENOM")){    _legtext1 = "MultiIso medium / "   ; }
+    else if(_canvas.Contains("MiniIso04")){    _legtext1 = "Loose + MiniIso04 + TightIP2D "   ; }
+    else if(_canvas.Contains("MultiIso") and _canvas.Contains("plus")){    _legtext1 = "Medium + MultiIsoMedium + TightIP2D + TightIP3D"   ; }
+    else if(_canvas.Contains("Medium") and _canvas.Contains("MiniIso02") and  _canvas.Contains("TightIP2D") ){    _legtext1 = "Medium + MiniIso02 + TightIP2D"   ; }
+    else if(_canvas.Contains("Medium") and _canvas.Contains("MiniIso02") and  _canvas.Contains("TightIP3D") ){    _legtext1 = "Medium + MiniIso02 + TightIP3D"   ; }
+    else if(_canvas.Contains("Loose") and _canvas.Contains("MiniIso02") and  _canvas.Contains("TightIP3D") ){    _legtext1 = "Loose + MiniIso02 + TightIP3D"   ; }
+    else if(_canvas.Contains("Medium") and _canvas.Contains("MiniIso02") and not _canvas.Contains("TightIP") ){    _legtext1 = "Medium + MiniIso02"   ; }
+    else if(_canvas.Contains("Loose") and _canvas.Contains("MiniIso02") and  _canvas.Contains("TightIP2D") ){    _legtext1 = "Loose + MiniIso02 + TightIP2D"   ; }
+    else if(_canvas.Contains("Loose") and _canvas.Contains("MiniIso02") and not _canvas.Contains("TightIP") ){    _legtext1 = "Loose + MiniIso02"   ; }
 
+    if(_canvas.Contains("NUM_LooseID_DENOM") || _canvas.Contains("DENOM_LooseID")){    _legtext1 += "Loose Id \n"   ; }
+    else if(_canvas.Contains("NUM_MediumID_DENOM") || _canvas.Contains("DENOM_MediumID")){    _legtext1 += "Medium Id \n"    ;}
+       
+    if(_canvas.Contains("VAR_pt")){    _legtext2 += "#||{#eta} #leq 2.4 "   ; }
+    else if(_canvas.Contains("VAR_eta")){    _legtext2 += "p_{T} #geq 10 GeV"   ; }
+    else if(_canvas.Contains("VAR_vtx")){    _legtext2 += "p_{T} #geq 10 GeV, #||{#eta} #leq 2.4"   ; }
+    
+    else if(_canvas.Contains("VAR_map_pt") && _canvas.Contains("pt_PLOT_abseta_bin0")){  _legtext2 += "0 < #||{#eta} #leq 0.9"   ; }   
+    else if(_canvas.Contains("VAR_map_pt") && _canvas.Contains("pt_PLOT_abseta_bin1")){  _legtext2 += "0.9 < #||{#eta} #leq 1.2"   ; }   
+    else if(_canvas.Contains("VAR_map_pt") && _canvas.Contains("pt_PLOT_abseta_bin2")){  _legtext2 += "1.2 < #||{#eta} #leq 2.1"   ; }   
+    else if(_canvas.Contains("VAR_map_pt") && _canvas.Contains("pt_PLOT_abseta_bin3")){  _legtext2 += "2.1 < #||{#eta} #leq 2.4"   ; }   
+    
+    else if(_canvas.Contains("VAR_map_activity_eta") && _canvas.Contains("pfCombRelActivitydBCorr_PLOT_abseta_bin0")){  _legtext2 += "0 < #||{#eta} #leq 1.2, p_{T} #geq 10 GeV"   ; }   
+    else if(_canvas.Contains("VAR_map_activity_eta") && _canvas.Contains("pfCombRelActivitydBCorr_PLOT_abseta_bin1")){  _legtext2 += "1.2 < #||{#eta} #leq 2.4, p_{T} #geq 10 GeV"   ; }   
+
+    else if(_canvas.Contains("VAR_map_activity_pt") && _canvas.Contains("pfCombRelActivitydBCorr_PLOT_pt_bin0")){  _legtext2 += "10 GeV < p_{T} #leq 40 GeV, #||{#eta} #leq 2.4"   ; }   
+    else if(_canvas.Contains("VAR_map_activity_pt") && _canvas.Contains("pfCombRelActivitydBCorr_PLOT_pt_bin1")){  _legtext2 += "40 GeV < p_{T} #leq 80 GeV, #||{#eta} #leq 2.4"   ; }   
+    else if(_canvas.Contains("VAR_map_activity_pt") && _canvas.Contains("pfCombRelActivitydBCorr_PLOT_pt_bin2")){  _legtext2 += "80 GeV < p_{T} #leq 200 GeV, #||{#eta} #leq 2.4"   ; }   
+
+    TString _legtext = "#splitline{" + _legtext1 + "}{" + _legtext2 + "}";
+
+/*
     if(_canvas.Contains("/Loose_noIP_eta")){
         _legtext = "Loose Id, p_{T} #geq 20 GeV";
     }else if(_canvas.Contains("/Loose_noIP_vtx_bin")){
@@ -384,13 +463,15 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
 	std::cout<<"canvas is"<<_canvas<<endl;
         //return 1;
     }
-    TLegend* leg = new TLegend(0.40, 0.65, 0.70 , 0.85);
+*/    
+
+    TLegend* leg = new TLegend(0.40, 0.65, 0.70 , 0.87);
     leg->SetHeader(_legtext);
     TLegendEntry *header = (TLegendEntry*)leg->GetListOfPrimitives()->First();
     //header->SetTextAlign(22);
     header->SetTextColor(1);
     header->SetTextFont(43);
-    header->SetTextSize(16);
+    header->SetTextSize(14);
     TString _leg1 = "";
     TString _leg2 = "";
     if(_path1.Contains("DATA")) _leg1 = "data";
@@ -436,13 +517,17 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     pad2->SetGridy(); 
     pad2->Draw();
     pad2->cd();
-    TH1* h;
+    TH1F* h;
     float ymin = 0.950001;
     float ymax = 1.049999;
-    float xmin = eff1->GetXaxis()->GetXmin();
-    float xmax = eff1->GetXaxis()->GetXmax();
+    float xmin = 0.001; //eff1->GetXaxis()->GetXmin();
+    float enlarge = 0.9;   
+ 
+    //float xmax = eff1->GetXaxis()->GetXmax();
+    float xmax = 10.01;
+    
     if(_xtitle == "Rel Activity"){
-        h = pad2->DrawFrame(xmin,ymin,xmax,ymax);
+        h = pad2->DrawFrame(xmin,ymin-enlarge,xmax,ymax+enlarge);
     }
     else{ 
         h = pad2->DrawFrame(x_low,ymin,x_hi,ymax);
@@ -453,7 +538,12 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     h->SetMarkerStyle(20);
     h->SetMarkerColor(1);
     //ratio->GetYaxis()->SetRangeUser(0.9,1.0999);
-    h->GetYaxis()->SetRangeUser(ymin,ymax);
+    if(_xtitle == "Rel Activity"){
+        h->GetYaxis()->SetRangeUser(ymin-enlarge,ymax+enlarge);
+    }
+    else{ 
+        h->GetYaxis()->SetRangeUser(ymin,ymax);
+    }
     //raftio->GetYaxis()->SetRangeUser(0.98,1.01999);
     h->GetYaxis()->SetTitle("Data/MC");
     h->GetYaxis()->SetNdivisions(505);
@@ -479,25 +569,39 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
 
     ratio->Draw("same");
     pad2->Update();
+
+    //cout << "--------------" << endl;
+    //for (int k = 0; k < ratio->GetSize(); ++k){
+    //    cout << "        " << ratio->GetBinContent(k) << endl;
+    //}
  
+    float ratio_min = ratio->GetMinimum(0);
+    float ratio_max = ratio->GetMaximum();
+
+    TString leg_ratio_text = Form("min: %.3f, max: %.3f",ratio_min, ratio_max);
+    TLegend* leg_ratio = new TLegend(0.20, 0.86, 0.40 , 0.87);
+    leg_ratio->SetHeader(leg_ratio_text);
+    TLegendEntry *header_ratio = (TLegendEntry*)leg_ratio->GetListOfPrimitives()->First();
+    //header_ratio->SetTextAlign(22);
+    header_ratio->SetTextColor(1);
+    header_ratio->SetTextFont(43);
+    header_ratio->SetTextSize(16);
+    leg_ratio->Draw("same");
+
     CMS_lumi(pad1, 4, 11);
     c3->Update();
 
     c3->SaveAs(_output + _par + "_" + _file);
     _file.ReplaceAll("pdf","png");
     c3->SaveAs(_output + _par + "_" + _file);
-
-    //TFile *f_out = TFile::Open("TEST.root","recreate");
-    //f_out->cd();
-    //c3->Write();
+    _file.ReplaceAll("png","root");
 
     //_*_*_*_*_*_*_*_*_*
     //Write SF into file
     //_*_*_*_*_*_*_*_*_*
-
-    //ofstream myfile;
-    //myfile.open(_output + 
-
+    //TFile *fout = new TFile(_output + _par + "_" + _file, "NEW");
+    //ratio->Write();
+    //fout->Close();
 
     return 0;
 

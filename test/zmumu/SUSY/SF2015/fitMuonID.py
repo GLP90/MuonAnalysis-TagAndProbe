@@ -41,13 +41,19 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 #Preparing the variables
 #_*_*_*_*_*_*_*_*_*_*_*_*
 
+_mrange = "70"
+if (int(id_bins) > 4) and (int(id_bins) < 19): 
+    _mrange = "77"
+
+
 Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         NumCPU = cms.uint32(1),
     SaveWorkspace = cms.bool(False),
 
     Variables = cms.PSet(
         weight = cms.vstring("weight","-100","100",""),
-        mass = cms.vstring("Tag-muon Mass", "70", "130", "GeV/c^{2}"),
+        #mass = cms.vstring("Tag-muon Mass", "70", "130", "GeV/c^{2}"),
+        mass = cms.vstring("Tag-muon Mass", _mrange, "130", "GeV/c^{2}"),
         pt = cms.vstring("muon p_{T}", "0", "1000", "GeV/c"),
         eta    = cms.vstring("muon #eta", "-2.5", "2.5", ""),
         abseta = cms.vstring("muon |#eta|", "0", "2.5", ""),
@@ -85,7 +91,26 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         LooseMiniIsoVar = cms.vstring("LooseMiniIsoVar" ,"pfCombRelMiniIsoEACorr < 0.4", "pfCombRelMiniIsoEACorr"),
         TightMiniIsoVar = cms.vstring("TightMiniIsoVar" ,"pfCombRelMiniIsoEACorr < 0.2", "pfCombRelMiniIsoEACorr"),
         #Multi Iso
-        MediumMultiIsoVar= cms.vstring("MediumMultIsoVar" ,"pfCombRelMiniIsoEACorr < 0.16 && ( PtRel > 7.2 || PtRatio > 0.76 )", "pfCombRelMiniIsoEACorr", "PtRel", "PtRatio"),
+        MediumMultiIsoVar= cms.vstring("MediumMultiIsoVar" ,"pfCombRelMiniIsoEACorr < 0.16 && ( PtRel > 7.2 || PtRatio > 0.76 )", "pfCombRelMiniIsoEACorr", "PtRel", "PtRatio"),
+
+        #Stacked requirements
+
+        #Loose + Miniso02
+        Loose_plus_MiniIso02Var= cms.vstring("Loose_plus_MiniIso02Var" ,"PF==1 && pfCombRelMiniIsoEACorr < 0.2", "PF", "pfCombRelMiniIsoEACorr"),
+        #Loose + Miniso02 + TightIP2D
+        Loose_plus_MiniIso02_puls_TightIP2DVar= cms.vstring("Loose_plus_MiniIso02_puls_TightIP2DVar" ,"PF==1 && pfCombRelMiniIsoEACorr < 0.2 && abs(dxyBS) < 0.02 && abs(dzPV) < 0.1", "PF", "pfCombRelMiniIsoEACorr", "dxyBS", "dzPV"),
+        #Medium + Miniso02
+        Medium_plus_MiniIso02Var= cms.vstring("Medium_plus_MiniIso02Var" ,"Medium==1 && pfCombRelMiniIsoEACorr < 0.2", "Medium", "pfCombRelMiniIsoEACorr"),
+        #Loose + Miniso02 + TightIP3D
+        Loose_plus_MiniIso02_puls_TightIP3DVar= cms.vstring("Loose_plus_MiniIso02_puls_TightIP3DVar" ,"PF==1 && pfCombRelMiniIsoEACorr < 0.2 && abs(SIP) < 4", "PF", "pfCombRelMiniIsoEACorr", "SIP"),
+        #Medium + Miniso02 + TightIP3D
+        Medium_plus_MiniIso02_puls_TightIP3DVar= cms.vstring("Medium_plus_MiniIso02_puls_TightIP3DVar" ,"Medium==1 && pfCombRelMiniIsoEACorr < 0.2 && abs(SIP) < 4", "Medium", "pfCombRelMiniIsoEACorr", "SIP"),
+        #Medium + Miniso02 + TightIP2D
+        Medium_plus_MiniIso02_puls_TightIP2DVar= cms.vstring("Medium_plus_MiniIso02_puls_TightIP2DVar" ,"Medium==1 && pfCombRelMiniIsoEACorr < 0.2 && abs(dxyBS) < 0.02 && abs(dzPV) < 0.1", "Medium", "pfCombRelMiniIsoEACorr", "dxyBS", "dzPV"),
+        #Medium + MultiIsoMedium + TightIP2D + TightIP3D
+        Medium_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3DVar= cms.vstring("Medium_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3DVar" ,"Medium==1 && pfCombRelMiniIsoEACorr < 0.16 && ( PtRel > 7.2 || PtRatio > 0.76 ) && abs(dxyBS) < 0.02 && abs(dzPV) < 0.1 && abs(SIP) < 4", "Medium", "pfCombRelMiniIsoEACorr", "PtRel", "PtRatio", "dxyBS", "dzPV", "SIP"),
+        #Loose + MiniIso04 + TightIP2D
+        Loose_plus_MiniIso04_puls_TightIP2DVar= cms.vstring("Loose_plus_MiniIso04_puls_TightIP2DVar" ,"PF==1 && pfCombRelMiniIsoEACorr < 0.4 && abs(dxyBS) < 0.02 && abs(dzPV) < 0.1", "PF", "pfCombRelMiniIsoEACorr", "dxyBS", "dzPV"),
     ),
 
 #_*_*_*_*_*
@@ -104,6 +129,22 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         TightMiniIso = cms.vstring("TightMiniIso" ,"TightMiniIsoVar", "0.5"),
         #Multi Iso
         MediumMultiIso= cms.vstring("MediumMultiIso" ,"MediumMultiIsoVar", "0.5"),
+        #Loose + Miniso02
+        Loose_plus_MiniIso02= cms.vstring("Loose_plus_MiniIso02" ,"Loose_plus_MiniIso02Var", "0.5"),
+        #Loose + Miniso02 + TightIP2D
+        Loose_plus_MiniIso02_puls_TightIP2D= cms.vstring("Loose_plus_MiniIso02_puls_TightIP2D", "Loose_plus_MiniIso02_puls_TightIP2DVar" , "0.5"),
+        #Medium + Miniso02
+        Medium_plus_MiniIso02= cms.vstring("Medium_plus_MiniIso02", "Medium_plus_MiniIso02Var", "0.5" ),
+        #Loose + Miniso02 + TightIP3D
+        Loose_plus_MiniIso02_puls_TightIP3D= cms.vstring("Loose_plus_MiniIso02_puls_TightIP3D", "Loose_plus_MiniIso02_puls_TightIP3DVar", "0.5" ),
+        #Medium + Miniso02 + TightIP3D
+        Medium_plus_MiniIso02_puls_TightIP3D= cms.vstring("Medium_plus_MiniIso02_puls_TightIP3D", "Medium_plus_MiniIso02_puls_TightIP3DVar", "0.5" ),
+        #Medium + Miniso02 + TightIP2D
+        Medium_plus_MiniIso02_puls_TightIP2D= cms.vstring("Medium_plus_MiniIso02_puls_TightIP2D", "Medium_plus_MiniIso02_puls_TightIP2DVar", "0.5" ),
+        #Medium + MultiIsoMedium + TightIP2D + TightIP3D
+        Medium_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D= cms.vstring("Medium_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D", "Medium_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3DVar", "0.5" ),
+        #Loose + MiniIso04 + TightIP2D
+        Loose_plus_MiniIso04_puls_TightIP2D= cms.vstring("Loose_plus_MiniIso04_puls_TightIP2D", "Loose_plus_MiniIso04_puls_TightIP2DVar", "0.5" ),
     ),
 
 #_*_*_*_*_*_*_*_*_*_*_*_*_*
@@ -161,7 +202,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 
 #For ID
 
-ETA_BINS = cms.PSet(
+ETA_BINS_INCLUSIVE_PT = cms.PSet(
     pt  = cms.vdouble(10, 500),
     eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
@@ -170,7 +211,7 @@ ETA_BINS = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-VTX_BINS_ETA24  = cms.PSet(
+VTX_BINS_INCLUSIVE_ETA_PT  = cms.PSet(
     pt     = cms.vdouble(10 , 500),
     abseta = cms.vdouble(0.0, 2.4),
     tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
@@ -180,8 +221,8 @@ VTX_BINS_ETA24  = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-PT_ALLETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(5, 10, 20, 30, 40, 50, 60, 80, 120, 200),
+PT_BINS_INCLUSIVE_ETA = cms.PSet(
+    pt     = cms.vdouble(10, 20, 25, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
@@ -189,17 +230,40 @@ PT_ALLETA_BINS1 = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-PT_ETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(5, 10, 20, 30, 40, 50, 60, 80, 120, 200),
-    abseta = cms.vdouble( 0.0, 1.2, 2.4),
+PT_ETA_MAP = cms.PSet(
+    pt     = cms.vdouble(10, 20, 25, 30, 40, 50, 60, 120),
+    abseta = cms.vdouble( 0.0, 0.9, 1.2, 2.1, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
     tag_pt = cms.vdouble(21, 500),
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
+
+ACTIVITY_ETA_MAP_INCLUSIVE_PT = cms.PSet(
+    pfCombRelActivitydBCorr = cms.vdouble(0, 0.02, 0.05, 0.15, 1, 9999),
+    pt     = cms.vdouble(10, 500),
+    abseta = cms.vdouble( 0, 1.2, 2.4),
+    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+    #tag selections
+    tag_pt = cms.vdouble(21, 500),
+    tag_IsoMu20 = cms.vstring("pass"), 
+    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
+)
+
+ACTIVITY_PT_MAP_INCLUSIVE_ETA = cms.PSet(
+    pfCombRelActivitydBCorr = cms.vdouble(0, 0.02, 0.05, 0.15, 1, 9999),
+    pt     = cms.vdouble(10, 40, 80, 200),
+    abseta = cms.vdouble( 0, 2.4),
+    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+    #tag selections
+    tag_pt = cms.vdouble(21, 500),
+    tag_IsoMu20 = cms.vstring("pass"), 
+    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
+)
+
 #For IP,ISO on ID
-LOOSE_ETA_BINS = cms.PSet(
+LOOSE_ETA_BINS_INCLUSIVE_PT = cms.PSet(
     pt  = cms.vdouble(10, 500),
     eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
@@ -209,7 +273,7 @@ LOOSE_ETA_BINS = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-LOOSE_VTX_BINS_ETA24  = cms.PSet(
+LOOSE_VTX_BINS_INCLUSIVE_ETA_PT  = cms.PSet(
     pt     = cms.vdouble(10, 500 ),
     abseta = cms.vdouble(  0.0, 2.4),
     tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
@@ -220,8 +284,8 @@ LOOSE_VTX_BINS_ETA24  = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-LOOSE_PT_ALLETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(5, 10, 20, 30, 40, 50, 60, 80, 120, 200),
+LOOSE_PT_BINS_INCLUSIVE_ETA = cms.PSet(
+    pt     = cms.vdouble(10, 20, 25, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     PF = cms.vstring("pass"), 
@@ -230,9 +294,9 @@ LOOSE_PT_ALLETA_BINS1 = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-LOOSE_PT_ETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(5, 10, 20, 30, 40, 50, 60, 80, 120, 200),
-    abseta = cms.vdouble(  0.0, 1.2, 2.4),
+LOOSE_PT_ETA_MAP = cms.PSet(
+    pt     = cms.vdouble(10, 20, 25, 30, 40, 50, 60, 120),
+    abseta = cms.vdouble( 0.0, 0.9, 1.2, 2.1, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     PF = cms.vstring("pass"), 
     #tag selections
@@ -240,10 +304,10 @@ LOOSE_PT_ETA_BINS1 = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-LOOSE_PT_ACTIVITY_BARREL = cms.PSet(
+LOOSE_ACTIVITY_ETA_MAP_INCLUSIVE_PT = cms.PSet(
     pfCombRelActivitydBCorr = cms.vdouble(0, 0.02, 0.05, 0.15, 1, 9999),
     pt     = cms.vdouble(10, 500),
-    abseta = cms.vdouble( 0, 1.2),
+    abseta = cms.vdouble( 0, 1.2, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     PF = cms.vstring("pass"), 
     #tag selections
@@ -251,21 +315,11 @@ LOOSE_PT_ACTIVITY_BARREL = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-LOOSE_PT_ACTIVITY_ENDCAP = cms.PSet(
-    pfCombRelActivitydBCorr = cms.vdouble(0, 0.02, 0.05, 0.15, 1, 9999),
-    pt     = cms.vdouble(10, 500),
-    abseta = cms.vdouble( 1.2, 2.4),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    PF = cms.vstring("pass"), 
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
+
 #
-LOOSE_PT_ACTIVITY_PTLOW = cms.PSet(
+LOOSE_ACTIVITY_PT_MAP_INCLUSIVE_ETA = cms.PSet(
     pfCombRelActivitydBCorr = cms.vdouble(0, 0.02, 0.05, 0.15, 1, 9999),
-    pt     = cms.vdouble(10, 40),
+    pt     = cms.vdouble(10, 40, 80, 200),
     abseta = cms.vdouble( 0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     PF = cms.vstring("pass"), 
@@ -274,30 +328,9 @@ LOOSE_PT_ACTIVITY_PTLOW = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-LOOSE_PT_ACTIVITY_PTMED= cms.PSet(
-    pfCombRelActivitydBCorr = cms.vdouble(0, 0.02, 0.05, 0.15, 1, 9999),
-    pt     = cms.vdouble(40, 80),
-    abseta = cms.vdouble( 0, 2.4),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    PF = cms.vstring("pass"), 
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
-LOOSE_PT_ACTIVITY_PTHIGH= cms.PSet(
-    pfCombRelActivitydBCorr = cms.vdouble(0, 0.02, 0.05, 0.15, 1, 9999),
-    pt     = cms.vdouble(80, 200),
-    abseta = cms.vdouble( 0, 2.4),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    PF = cms.vstring("pass"), 
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
+
 #MEDIUM
-MEDIUM_ETA_BINS = cms.PSet(
+MEDIUM_ETA_BINS_INCLUSIVE_PT = cms.PSet(
     pt  = cms.vdouble(10, 500),
     eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
@@ -307,7 +340,7 @@ MEDIUM_ETA_BINS = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-MEDIUM_VTX_BINS_ETA24  = cms.PSet(
+MEDIUM_VTX_BINS_INCLUSIVE_ETA_PT  = cms.PSet(
     pt     = cms.vdouble(10, 500),
     abseta = cms.vdouble(0.0, 2.4),
     tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
@@ -318,8 +351,8 @@ MEDIUM_VTX_BINS_ETA24  = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-MEDIUM_PT_ALLETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(5, 10, 20, 30, 40, 50, 60, 80, 120, 200),
+MEDIUM_PT_BINS_INCLUSIVE_ETA = cms.PSet(
+    pt     = cms.vdouble(10, 20, 25, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     Medium = cms.vstring("pass"), 
@@ -328,9 +361,9 @@ MEDIUM_PT_ALLETA_BINS1 = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-MEDIUM_PT_ETA_BINS1 = cms.PSet(
-    pt     = cms.vdouble(5, 10, 20, 30, 40, 50, 60, 80, 120, 200),
-    abseta = cms.vdouble(  0.0, 1.2, 2.4),
+MEDIUM_PT_ETA_MAP = cms.PSet(
+    pt     = cms.vdouble(10, 20, 25, 30, 40, 50, 60, 120),
+    abseta = cms.vdouble( 0.0, 0.9, 1.2, 2.1, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     Medium = cms.vstring("pass"), 
     #tag selections
@@ -338,10 +371,10 @@ MEDIUM_PT_ETA_BINS1 = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-MEDIUM_PT_ACTIVITY_BARREL = cms.PSet(
+MEDIUM_ACTIVITY_ETA_MAP_INCLUSIVE_PT = cms.PSet(
     pfCombRelActivitydBCorr = cms.vdouble(0, 0.02, 0.05, 0.15, 1, 9999),
     pt     = cms.vdouble(10, 500),
-    abseta = cms.vdouble( 0, 1.2),
+    abseta = cms.vdouble( 0, 1.2, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     Medium = cms.vstring("pass"), 
     #tag selections
@@ -349,21 +382,11 @@ MEDIUM_PT_ACTIVITY_BARREL = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-MEDIUM_PT_ACTIVITY_ENDCAP = cms.PSet(
-    pfCombRelActivitydBCorr = cms.vdouble(0, 0.02, 0.05, 0.15, 1, 9999),
-    pt     = cms.vdouble(10, 500),
-    abseta = cms.vdouble( 1.2, 2.4),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    Medium = cms.vstring("pass"), 
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
+
 #
-MEDIUM_PT_ACTIVITY_PTLOW= cms.PSet(
+MEDIUM_ACTIVITY_PT_MAP_INCLUSIVE_ETA= cms.PSet(
     pfCombRelActivitydBCorr = cms.vdouble(0, 0.02, 0.05, 0.15, 1, 9999),
-    pt     = cms.vdouble(10, 40),
+    pt     = cms.vdouble(10, 40, 80, 200),
     abseta = cms.vdouble( 0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     Medium = cms.vstring("pass"), 
@@ -372,28 +395,7 @@ MEDIUM_PT_ACTIVITY_PTLOW= cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-MEDIUM_PT_ACTIVITY_PTMED= cms.PSet(
-    pfCombRelActivitydBCorr = cms.vdouble(0, 0.02, 0.05, 0.15, 1, 9999),
-    pt     = cms.vdouble(40, 80),
-    abseta = cms.vdouble( 0, 2.4),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    Medium = cms.vstring("pass"), 
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
-MEDIUM_PT_ACTIVITY_PTHIGH= cms.PSet(
-    pfCombRelActivitydBCorr = cms.vdouble(0, 0.02, 0.05, 0.15, 1, 9999),
-    pt     = cms.vdouble(80, 200),
-    abseta = cms.vdouble( 0, 2.4),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    Medium = cms.vstring("pass"), 
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
+
 
 #_*_*_*_
 #Samples
@@ -404,7 +406,13 @@ if scenario == 'data_all':
         if run == '2015D':
             process.TnP_MuonID = Template.clone(
                 InputFileNames = cms.vstring(
-                    'root://eoscms//eos/cms/store/group/phys_muon/perrin/SUSY/tnp_DATA_25ns_2015D_v3v4_withEAMiniIso_v2.root'
+                    #'root://eoscms//eos/cms/store/group/phys_muon/perrin/SUSY/tnp_DATA_25ns_2015D_v3v4_withEAMiniIso_v2.root'      #original file: full size on eos
+                    #'root://eoscms//eos/cms/store/group/phys_muon/perrin/SUSY/tnp_DATA_25ns_2015D_v3v4_withEAMiniIso_v2SmallTree.root' #small file with only 5000 events fot test purposes
+                    #'root:///afs/cern.ch/work/g/gaperrin/public/Ntuples_for_Jan/tnpZ_mu_POG_Data_25ns_run2015D_v3p2_withEAMiniIso.root'       
+                    'root:///afs/cern.ch/work/j/jhoss/public/151130_TnP_topUp/tnpZ_Data_25ns_run2015C_v3p31.root',
+                    'root:///afs/cern.ch/work/j/jhoss/public/151130_TnP_topUp/tnpZ_Data_25ns_run2015D_v3p2.root',
+                    'root:///afs/cern.ch/work/j/jhoss/public/151130_TnP_topUp/tnpZ_Data_25ns_run2015D_v3p31.root',
+                    'root:///afs/cern.ch/work/j/jhoss/public/151130_TnP_topUp/tnpZ_Data_25ns_run2015D_v3p3.root'
                     ),
                 InputTreeName = cms.string("fitter_tree"),
                 InputDirectoryName = cms.string("tpTree"),
@@ -417,7 +425,10 @@ elif scenario == 'mc_all':
             if order== 'LO':
                 process.TnP_MuonID = Template.clone(
                 InputFileNames = cms.vstring(
-                'root://eoscms//eos/cms/store/group/phys_muon/perrin/SUSY/tnp_MC_25ns_2015D_LO_SmallTree_withNVtxWeights_withEAMiniIso_v2.root'
+                #'root://eoscms//eos/cms/store/group/phys_muon/perrin/SUSY/tnp_MC_25ns_2015D_LO_SmallTree_withNVtxWeights_withEAMiniIso_v2.root'
+                #'root:///afs/cern.ch/work/g/gaperrin/public/Ntuples_for_Jan/tnp_MC_25ns_2015D_LO_SmallTree_withNVtxWeights_withEAMiniIso_v2.root'
+                #'root:///afs/cern.ch/work/g/gaperrin/public/Ntuples_for_Jan/tnp_MC_25ns_2015D_LO_withNVtxWeights_withEAMiniIso_v2.root'
+                'root:///afs/cern.ch/work/j/jhoss/public/151130_TnP_topUp/tnpZ_MC_25ns_madgraphMLM-pythia8_v3p2_withNVtxWeights.root' #LO sample for top up
                     ),
                 InputTreeName = cms.string("fitter_tree"),
                 InputDirectoryName = cms.string("tpTree"),
@@ -430,8 +441,11 @@ elif scenario == 'mc_all':
                 process.TnP_MuonID = Template.clone(
                 InputFileNames = cms.vstring(
                 #'root://eoscms//eos/cms/store/group/phys_muon/perrin/SUSY/tnp_MC_25ns_2015D_NLO_SmallTree_withNVtxWeights_WithWeights_withEAMiniIso_v2.root'
-                'root://eoscms//eos/cms/store/group/phys_muon/perrin/SUSY/tnpZ_MC_25ns_amcatnloFXFX-pythia8_v3_WithWeights.root'
-
+                #'root://eoscms//eos/cms/store/group/phys_muon/perrin/SUSY/tnpZ_MC_25ns_amcatnloFXFX-pythia8_v3_WithWeights.root'
+                #'root:///afs/cern.ch/work/j/jhoss/public/tnpZ_MC_25ns_amcatnloFXFX-pythia8_v3_WithWeights.root'    # local NLO sample full size 12e6 events
+                #'root:///afs/cern.ch/work/j/jhoss/public/tnpZ_MC_25ns_amcatnloFXFX-pythia8_v3_WithWeightsSmallTree.root'    #local NLO sample with 3e6 events
+                #'root:///afs/cern.ch/work/j/jhoss/public/tnpZ_MC_25ns_amcatnloFXFX-pythia8_v3_WithWeightsSmallTree_v2.root'    #local NLO sample with 9e6 events
+                'root:///afs/cern.ch/work/g/gaperrin/public/Ntuples_for_Jan/tnpZ_muPOG_MC_25ns_amcatnloFXFX-pythia8_v3p2_WithWeights_withEAMiniIso.root'
                     ),
                 InputTreeName = cms.string("fitter_tree"),
                 InputDirectoryName = cms.string("tpTree"),
@@ -454,49 +468,49 @@ ID_BINS = []
 #Loose ID
 if id_bins == '1':
     ID_BINS = [
-    (("Loose_noIP"), ("eta", ETA_BINS)),
-    (("Loose_noIP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
-    (("Loose_noIP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
-    (("Loose_noIP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
+    #(("Loose_noIP"), ("NUM_LooseID_DENOM_generalTracks_VAR_eta",            ETA_BINS_INCLUSIVE_PT           )),
+    #(("Loose_noIP"), ("NUM_LooseID_DENOM_generalTracks_VAR_vtx",            VTX_BINS_INCLUSIVE_ETA_PT       )),
+    #(("Loose_noIP"), ("NUM_LooseID_DENOM_generalTracks_VAR_pt",             PT_BINS_INCLUSIVE_ETA           )),
+    (("Loose_noIP"), ("NUM_LooseID_DENOM_generalTracks_VAR_map_pt_eta",         PT_ETA_MAP                      )),
     ]
 #Medium ID
 if id_bins == '2':
     ID_BINS = [
-    (("Medium_noIP"), ("eta", ETA_BINS)),
-    (("Medium_noIP"), ("vtx_bin1_24", VTX_BINS_ETA24 )),
-    (("Medium_noIP"), ("pt_alleta_bin1", PT_ALLETA_BINS1)),
-    (("Medium_noIP"), ("pt_spliteta_bin1", PT_ETA_BINS1)),
+    #(("Medium_noIP"), ("NUM_MediumID_DENOM_generalTracks_VAR_eta",          ETA_BINS_INCLUSIVE_PT           )),
+    #(("Medium_noIP"), ("NUM_MediumID_DENOM_generalTracks_VAR_vtx",          VTX_BINS_INCLUSIVE_ETA_PT       )),
+    #(("Medium_noIP"), ("NUM_MediumID_DENOM_generalTracks_VAR_pt",           PT_BINS_INCLUSIVE_ETA           )),
+    (("Medium_noIP"), ("NUM_MediumID_DENOM_generalTracks_VAR_map_pt_eta",       PT_ETA_MAP                      )),
     ]
 #_*_
 #IPs
 #_*_
 if id_bins == '3':
     ID_BINS = [
-    (("TightIP2D"), ("loose_eta", LOOSE_ETA_BINS)),
-    (("TightIP2D"), ("loose_vtx_bin1_24", LOOSE_VTX_BINS_ETA24 )),
-    (("TightIP2D"), ("loose_pt_alleta_bin1", LOOSE_PT_ALLETA_BINS1)),
-    (("TightIP2D"), ("loose_pt_spliteta_bin1", LOOSE_PT_ETA_BINS1)),
-    ]
-if id_bins == '4':
-    ID_BINS = [
-    (("TightIP2D"), ("medium_eta", MEDIUM_ETA_BINS)),
-    (("TightIP2D"), ("medium_vtx_bin1_24", MEDIUM_VTX_BINS_ETA24 )),
-    (("TightIP2D"), ("medium_pt_alleta_bin1", MEDIUM_PT_ALLETA_BINS1)),
-    (("TightIP2D"), ("medium_pt_spliteta_bin1", MEDIUM_PT_ETA_BINS1)),
+    #(("TightIP2D"), ("NUM_TightIP2D_DENOM_LooseID_VAR_eta",                 LOOSE_ETA_BINS_INCLUSIVE_PT           )),
+    #(("TightIP2D"), ("NUM_TightIP2D_DENOM_LooseID_VAR_vtx",                 LOOSE_VTX_BINS_INCLUSIVE_ETA_PT       )),
+    #(("TightIP2D"), ("NUM_TightIP2D_DENOM_LooseID_VAR_pt",                  LOOSE_PT_BINS_INCLUSIVE_ETA           )),
+    (("TightIP2D"), ("NUM_TightIP2D_DENOM_LooseID_VAR_map_pt_eta",              LOOSE_PT_ETA_MAP                      )),
+    ]                                                                                                                
+if id_bins == '4':                                                                                                   
+    ID_BINS = [                                                                                                      
+    #(("TightIP2D"), ("NUM_TightIP2D_DENOM_MediumID_VAR_eta",                MEDIUM_ETA_BINS_INCLUSIVE_PT           )), 
+    #(("TightIP2D"), ("NUM_TightIP2D_DENOM_MediumID_VAR_vtx",                MEDIUM_VTX_BINS_INCLUSIVE_ETA_PT       )),
+    #(("TightIP2D"), ("NUM_TightIP2D_DENOM_MediumID_VAR_pt",                 MEDIUM_PT_BINS_INCLUSIVE_ETA           )),
+    (("TightIP2D"), ("NUM_TightIP2D_DENOM_MediumID_VAR_map_pt_eta",             MEDIUM_PT_ETA_MAP                      )),
     ]
 if id_bins == '5':
     ID_BINS = [
-    (("TightIP3D"), ("loose_eta", LOOSE_ETA_BINS)),
-    (("TightIP3D"), ("loose_vtx_bin1_24", LOOSE_VTX_BINS_ETA24 )),
-    (("TightIP3D"), ("loose_pt_alleta_bin1", LOOSE_PT_ALLETA_BINS1)),
-    (("TightIP3D"), ("loose_pt_spliteta_bin1", LOOSE_PT_ETA_BINS1)),
+    #(("TightIP3D"), ("NUM_TightIP3D_DENOM_LooseID_VAR_eta",                 LOOSE_ETA_BINS_INCLUSIVE_PT           )),
+    #(("TightIP3D"), ("NUM_TightIP3D_DENOM_LooseID_VAR_vtx",                 LOOSE_VTX_BINS_INCLUSIVE_ETA_PT       )),
+    #(("TightIP3D"), ("NUM_TightIP3D_DENOM_LooseID_VAR_pt",                  LOOSE_PT_BINS_INCLUSIVE_ETA           )),
+    (("TightIP3D"), ("NUM_TightIP3D_DENOM_LooseID_VAR_map_pt_eta",              LOOSE_PT_ETA_MAP                      )),
     ]
 if id_bins == '6':
     ID_BINS = [
-    (("TightIP3D"), ("medium_eta", MEDIUM_ETA_BINS)),
-    (("TightIP3D"), ("medium_vtx_bin1_24", MEDIUM_VTX_BINS_ETA24 )),
-    (("TightIP3D"), ("medium_pt_alleta_bin1", MEDIUM_PT_ALLETA_BINS1)),
-    (("TightIP3D"), ("medium_pt_spliteta_bin1", MEDIUM_PT_ETA_BINS1)),
+    #(("TightIP3D"), ("NUM_TightIP3D_DENOM_MediumID_VAR_eta",                MEDIUM_ETA_BINS_INCLUSIVE_PT           )),
+    #(("TightIP3D"), ("NUM_TightIP3D_DENOM_MediumID_VAR_vtx",                MEDIUM_VTX_BINS_INCLUSIVE_ETA_PT       )),
+    #(("TightIP3D"), ("NUM_TightIP3D_DENOM_MediumID_VAR_pt",                 MEDIUM_PT_BINS_INCLUSIVE_ETA           )),
+    (("TightIP3D"), ("NUM_TightIP3D_DENOM_MediumID_VAR_map_pt_eta",             MEDIUM_PT_ETA_MAP                      )),
     ]
 #_*_*
 #ISOs
@@ -504,54 +518,127 @@ if id_bins == '6':
 #Loose MiniIso
 if id_bins == '7':
     ID_BINS = [
-    (("LooseMiniIso"), ("loose_eta", LOOSE_ETA_BINS)),
-    (("LooseMiniIso"), ("loose_vtx_bin1_24", LOOSE_VTX_BINS_ETA24 )),
-    (("LooseMiniIso"), ("loose_pt_alleta_bin1", LOOSE_PT_ALLETA_BINS1)),
-    (("LooseMiniIso"), ("loose_pt_spliteta_bin1", LOOSE_PT_ETA_BINS1)),
-    (("LooseMiniIso"), ("loose_pt_activity_barrel", LOOSE_PT_ACTIVITY_BARREL)),
-    (("LooseMiniIso"), ("loose_pt_activity_endcap", LOOSE_PT_ACTIVITY_ENDCAP)),
-    (("LooseMiniIso"), ("loose_pt_activity_lowpt", LOOSE_PT_ACTIVITY_PTLOW)),
-    (("LooseMiniIso"), ("loose_pt_activity_medpt", LOOSE_PT_ACTIVITY_PTMED)),
-    (("LooseMiniIso"), ("loose_pt_activity_highpt", LOOSE_PT_ACTIVITY_PTHIGH)),
+    #(("LooseMiniIso"), ("NUM_MiniIsoLoose_DENOM_LooseID_VAR_eta",                   LOOSE_ETA_BINS_INCLUSIVE_PT           )),
+    #(("LooseMiniIso"), ("NUM_MiniIsoLoose_DENOM_LooseID_VAR_vtx",                   LOOSE_VTX_BINS_INCLUSIVE_ETA_PT       )),
+    #(("LooseMiniIso"), ("NUM_MiniIsoLoose_DENOM_LooseID_VAR_pt",                    LOOSE_PT_BINS_INCLUSIVE_ETA           )),
+    (("LooseMiniIso"), ("NUM_MiniIsoLoose_DENOM_LooseID_VAR_map_pt_eta",                LOOSE_PT_ETA_MAP                      )),
+    #(("LooseMiniIso"), ("NUM_MiniIsoLoose_DENOM_LooseID_VAR_map_activity_eta",          LOOSE_ACTIVITY_ETA_MAP_INCLUSIVE_PT   )),
+    #(("LooseMiniIso"), ("NUM_MiniIsoLoose_DENOM_LooseID_VAR_map_activity_pt",           LOOSE_ACTIVITY_PT_MAP_INCLUSIVE_ETA   )),
     ]
 #Tight MiniIso
 if id_bins == '8':
     ID_BINS = [
-    (("TightMiniIso"), ("medium_eta", MEDIUM_ETA_BINS)),
-    (("TightMiniIso"), ("medium_vtx_bin1_24", MEDIUM_VTX_BINS_ETA24 )),
-    (("TightMiniIso"), ("medium_pt_alleta_bin1", MEDIUM_PT_ALLETA_BINS1)),
-    (("TightMiniIso"), ("medium_pt_spliteta_bin1", MEDIUM_PT_ETA_BINS1)),
-    (("TightMiniIso"), ("medium_pt_activity_barrel", MEDIUM_PT_ACTIVITY_BARREL)),
-    (("TightMiniIso"), ("medium_pt_activity_endcap", MEDIUM_PT_ACTIVITY_ENDCAP)),
-    (("TightMiniIso"), ("medium_pt_activity_lowpt", MEDIUM_PT_ACTIVITY_PTLOW)),
-    (("TightMiniIso"), ("medium_pt_activity_medpt", MEDIUM_PT_ACTIVITY_PTMED)),
-    (("TightMiniIso"), ("medium_pt_activity_highpt", MEDIUM_PT_ACTIVITY_PTHIGH)),
+    #(("TightMiniIso"), ("NUM_MiniIsoTight_DENOM_MediumID_VAR_eta",                  MEDIUM_ETA_BINS_INCLUSIVE_PT           )),
+    #(("TightMiniIso"), ("NUM_MiniIsoTight_DENOM_MediumID_VAR_vtx",                  MEDIUM_VTX_BINS_INCLUSIVE_ETA_PT       )),
+    #(("TightMiniIso"), ("NUM_MiniIsoTight_DENOM_MediumID_VAR_pt",                   MEDIUM_PT_BINS_INCLUSIVE_ETA           )),
+    (("TightMiniIso"), ("NUM_MiniIsoTight_DENOM_MediumID_VAR_map_pt_eta",               MEDIUM_PT_ETA_MAP                      )),
+    #(("TightMiniIso"), ("NUM_MiniIsoTight_DENOM_MediumID_VAR_map_activity_eta",         MEDIUM_ACTIVITY_ETA_MAP_INCLUSIVE_PT   )),
+    #(("TightMiniIso"), ("NUM_MiniIsoTight_DENOM_MediumID_VAR_map_activity_pt",          MEDIUM_ACTIVITY_PT_MAP_INCLUSIVE_ETA   )),
     ]
 if id_bins == '9':
     ID_BINS = [
-    (("TightMiniIso"), ("loose_eta", LOOSE_ETA_BINS)),
-    (("TightMiniIso"), ("loose_vtx_bin1_24", LOOSE_VTX_BINS_ETA24 )),
-    (("TightMiniIso"), ("loose_pt_alleta_bin1", LOOSE_PT_ALLETA_BINS1)),
-    (("TightMiniIso"), ("loose_pt_spliteta_bin1", LOOSE_PT_ETA_BINS1)),
-    (("TightMiniIso"), ("loose_pt_activity_barrel", LOOSE_PT_ACTIVITY_BARREL)),
-    (("TightMiniIso"), ("loose_pt_activity_endcap", LOOSE_PT_ACTIVITY_ENDCAP)),
-    (("TightMiniIso"), ("loose_pt_activity_lowpt", LOOSE_PT_ACTIVITY_PTLOW)),
-    (("TightMiniIso"), ("loose_pt_activity_medpt", LOOSE_PT_ACTIVITY_PTMED)),
-    (("TightMiniIso"), ("loose_pt_activity_highpt", LOOSE_PT_ACTIVITY_PTHIGH)),
+    #(("TightMiniIso"), ("NUM_MiniIsoTight_DENOM_LooseID_VAR_eta",                   LOOSE_ETA_BINS_INCLUSIVE_PT           )), 
+    #(("TightMiniIso"), ("NUM_MiniIsoTight_DENOM_LooseID_VAR_vtx",                   LOOSE_VTX_BINS_INCLUSIVE_ETA_PT       )),
+    #(("TightMiniIso"), ("NUM_MiniIsoTight_DENOM_LooseID_VAR_pt",                    LOOSE_PT_BINS_INCLUSIVE_ETA           )),
+    (("TightMiniIso"), ("NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta",                LOOSE_PT_ETA_MAP                      )),
+    #(("TightMiniIso"), ("NUM_MiniIsoTight_DENOM_LooseID_VAR_map_activity_eta",          LOOSE_ACTIVITY_ETA_MAP_INCLUSIVE_PT   )),
+    #(("TightMiniIso"), ("NUM_MiniIsoTight_DENOM_LooseID_VAR_map_activity_pt",           LOOSE_ACTIVITY_PT_MAP_INCLUSIVE_ETA   )),
     ]
 #MultiIso
 if id_bins == '10':
     ID_BINS = [
-    (("MediumMultiIso"), ("medium_eta", MEDIUM_ETA_BINS)),
-    (("MediumMultiIso"), ("medium_vtx_bin1_24", MEDIUM_VTX_BINS_ETA24 )),
-    (("MediumMultiIso"), ("medium_pt_alleta_bin1", MEDIUM_PT_ALLETA_BINS1)),
-    (("MediumMultiIso"), ("medium_pt_spliteta_bin1", MEDIUM_PT_ETA_BINS1)),
-    (("MediumMultiIso"), ("medium_pt_activity_barrel", MEDIUM_PT_ACTIVITY_BARREL)),
-    (("MediumMultiIso"), ("medium_pt_activity_endcap", MEDIUM_PT_ACTIVITY_ENDCAP)),
-    (("MediumMultiIso"), ("medium_pt_activity_lowpt", MEDIUM_PT_ACTIVITY_PTLOW)),
-    (("MediumMultiIso"), ("medium_pt_activity_medpt", MEDIUM_PT_ACTIVITY_PTMED)),
-    (("MediumMultiIso"), ("medium_pt_activity_highpt", MEDIUM_PT_ACTIVITY_PTHIGH)),
+    #(("MediumMultiIso"), ("NUM_MultiIsoMedium_DENOM_MediumID_VAR_eta",              MEDIUM_ETA_BINS_INCLUSIVE_PT           )), 
+    #(("MediumMultiIso"), ("NUM_MultiIsoMedium_DENOM_MediumID_VAR_vtx",              MEDIUM_VTX_BINS_INCLUSIVE_ETA_PT       )),
+    #(("MediumMultiIso"), ("NUM_MultiIsoMedium_DENOM_MediumID_VAR_pt",               MEDIUM_PT_BINS_INCLUSIVE_ETA           )),
+    (("MediumMultiIso"), ("NUM_MultiIsoMedium_DENOM_MediumID_VAR_map_pt_eta",           MEDIUM_PT_ETA_MAP                      )),
+    #(("MediumMultiIso"), ("NUM_MultiIsoMedium_DENOM_MediumID_VAR_map_activity_eta",     MEDIUM_ACTIVITY_ETA_MAP_INCLUSIVE_PT   )),
+    #(("MediumMultiIso"), ("NUM_MultiIsoMedium_DENOM_MediumID_VAR_map_activity_pt",      MEDIUM_ACTIVITY_PT_MAP_INCLUSIVE_ETA   )),
     ]
+#Loose+MiniIso02
+if id_bins == '11':
+    ID_BINS = [
+    (("Loose_plus_MiniIso02"), ("NUM_LooseID_plus_MiniIso02_DENOM_generalTracks_VAR_eta",                                           ETA_BINS_INCLUSIVE_PT           )),
+    (("Loose_plus_MiniIso02"), ("NUM_LooseID_plus_MiniIso02_DENOM_generalTracks_VAR_vtx",                                           VTX_BINS_INCLUSIVE_ETA_PT       )),
+    (("Loose_plus_MiniIso02"), ("NUM_LooseID_plus_MiniIso02_DENOM_generalTracks_VAR_pt",                                            PT_BINS_INCLUSIVE_ETA           )),
+    (("Loose_plus_MiniIso02"), ("NUM_LooseID_plus_MiniIso02_DENOM_generalTracks_VAR_map_pt_eta",                                        PT_ETA_MAP                      )),
+    (("Loose_plus_MiniIso02"), ("NUM_LooseID_plus_MiniIso02_DENOM_generalTracks_VAR_map_activity_eta",                                  ACTIVITY_ETA_MAP_INCLUSIVE_PT   )),
+    (("Loose_plus_MiniIso02"), ("NUM_LooseID_plus_MiniIso02_DENOM_generalTracks_VAR_map_activity_pt",                                   ACTIVITY_PT_MAP_INCLUSIVE_ETA   )),
+    ]
+#Loose+MiniIso02+TightIP2D
+if id_bins == '12':
+    ID_BINS = [
+    (("Loose_plus_MiniIso02_puls_TightIP2D"), ("NUM_LooseID_plus_MiniIso02_puls_TightIP2D_DENOM_generalTracks_VAR_eta",             ETA_BINS_INCLUSIVE_PT           )),
+    (("Loose_plus_MiniIso02_puls_TightIP2D"), ("NUM_LooseID_plus_MiniIso02_puls_TightIP2D_DENOM_generalTracks_VAR_vtx",             VTX_BINS_INCLUSIVE_ETA_PT       )),
+    (("Loose_plus_MiniIso02_puls_TightIP2D"), ("NUM_LooseID_plus_MiniIso02_puls_TightIP2D_DENOM_generalTracks_VAR_pt",              PT_BINS_INCLUSIVE_ETA           )),
+    (("Loose_plus_MiniIso02_puls_TightIP2D"), ("NUM_LooseID_plus_MiniIso02_puls_TightIP2D_DENOM_generalTracks_VAR_map_pt_eta",          PT_ETA_MAP                      )),
+    (("Loose_plus_MiniIso02_puls_TightIP2D"), ("NUM_LooseID_plus_MiniIso02_puls_TightIP2D_DENOM_generalTracks_VAR_map_activity_eta",    ACTIVITY_ETA_MAP_INCLUSIVE_PT   )),
+    (("Loose_plus_MiniIso02_puls_TightIP2D"), ("NUM_LooseID_plus_MiniIso02_puls_TightIP2D_DENOM_generalTracks_VAR_map_activity_pt",     ACTIVITY_PT_MAP_INCLUSIVE_ETA   )),
+    ]
+#Medium+MiniIso02
+if id_bins == '13':
+    ID_BINS = [
+    (("Medium_plus_MiniIso02"), ("NUM_MediumID_plus_MiniIso02_DENOM_generalTracks_VAR_eta",                                         ETA_BINS_INCLUSIVE_PT           )),
+    (("Medium_plus_MiniIso02"), ("NUM_MediumID_plus_MiniIso02_DENOM_generalTracks_VAR_vtx",                                         VTX_BINS_INCLUSIVE_ETA_PT       )),
+    (("Medium_plus_MiniIso02"), ("NUM_MediumID_plus_MiniIso02_DENOM_generalTracks_VAR_pt",                                          PT_BINS_INCLUSIVE_ETA           )),
+    (("Medium_plus_MiniIso02"), ("NUM_MediumID_plus_MiniIso02_DENOM_generalTracks_VAR_map_pt_eta",                                      PT_ETA_MAP                      )),
+    (("Medium_plus_MiniIso02"), ("NUM_MediumID_plus_MiniIso02_DENOM_generalTracks_VAR_map_activity_eta",                                ACTIVITY_ETA_MAP_INCLUSIVE_PT   )),
+    (("Medium_plus_MiniIso02"), ("NUM_MediumID_plus_MiniIso02_DENOM_generalTracks_VAR_map_activity_pt",                                 ACTIVITY_PT_MAP_INCLUSIVE_ETA   )),
+    ]
+#Loose+MiniIso02+TightIP3D
+if id_bins == '14':
+    ID_BINS = [
+    (("Loose_plus_MiniIso02_puls_TightIP3D"), ("NUM_LooseID_plus_MiniIso02_puls_TightIP3D_DENOM_generalTracks_VAR_eta",             ETA_BINS_INCLUSIVE_PT           )),
+    (("Loose_plus_MiniIso02_puls_TightIP3D"), ("NUM_LooseID_plus_MiniIso02_puls_TightIP3D_DENOM_generalTracks_VAR_vtx",             VTX_BINS_INCLUSIVE_ETA_PT       )),
+    (("Loose_plus_MiniIso02_puls_TightIP3D"), ("NUM_LooseID_plus_MiniIso02_puls_TightIP3D_DENOM_generalTracks_VAR_pt",              PT_BINS_INCLUSIVE_ETA           )),
+    (("Loose_plus_MiniIso02_puls_TightIP3D"), ("NUM_LooseID_plus_MiniIso02_puls_TightIP3D_DENOM_generalTracks_VAR_map_pt_eta",          PT_ETA_MAP                      )),
+    (("Loose_plus_MiniIso02_puls_TightIP3D"), ("NUM_LooseID_plus_MiniIso02_puls_TightIP3D_DENOM_generalTracks_VAR_map_activity_eta",    ACTIVITY_ETA_MAP_INCLUSIVE_PT   )),
+    (("Loose_plus_MiniIso02_puls_TightIP3D"), ("NUM_LooseID_plus_MiniIso02_puls_TightIP3D_DENOM_generalTracks_VAR_map_activity_pt",     ACTIVITY_PT_MAP_INCLUSIVE_ETA   )),
+    ]
+#Medium+MiniIso02+TightIP3D
+if id_bins == '15':
+    ID_BINS = [
+    (("Medium_plus_MiniIso02_puls_TightIP3D"), ("NUM_MediumID_plus_MiniIso02_puls_TightIP3D_DENOM_generalTracks_VAR_eta",           ETA_BINS_INCLUSIVE_PT           )),
+    (("Medium_plus_MiniIso02_puls_TightIP3D"), ("NUM_MediumID_plus_MiniIso02_puls_TightIP3D_DENOM_generalTracks_VAR_vtx",           VTX_BINS_INCLUSIVE_ETA_PT       )),
+    (("Medium_plus_MiniIso02_puls_TightIP3D"), ("NUM_MediumID_plus_MiniIso02_puls_TightIP3D_DENOM_generalTracks_VAR_pt",            PT_BINS_INCLUSIVE_ETA           )),
+    (("Medium_plus_MiniIso02_puls_TightIP3D"), ("NUM_MediumID_plus_MiniIso02_puls_TightIP3D_DENOM_generalTracks_VAR_map_pt_eta",        PT_ETA_MAP                      )),
+    (("Medium_plus_MiniIso02_puls_TightIP3D"), ("NUM_MediumID_plus_MiniIso02_puls_TightIP3D_DENOM_generalTracks_VAR_map_activity_eta",  ACTIVITY_ETA_MAP_INCLUSIVE_PT   )),
+    (("Medium_plus_MiniIso02_puls_TightIP3D"), ("NUM_MediumID_plus_MiniIso02_puls_TightIP3D_DENOM_generalTracks_VAR_map_activity_pt",   ACTIVITY_PT_MAP_INCLUSIVE_ETA   )),
+    ]
+#Medium+MiniIso02+TightIP2D
+if id_bins == '16':
+    ID_BINS = [
+    (("Medium_plus_MiniIso02_puls_TightIP2D"), ("NUM_MediumID_plus_MiniIso02_puls_TightIP2D_DENOM_generalTracks_VAR_eta",           ETA_BINS_INCLUSIVE_PT           )),
+    (("Medium_plus_MiniIso02_puls_TightIP2D"), ("NUM_MediumID_plus_MiniIso02_puls_TightIP2D_DENOM_generalTracks_VAR_vtx",           VTX_BINS_INCLUSIVE_ETA_PT       )),
+    (("Medium_plus_MiniIso02_puls_TightIP2D"), ("NUM_MediumID_plus_MiniIso02_puls_TightIP2D_DENOM_generalTracks_VAR_pt",            PT_BINS_INCLUSIVE_ETA           )),
+    (("Medium_plus_MiniIso02_puls_TightIP2D"), ("NUM_MediumID_plus_MiniIso02_puls_TightIP2D_DENOM_generalTracks_VAR_map_pt_eta",        PT_ETA_MAP                      )),
+    (("Medium_plus_MiniIso02_puls_TightIP2D"), ("NUM_MediumID_plus_MiniIso02_puls_TightIP2D_DENOM_generalTracks_VAR_map_activity_eta",  ACTIVITY_ETA_MAP_INCLUSIVE_PT   )),
+    (("Medium_plus_MiniIso02_puls_TightIP2D"), ("NUM_MediumID_plus_MiniIso02_puls_TightIP2D_DENOM_generalTracks_VAR_map_activity_pt",   ACTIVITY_PT_MAP_INCLUSIVE_ETA   )),
+    ]
+#Medium+MultiIsoMedium+TightIP2D+TightIP3D
+if id_bins == '17':
+    ID_BINS = [
+    (("Medium_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D"), ("NUM_MediumID_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D_DENOM_generalTracks_VAR_eta",           ETA_BINS_INCLUSIVE_PT           )),
+    (("Medium_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D"), ("NUM_MediumID_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D_DENOM_generalTracks_VAR_vtx",           VTX_BINS_INCLUSIVE_ETA_PT       )),
+    (("Medium_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D"), ("NUM_MediumID_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D_DENOM_generalTracks_VAR_pt",            PT_BINS_INCLUSIVE_ETA           )),
+    (("Medium_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D"), ("NUM_MediumID_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D_DENOM_generalTracks_VAR_map_pt_eta",        PT_ETA_MAP                      )),
+    (("Medium_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D"), ("NUM_MediumID_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D_DENOM_generalTracks_VAR_map_activity_eta",  ACTIVITY_ETA_MAP_INCLUSIVE_PT   )),
+    (("Medium_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D"), ("NUM_MediumID_plus_MediumMultiIso_plus_TightIP2D_plus_TightIP3D_DENOM_generalTracks_VAR_map_activity_pt",   ACTIVITY_PT_MAP_INCLUSIVE_ETA   )),
+    ]
+
+#Loose+MiniIso04+TightIP2D
+if id_bins == '18':
+    ID_BINS = [
+    (("Loose_plus_MiniIso04_puls_TightIP2D"), ("NUM_LooseID_plus_MiniIso04_puls_TightIP2D_DENOM_generalTracks_VAR_eta",             ETA_BINS_INCLUSIVE_PT           )),
+    (("Loose_plus_MiniIso04_puls_TightIP2D"), ("NUM_LooseID_plus_MiniIso04_puls_TightIP2D_DENOM_generalTracks_VAR_vtx",             VTX_BINS_INCLUSIVE_ETA_PT       )),
+    (("Loose_plus_MiniIso04_puls_TightIP2D"), ("NUM_LooseID_plus_MiniIso04_puls_TightIP2D_DENOM_generalTracks_VAR_pt",              PT_BINS_INCLUSIVE_ETA           )),
+    (("Loose_plus_MiniIso04_puls_TightIP2D"), ("NUM_LooseID_plus_MiniIso04_puls_TightIP2D_DENOM_generalTracks_VAR_map_pt_eta",          PT_ETA_MAP                      )),
+    (("Loose_plus_MiniIso04_puls_TightIP2D"), ("NUM_LooseID_plus_MiniIso04_puls_TightIP2D_DENOM_generalTracks_VAR_map_activity_eta",    ACTIVITY_ETA_MAP_INCLUSIVE_PT   )),
+    (("Loose_plus_MiniIso04_puls_TightIP2D"), ("NUM_LooseID_plus_MiniIso04_puls_TightIP2D_DENOM_generalTracks_VAR_map_activity_pt",     ACTIVITY_PT_MAP_INCLUSIVE_ETA   )),
+    ]
+
+
+
+
 
 #_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
 #Produce the efficiency .root files
@@ -571,17 +658,25 @@ for ID, ALLBINS in ID_BINS:
         _output += '/MC' + bs + run + order
     if not os.path.exists(_output):
         os.makedirs(_output)
-    module = process.TnP_MuonID.clone(OutputFileName = cms.string(_output + "/TnP_MuonID_%s_%s.root" % (ID, X)))
+    module = process.TnP_MuonID.clone(OutputFileName = cms.string(_output + "/TnP_MuonID_%s.root" % (X)))
     shape = cms.vstring("vpvPlusExpo")
     #shape = cms.vstring("vpvPlusCheb")
-    if not "Iso" in ID:  #customize only for ID
-        if (len(B.pt)==10):  #customize only when the pT have the high pt bins
-            if "Loose_noIP" in ID:
-                shape = cms.vstring("vpvPlusExpo","*pt_bin5*","vpvPlusCheb","*pt_bin6*","vpvPlusCheb","*pt_bin7*","vpvPlusCheb","*pt_bin8*","vpvPlusCheb")
-            else:
-                shape = cms.vstring("vpvPlusExpo","*pt_bin6*","vpvPlusCheb","*pt_bin7*","vpvPlusCheb","*pt_bin8*","vpvPlusCheb")
-    DEN = B.clone(); num = ID;
 
+    if(("Iso" in ID) and (not "plus" in ID)):
+        shape = cms.vstring("vpvPlusExpo")
+    else:
+    #if not "Iso" in ID:  #customize only for ID
+        if ALLBINS[0].find('VAR_pt') != -1: 
+                shape = cms.vstring("vpvPlusExpo","*pt_bin6*","vpvPlusCheb","*pt_bin7*","vpvPlusCheb","*pt_bin8*","vpvPlusCheb")
+        if ALLBINS[0].find('VAR_map_pt_eta') != -1: 
+                shape = cms.vstring("vpvPlusExpo","*pt_bin6*","vpvPlusCheb")
+    
+        #if (len(B.pt)>=8):  #customize only when the pT have the high pt bins
+        #    if "Loose_noIP" in ID:
+        #        shape = cms.vstring("vpvPlusExpo","*pt_bin5*","vpvPlusCheb","*pt_bin6*","vpvPlusCheb","*pt_bin7*","vpvPlusCheb","*pt_bin8*","vpvPlusCheb")
+        #    else:
+        #        shape = cms.vstring("vpvPlusExpo","*pt_bin6*","vpvPlusCheb","*pt_bin7*","vpvPlusCheb","*pt_bin8*","vpvPlusCheb")
+    DEN = B.clone(); num = ID;
     #compute isolation efficiency 
     if scenario == 'data_all':
         setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
