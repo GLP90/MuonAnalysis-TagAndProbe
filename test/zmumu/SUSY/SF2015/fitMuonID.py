@@ -409,10 +409,10 @@ if scenario == 'data_all':
                     #'root://eoscms//eos/cms/store/group/phys_muon/perrin/SUSY/tnp_DATA_25ns_2015D_v3v4_withEAMiniIso_v2.root'      #original file: full size on eos
                     #'root://eoscms//eos/cms/store/group/phys_muon/perrin/SUSY/tnp_DATA_25ns_2015D_v3v4_withEAMiniIso_v2SmallTree.root' #small file with only 5000 events fot test purposes
                     #'root:///afs/cern.ch/work/g/gaperrin/public/Ntuples_for_Jan/tnpZ_mu_POG_Data_25ns_run2015D_v3p2_withEAMiniIso.root'       
-                    'root:///afs/cern.ch/work/j/jhoss/public/151130_TnP_topUp/tnpZ_Data_25ns_run2015C_v3p31.root',
-                    'root:///afs/cern.ch/work/j/jhoss/public/151130_TnP_topUp/tnpZ_Data_25ns_run2015D_v3p2.root',
-                    'root:///afs/cern.ch/work/j/jhoss/public/151130_TnP_topUp/tnpZ_Data_25ns_run2015D_v3p31.root',
-                    'root:///afs/cern.ch/work/j/jhoss/public/151130_TnP_topUp/tnpZ_Data_25ns_run2015D_v3p3.root'
+                    '/afs/cern.ch/work/j/jhoss/public/151130_TnP_topUp/tnpZ_Data_25ns_run2015C_v3p31.root',
+                    '/afs/cern.ch/work/j/jhoss/public/151130_TnP_topUp/tnpZ_Data_25ns_run2015D_v3p2.root',
+                    '/afs/cern.ch/work/j/jhoss/public/151130_TnP_topUp/tnpZ_Data_25ns_run2015D_v3p31.root',
+                    '/afs/cern.ch/work/j/jhoss/public/151130_TnP_topUp/tnpZ_Data_25ns_run2015D_v3p3.root'
                     ),
                 InputTreeName = cms.string("fitter_tree"),
                 InputDirectoryName = cms.string("tpTree"),
@@ -445,7 +445,7 @@ elif scenario == 'mc_all':
                 #'root:///afs/cern.ch/work/j/jhoss/public/tnpZ_MC_25ns_amcatnloFXFX-pythia8_v3_WithWeights.root'    # local NLO sample full size 12e6 events
                 #'root:///afs/cern.ch/work/j/jhoss/public/tnpZ_MC_25ns_amcatnloFXFX-pythia8_v3_WithWeightsSmallTree.root'    #local NLO sample with 3e6 events
                 #'root:///afs/cern.ch/work/j/jhoss/public/tnpZ_MC_25ns_amcatnloFXFX-pythia8_v3_WithWeightsSmallTree_v2.root'    #local NLO sample with 9e6 events
-                'root:///afs/cern.ch/work/g/gaperrin/public/Ntuples_for_Jan/tnpZ_muPOG_MC_25ns_amcatnloFXFX-pythia8_v3p2_WithWeights_withEAMiniIso.root'
+                '/afs/cern.ch/work/g/gaperrin/public/Ntuples_for_Jan/tnpZ_muPOG_MC_25ns_amcatnloFXFX-pythia8_v3p2_WithWeights_withEAMiniIso.root'
                     ),
                 InputTreeName = cms.string("fitter_tree"),
                 InputDirectoryName = cms.string("tpTree"),
