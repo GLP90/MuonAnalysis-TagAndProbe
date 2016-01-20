@@ -399,30 +399,15 @@ TIGHT_PT_ETA_BINS = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
     
 )
-if scenario == 'data_all':
-    if sample == 'JSON1280':
-        process.TnP_MuonID = Template.clone(
-            InputFileNames = cms.vstring(
-                'tnpZ_Data_25ns_run2015D_v3p2.root'
-                ),
-            InputTreeName = cms.string("fitter_tree"),
-            InputDirectoryName = cms.string("tpTree"),
-            OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
-            Efficiencies = cms.PSet(),
-            )
-elif scenario == 'mc_all':
-    if sample == 'NLO':
-         process.TnP_MuonID = Template.clone(
-         InputFileNames = cms.vstring(
-             'tnpZ_MC_25ns_amcatnloFXFX-pythia8_v3p2_WithWeights.root'
-             ),
-         InputTreeName = cms.string("fitter_tree"),
-         InputDirectoryName = cms.string("tpTree"),
-         OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
-         Efficiencies = cms.PSet(),
-         )
-         process.TnP_MuonID.WeightVariable = cms.string("weight")
-         process.TnP_MuonID.Variables.weight = cms.vstring("weight","-10","10","")
+process.TnP_MuonID = Template.clone(
+    InputFileNames = cms.vstring(
+        'root://eoscms//eos/cms/store/group/phys_tracking/gpetrucc/tnp/76X/tnpZ_MC_DY76_chunk0.root'
+        ),
+    InputTreeName = cms.string("fitter_tree"),
+    InputDirectoryName = cms.string("tpTree"),
+    OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
+    Efficiencies = cms.PSet(),
+    )
 ID_BINS = []
 
 #_*_*_*_*_*_*_*_*_*_*
