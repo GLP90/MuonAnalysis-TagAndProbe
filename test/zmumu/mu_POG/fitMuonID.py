@@ -1,24 +1,29 @@
 import FWCore.ParameterSet.Config as cms
+import sys, os, shutil
+from optparse import OptionParser
 ### USAGE:
 ###
 ###
 ###
 ###
 
-import sys, os, shutil
+#_*_*_*_*_*_
+#Read Inputs
+#_*_*_*_*_*_
+
 args = sys.argv[1:]
-iteration = 'TEST'
+iteration = ''
 if len(args) > 1: iteration = args[1]
 print "The iteration is", iteration
 id_bins = '1'
 if len(args) > 2: id_bins = args[2]
-print 'id_bins is', id_bins
+print 'The id_bins is', id_bins
 scenario = "data_all"
 if len(args) > 3: scenario = args[3]
 print "Will run scenario ", scenario
-sample = 'JSON1280'
+sample = 'data'
 if len(args) > 4: sample = args[4]
-print 'the sample is', sample 
+print 'The sample is', sample 
 
 process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
@@ -399,15 +404,28 @@ TIGHT_PT_ETA_BINS = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
     
 )
-process.TnP_MuonID = Template.clone(
-    InputFileNames = cms.vstring(
-        'root://eoscms//eos/cms/store/group/phys_tracking/gpetrucc/tnp/76X/tnpZ_MC_DY76_chunk0.root'
-        ),
-    InputTreeName = cms.string("fitter_tree"),
-    InputDirectoryName = cms.string("tpTree"),
-    OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
-    Efficiencies = cms.PSet(),
-    )
+
+if sample == "mc":
+    process.TnP_MuonID = Template.clone(
+        InputFileNames = cms.vstring(
+            'root://eoscms//eos/cms/store/group/phys_tracking/ebrondol/tnp/76X/tnpZ_Data_Run2015D_16Dec2015-v1_run260627.root'
+            ),
+        InputTreeName = cms.string("fitter_tree"),
+        InputDirectoryName = cms.string("tpTree"),
+        OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
+        Efficiencies = cms.PSet(),
+        )
+if sample == "data":
+    process.TnP_MuonID = Template.clone(
+        InputFileNames = cms.vstring(
+            'root://eoscms//eos/cms/store/group/phys_tracking/gpetrucc/tnp/76X/tnpZ_MC_DY76_chunk0.root'
+            ),
+        InputTreeName = cms.string("fitter_tree"),
+        InputDirectoryName = cms.string("tpTree"),
+        OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
+        Efficiencies = cms.PSet(),
+        )
+
 ID_BINS = []
 
 #_*_*_*_*_*_*_*_*_*_*
@@ -505,17 +523,21 @@ if id_bins == '9':
 for ID, ALLBINS in ID_BINS:
     X = ALLBINS[0]
     B = ALLBINS[1]
-    _output = os.getcwd() + '/Efficiency_' + iteration
+    _output = os.getcwd() + '/Efficiency' + iteration
     if not os.path.exists(_output):
-        print 'Creating', '/Efficiency_' + iteration,'directory where the fits are stored'  
+        print 'Creating', '/Efficiency' + iteration,', the directory where the fits are stored.'  
         os.makedirs(_output)
     if scenario == 'data_all':
-        _output += '/DATA' + '_' + sample
+        _output += '/DATA'
     elif scenario == 'mc_all':
-        _output += '/MC' + '_' + sample
+        _output += '/MC' 
+    #if scenario == 'data_all':
+    #    _output += '/DATA' + '_' + sample
+    #elif scenario == 'mc_all':
+    #    _output += '/MC' + '_' + sample
     if not os.path.exists(_output):
         os.makedirs(_output)
-    module = process.TnP_MuonID.clone(OutputFileName = cms.string(_output + "/TnP_%s.root" % (X)))
+    module = process.TnP_MuonID.clone(OutputFileName = cms.string(_output + "/TnP_MC_%s.root" % (X)))
     #save the fitconfig in the plot directory
     shutil.copyfile(os.getcwd()+'/fitMuonID.py',_output+'/fitMuonID.py')
     shape = cms.vstring("vpvPlusExpo")
@@ -533,7 +555,6 @@ for ID, ALLBINS in ID_BINS:
                 EfficiencyCategoryAndState = cms.vstring(num,"below"),
                 UnbinnedVariables = cms.vstring("mass"),
                 BinnedVariables = DEN,
-                #BinToPDFmap = cms.vstring(shape)
                 BinToPDFmap = shape
                 ))
         else:
@@ -541,7 +562,6 @@ for ID, ALLBINS in ID_BINS:
                 EfficiencyCategoryAndState = cms.vstring(num,"above"),
                 UnbinnedVariables = cms.vstring("mass"),
                 BinnedVariables = DEN,
-                #BinToPDFmap = cms.vstring(shape)
                 BinToPDFmap = shape
                 ))
         setattr(process, "TnP_MuonID_"+ID+"_"+X, module)        
@@ -552,7 +572,6 @@ for ID, ALLBINS in ID_BINS:
                 EfficiencyCategoryAndState = cms.vstring(num,"below"),
                 UnbinnedVariables = cms.vstring("mass","weight"),
                 BinnedVariables = DEN,
-                #BinToPDFmap = cms.vstring(shape)
                 BinToPDFmap = shape
                 ))
         else:
@@ -560,7 +579,6 @@ for ID, ALLBINS in ID_BINS:
                 EfficiencyCategoryAndState = cms.vstring(num,"above"),
                 UnbinnedVariables = cms.vstring("mass","weight"),
                 BinnedVariables = DEN,
-                #BinToPDFmap = cms.vstring(shape)
                 BinToPDFmap = shape
                 ))
         setattr(process, "TnP_MuonID_"+ID+"_"+X, module)        
