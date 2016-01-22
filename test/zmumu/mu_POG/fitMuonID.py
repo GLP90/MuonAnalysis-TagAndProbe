@@ -30,7 +30,11 @@ process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 
-#set different mass range if iso
+#_*_*_*_*_*_*_*_*_*_*_*_*
+#Prepare variables, den, num and fit funct
+#_*_*_*_*_*_*_*_*_*_*_*_*
+
+#Set-up the mass range
 _mrange = "70"
 if (int(id_bins) > 4) and (int(id_bins) < 10): 
     _mrange = "77"
@@ -45,7 +49,6 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     Variables = cms.PSet(
         weight = cms.vstring("weight","-100","100",""),
         mass = cms.vstring("Tag-muon Mass", _mrange, "130", "GeV/c^{2}"),
-        #mass = cms.vstring("Tag-muon Mass", "70", "130", "GeV/c^{2}"),
         pt = cms.vstring("muon p_{T}", "0", "1000", "GeV/c"),
         eta    = cms.vstring("muon #eta", "-2.5", "2.5", ""),
         abseta = cms.vstring("muon |#eta|", "0", "2.5", ""),
@@ -415,6 +418,16 @@ if sample == "mc":
         OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
         Efficiencies = cms.PSet(),
         )
+if sample == "mclocal":
+    process.TnP_MuonID = Template.clone(
+        InputFileNames = cms.vstring(
+            'tnpZ_MC_DY76_chunk0.root'
+            ),
+        InputTreeName = cms.string("fitter_tree"),
+        InputDirectoryName = cms.string("tpTree"),
+        OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
+        Efficiencies = cms.PSet(),
+        )
 if sample == "data":
     process.TnP_MuonID = Template.clone(
         InputFileNames = cms.vstring(
@@ -426,11 +439,18 @@ if sample == "data":
         Efficiencies = cms.PSet(),
         )
 
+if scenario == "mc_all":
+    print "Including the weight for MC"
+    process.TnP_MuonID.WeightVariable = cms.string("weight")
+    process.TnP_MuonID.Variables.weight = cms.vstring("weight","0","10","")
+    
+
 ID_BINS = []
 
 #_*_*_*_*_*_*_*_*_*_*
-#IDs
+#IDs/Den pair
 #_*_*_*_*_*_*_*_*_*_*
+
 #Loose ID
 if id_bins == '1':
     ID_BINS = [
@@ -520,6 +540,10 @@ if id_bins == '9':
 #if id_bins == '14': ID_BINS = [(("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS))]
 #if id_bins == '15': ID_BINS = [(("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS))]
 
+#_*_*_*_*_*_*_*_*_*_*_*
+#Launch fit production
+#_*_*_*_*_*_*_*_*_*_*_*
+
 for ID, ALLBINS in ID_BINS:
     X = ALLBINS[0]
     B = ALLBINS[1]
@@ -528,13 +552,9 @@ for ID, ALLBINS in ID_BINS:
         print 'Creating', '/Efficiency' + iteration,', the directory where the fits are stored.'  
         os.makedirs(_output)
     if scenario == 'data_all':
-        _output += '/DATA'
+        _output += '/DATA' + '_' + sample
     elif scenario == 'mc_all':
-        _output += '/MC' 
-    #if scenario == 'data_all':
-    #    _output += '/DATA' + '_' + sample
-    #elif scenario == 'mc_all':
-    #    _output += '/MC' + '_' + sample
+        _output += '/MC' + '_' + sample
     if not os.path.exists(_output):
         os.makedirs(_output)
     module = process.TnP_MuonID.clone(OutputFileName = cms.string(_output + "/TnP_MC_%s.root" % (X)))
