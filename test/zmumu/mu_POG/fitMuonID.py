@@ -36,7 +36,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 
 #Set-up the mass range
 _mrange = "70"
-if (int(id_bins) > 4) and (int(id_bins) < 10): 
+if (int(id_bins) > 5) and (int(id_bins) < 11): 
     _mrange = "77"
 print '_mrange is', _mrange
 
@@ -64,27 +64,34 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         dxyBS = cms.vstring("dxyBS", "-1000", "1000", ""),
         SIP = cms.vstring("SIP", "-1000", "1000", ""),
         pair_probeMultiplicity = cms.vstring("pair_probeMultiplicity", "0","30",""),
+        tkTrackerLay = cms.vstring("tkTrackerLay", "-10","1000",""),
+        tkPixelLay = cms.vstring("tkPixelLay", "-10","1000",""),
         ),
 
     Categories = cms.PSet(
         PF    = cms.vstring("PF Muon", "dummy[pass=1,fail=0]"),
         Medium   = cms.vstring("Medium Id. Muon", "dummy[pass=1,fail=0]"),
         Tight2012 = cms.vstring("Tight Id. Muon", "dummy[pass=1,fail=0]"),
+        TMOST = cms.vstring("TMOneStationTight", "dummy[pass=1,fail=0]"),
         tag_IsoMu20 = cms.vstring("PF Muon", "dummy[pass=1,fail=0]"),
+        Track_HP = cms.vstring("High-Purity muons", "dummy[pass=1,fail=0]"),
     ),
 
     Expressions = cms.PSet(
-        #IP 
+        #ID 
         Loose_noIPVar = cms.vstring("Loose_noIPVar", "PF==1", "PF"),
         Medium_noIPVar= cms.vstring("Medium_noIPVar", "Medium==1", "Medium"),
         Tight2012_zIPCutVar = cms.vstring("Tight2012_zIPCut", "Tight2012 == 1 && abs(dzPV) < 0.5", "Tight2012", "dzPV"),
+        SoftVar = cms.vstring("SoftVar", "TMOST == 1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
     ),
 
     Cuts = cms.PSet(
-        #IP
+        #ID
         Loose_noIP = cms.vstring("Loose_noIP", "Loose_noIPVar", "0.5"),
         Medium_noIP= cms.vstring("Medium_noIP", "Medium_noIPVar", "0.5"),
         Tight2012_zIPCut = cms.vstring("Tight2012_zIPCut", "Tight2012_zIPCutVar", "0.5"),
+        SoftID = cms.vstring("Soft", "SoftVar", "0.5"),
+
         #Isolations
         LooseIso4 = cms.vstring("LooseIso4" ,"combRelIsoPF04dBeta", "0.25"),
         TightIso4 = cms.vstring("TightIso4" ,"combRelIsoPF04dBeta", "0.15"),
@@ -421,7 +428,7 @@ if sample == "mc":
 if sample == "mclocal":
     process.TnP_MuonID = Template.clone(
         InputFileNames = cms.vstring(
-            'tnpZ_MC_DY76_chunk0.root'
+            'samples/tnpZ_MC_DY76_chunk0.root'
             ),
         InputTreeName = cms.string("fitter_tree"),
         InputDirectoryName = cms.string("tpTree"),
@@ -478,9 +485,18 @@ if id_bins == '3':
     #(("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS)),
     (("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS)),
     ]
+#SoftID
+if id_bins == '4':
+    ID_BINS = [
+    #(("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_eta", ETA_BINS)),
+    #(("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_coarse_eta", COARSE_ETA_BINS)),
+    #(("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_vtx_bin1_24", VTX_BINS_ETA24 )),
+    #(("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS)),
+    (("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS)),
+    ]
 #Additional studies on Medium ID (in selected eta region)
 #Medium ID
-if id_bins == '4':
+if id_bins == '5':
     ID_BINS = [
     #(("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_phi_loweta", PHI_LOWETA)),
     #(("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_phi_higheta", PHI_HIGHETA )),
@@ -491,7 +507,7 @@ if id_bins == '4':
 #ISOs
 #_*_*_*_*_*_*_*_*_*_*
 #Loose Iso
-if id_bins == '5':
+if id_bins == '6':
     ID_BINS = [
     #(("LooseIso4"), ("NUM_LooseRelIso_DEN_LooseID_PAR_eta", LOOSE_ETA_BINS)),
     #(("LooseIso4"), ("NUM_LooseRelIso_DEN_LooseID_PAR_coarse_eta", LOOSE_COARSE_ETA_BINS)),
@@ -499,7 +515,7 @@ if id_bins == '5':
     #(("LooseIso4"), ("NUM_LooseRelIso_DEN_LooseID_PAR_pt_alleta_bin1", LOOSE_PT_ALLETA_BINS)),
     (("LooseIso4"), ("NUM_LooseRelIso_DEN_LooseID_PAR_pt_spliteta_bin1", LOOSE_PT_ETA_BINS)),
     ]
-if id_bins == '6':
+if id_bins == '7':
     ID_BINS = [
     #(("LooseIso4"), ("NUM_LooseRelIso_DEN_MediumID_PAR_eta", MEDIUM_ETA_BINS)),
     #(("LooseIso4"), ("NUM_LooseRelIso_DEN_MediumID_PAR_coarse_eta", MEDIUM_COARSE_ETA_BINS)),
@@ -507,7 +523,7 @@ if id_bins == '6':
     #(("LooseIso4"), ("NUM_LooseRelIso_DEN_MediumID_PAR_pt_alleta_bin1", MEDIUM_PT_ALLETA_BINS)),
     (("LooseIso4"), ("NUM_LooseRelIso_DEN_MediumID_PAR_pt_spliteta_bin1", MEDIUM_PT_ETA_BINS)),
     ]
-if id_bins == '7':
+if id_bins == '8':
     ID_BINS = [
     #(("LooseIso4"), ("NUM_LooseRelIso_DEN_TightID_PAR_eta", TIGHT_ETA_BINS)),
     #(("LooseIso4"), ("NUM_LooseRelIso_DEN_TightID_PAR_coarse_eta", TIGHT_COARSE_ETA_BINS)),
@@ -516,7 +532,7 @@ if id_bins == '7':
     (("LooseIso4"), ("NUM_LooseRelIso_DEN_TightID_PAR_pt_spliteta_bin1", TIGHT_PT_ETA_BINS)),
     ]
 #Tight Iso
-if id_bins == '8':
+if id_bins == '9':
     ID_BINS = [
     #(("TightIso4"), ("NUM_TightRelIso_DEN_TightID_PAR_eta", TIGHT_ETA_BINS)),
     #(("TightIso4"), ("NUM_TightRelIso_DEN_TightID_PAR_coarse_eta", TIGHT_COARSE_ETA_BINS)),
@@ -524,7 +540,7 @@ if id_bins == '8':
     #(("TightIso4"), ("NUM_TightRelIso_DEN_TightID_PAR_pt_alleta_bin1", TIGHT_PT_ALLETA_BINS)),
     (("TightIso4"), ("NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1", TIGHT_PT_ETA_BINS)),
     ]
-if id_bins == '9':
+if id_bins == '10':
     ID_BINS = [
     #(("TightIso4"), ("NUM_TightRelIso_DEN_MediumID_PAR_eta", MEDIUM_ETA_BINS)),
     #(("TightIso4"), ("NUM_TightRelIso_DEN_MediumID_PAR_coarse_eta", MEDIUM_COARSE_ETA_BINS)),
