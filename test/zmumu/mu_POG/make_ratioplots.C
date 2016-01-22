@@ -13,7 +13,6 @@
 #include "TLegendEntry.h"
 
 #include <iostream>
-//#include <ofstream>
 
 //!! To compute SF = MC/Data
 TH1F* DividTGraphs(TGraphAsymmErrors* gr1, TGraphAsymmErrors* gr2){
@@ -76,7 +75,7 @@ TH1F* DividTGraphs(TGraphAsymmErrors* gr1, TGraphAsymmErrors* gr2){
 }
 
 
-int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _path2, TString _output, TString comparison){
+int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _path2, TString _output){
 
     setTDRStyle();
     gROOT->SetBatch(kTRUE);
@@ -88,7 +87,6 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     else if(_canvas.Contains("pt_PLOT_abseta_bin2")){_par = "abseta_bin2";}
     else if(_canvas.Contains("pt_PLOT_abseta_bin3")){_par = "abseta_bin3";}
 
-    //cout<<_file<<endl;
     TFile *f1 = TFile::Open(_path1 + _file);
     TCanvas* c1 = (TCanvas*) f1->Get(_canvas);
     TGraphAsymmErrors* eff1 = (TGraphAsymmErrors*)c1->GetPrimitive("hxy_fit_eff");
@@ -126,7 +124,6 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     eff1->GetXaxis()->SetTitle(_xtitle);
     TString _title = eff1->GetXaxis()->GetTitle();
     eff1->GetXaxis()->SetTitle("");
-    //eff1->GetYaxis()->SetRangeUser(0.8001, 1.05);
     eff1->GetYaxis()->SetRangeUser(0.79, 1.1);
     eff1->GetYaxis()->SetTitleSize(27);
     eff1->GetYaxis()->SetTitleFont(63);
@@ -249,7 +246,6 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     TLegend* leg = new TLegend(0.45, 0.65, 0.75 , 0.85);
     leg->SetHeader(_legtext);
     TLegendEntry *header = (TLegendEntry*)leg->GetListOfPrimitives()->First();
-    //header->SetTextAlign(22);
     header->SetTextColor(1);
     header->SetTextFont(43);
     header->SetTextSize(20);
@@ -259,28 +255,20 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     else if(_path1.Contains("MC")){ 
         if(_path1.Contains("NLO")) _leg1 = "MC NLO"; 
         else if(_path1.Contains("LO")) _leg1 = "MC LO";
+        else _leg1 = "MC";
     }
     
     if(_path2.Contains("DATA")) _leg2 = "data";
     else if(_path2.Contains("MC")){ 
         if(_path2.Contains("NLO")) _leg2 = "MC NLO";
         else if(_path2.Contains("LO")) _leg2 = "MC LO";
+        else _leg2 = "MC";
     }
     
 
     leg->AddEntry(eff1, _leg1, "LP");
     leg->AddEntry(eff2, _leg2,"LP");
     
-    /*
-    if (comparison == "mcdata"){
-    leg->AddEntry(eff1, "Data", "LP");
-    leg->AddEntry(eff2, "MC","LP");
-    } 
-    else if (comparison == "mcmc"){
-    leg->AddEntry(eff1, "LO", "LP");
-    leg->AddEntry(eff2, "NLO","LP");
-    } 
-    */
     leg->SetBorderSize(0.);
     leg->SetTextFont(43);
     leg->SetTextSize(20);
@@ -303,9 +291,7 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     ratio->SetLineColor(1);
     ratio->SetMarkerStyle(20);
     ratio->SetMarkerColor(1);
-    //ratio->GetYaxis()->SetRangeUser(0.9,1.0999);
     ratio->GetYaxis()->SetRangeUser(0.95,1.04999);
-    //ratio->GetYaxis()->SetRangeUser(0.98,1.01999);
     ratio->GetYaxis()->SetTitle("Data/MC");
     ratio->GetYaxis()->SetNdivisions(505);
     ratio->GetYaxis()->SetLabelSize(20);

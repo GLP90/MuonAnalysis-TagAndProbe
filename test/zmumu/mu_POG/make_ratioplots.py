@@ -58,7 +58,7 @@ def getparameter(_file):
 import sys, os
 args = sys.argv[1:]
 
-print 'starting making ratio plots'
+print 'Start making ratio plots.'
 
 iteration = '1'
 if len(args) > 0: iteration =  args[0]
@@ -82,16 +82,11 @@ debug = True
 
 inputeff = os.getcwd() + "/Efficiency" + iteration 
 
-#_path1 = os.getcwd() + "/Efficiency" + iteration + '/' + scenario1 + bspace1 + run1 + order1 + '/'
-#_path2 = os.getcwd() + "/Efficiency" + iteration + '/' + scenario2 + bspace2 + run2 + order2 + '/'
 _path1 = os.getcwd() + "/Efficiency" + iteration + '/' + sample1 + '/'
 _path2 = os.getcwd() + "/Efficiency" + iteration + '/' + sample2 + '/'
 
 comparison = 'mcdata'
-#if scenario1 == scenario2 and scenario1 == 'DATA': comparison = 'mcdata'
-#elif scenario1 == scenario2 and scenario1 == 'MC': comparison = 'mcmc'
 
-#_output += '/' + scenario1 + bspace1 + run1 + order1 + '_' + scenario2 + bspace2 + run2 + order2 +'/'
 _output += '/' + sample1 + '_' + sample2 + '/'
 if not os.path.exists(_output): 
     os.makedirs(_output)
@@ -114,8 +109,7 @@ for file in dir:
         else:
             if debug: print 'The file', file, 'exists !'
             CANVAS = getplotpath( file, _path1, _tptree)
-            print "hello"
             print "CANVAS is", CANVAS
             for _canvas in CANVAS:
                 print 'will retrieve the canvas ', _canvas
-                r.make_ratioplots(file, _canvas, _path1, _path2, _output, comparison)
+                r.make_ratioplots(file, _canvas, _path1, _path2, _output)
