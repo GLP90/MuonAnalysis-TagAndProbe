@@ -1,7 +1,11 @@
 *.root
 */
+!/plotsAndSFsExtractor
 *.d
 *.so
 *.png
 *.sw*
 *.pcm
+*.root
+*.pkl
+*.json
