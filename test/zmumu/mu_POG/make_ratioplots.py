@@ -77,7 +77,7 @@ if not os.path.exists(_output):
 if not os.path.exists(_output):
     os.makedirs(_output)
 
-r.gROOT.LoadMacro("make_ratioplots.C+")
+r.gROOT.LoadMacro("utils/make_ratioplots.C+")
 debug = True 
 
 inputeff = os.getcwd() + "/Efficiency" + iteration 

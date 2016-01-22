@@ -1,6 +1,7 @@
 *.root
 */
 !/plotsAndSFsExtractor
+!/utils
 *.d
 *.so
 *.png
