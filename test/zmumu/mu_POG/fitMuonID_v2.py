@@ -1,8 +1,8 @@
 import FWCore.ParameterSet.Config as cms
 import sys, os, shutil
 from optparse import OptionParser
-### USAGE: cmsRun fitMuonID.py test3 1 mc mc_all
-###
+### USAGE: cmsRun fitMuonID.py TEST tight loose mc mc_all
+###_id: tight, loose, medium, soft
 ###
 ###
 ###
@@ -11,18 +11,35 @@ from optparse import OptionParser
 #Read Inputs
 #_*_*_*_*_*_
 
+#args = sys.argv[1:]
+#iteration = ''
+#if len(args) > 1: iteration = args[1]
+#print "The iteration is", iteration
+#_id = 'tight'
+#if len(args) > 2: _id = args[2]
+#print 'The _id is', _id 
+#scenario = "data_all"
+#if len(args) > 3: scenario = args[3]
+#print "Will run scenario ", scenario
+#sample = 'data'
+#if len(args) > 4: sample = args[4]
+#print 'The sample is', sample 
+
 args = sys.argv[1:]
 iteration = ''
 if len(args) > 1: iteration = args[1]
 print "The iteration is", iteration
-id_bins = '1'
-if len(args) > 2: id_bins = args[2]
-print 'The id_bins is', id_bins
+_iso = 'tight'
+if len(args) > 2: _iso = args[2]
+print 'The _iso is', _iso 
+_id = 'tight'
+if len(args) > 3: _id = args[3]
+print 'The _id is', _id 
 scenario = "data_all"
-if len(args) > 3: scenario = args[3]
+if len(args) > 4: scenario = args[4]
 print "Will run scenario ", scenario
 sample = 'data'
-if len(args) > 4: sample = args[4]
+if len(args) > 5: sample = args[5]
 print 'The sample is', sample 
 
 process = cms.Process("TagProbe")
@@ -30,118 +47,371 @@ process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 
+if not _iso in ['noiso', 'loose', 'tight']: 
+    print '@ERROR: _iso should be \'noiso\', \'loos\' or \'tight\'. You used', _iso, '.Abort'
+    sys.exit()
+if not _id in ['loose', 'medium', 'tight', 'soft']: 
+    print '@ERROR: _iso should be \'loos\', \'medium\', \'tight\' of \'soft\'. You used', _id, '.Abort'
+    sys.exit()
+
 #_*_*_*_*_*_*_*_*_*_*_*_*
 #Prepare variables, den, num and fit funct
 #_*_*_*_*_*_*_*_*_*_*_*_*
 
 #Set-up the mass range
 _mrange = "70"
-if (int(id_bins) > 5) and (int(id_bins) < 11): 
+if not _iso == 'nosio': 
     _mrange = "77"
 print '_mrange is', _mrange
 
 
-Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
-        NumCPU = cms.uint32(1),
-    SaveWorkspace = cms.bool(False),
-
-
-    Variables = cms.PSet(
-        #weight = cms.vstring("weight","-100","100",""),
-        mass = cms.vstring("Tag-muon Mass", _mrange, "130", "GeV/c^{2}"),
-        pt = cms.vstring("muon p_{T}", "0", "1000", "GeV/c"),
-        eta    = cms.vstring("muon #eta", "-2.5", "2.5", ""),
-        #abseta = cms.vstring("muon |#eta|", "0", "2.5", ""),
-        #phi    = cms.vstring("muon #phi at vertex", "-3.1416", "3.1416", ""),
-        #charge = cms.vstring("muon charge", "-2.5", "2.5", ""),
-        #combRelIsoPF04dBeta = cms.vstring("dBeta rel iso dR 0.4", "-2", "9999999", ""),
-        tag_pt = cms.vstring("Tag p_{T}", "0", "1000", "GeV/c"),
-        #tag_nVertices   = cms.vstring("Number of vertices", "0", "999", ""),
-        #tag_abseta = cms.vstring("|eta| of tag muon", "0", "2.5", ""),
-        tag_combRelIsoPF04dBeta = cms.vstring("Tag dBeta rel iso dR 0.4", "-2", "9999999", ""),
-        #dB = cms.vstring("dB", "-1000", "1000", ""),
-        #dzPV = cms.vstring("dzPV", "-1000", "1000", ""),
-        #dxyBS = cms.vstring("dxyBS", "-1000", "1000", ""),
-        #SIP = cms.vstring("SIP", "-1000", "1000", ""),
-        pair_probeMultiplicity = cms.vstring("pair_probeMultiplicity", "0","30",""),
-        #tkTrackerLay = cms.vstring("tkTrackerLay", "-10","1000",""),
-        #tkPixelLay = cms.vstring("tkPixelLay", "-10","1000",""),
+if _id == "loose":
+    Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
+            NumCPU = cms.uint32(1),
+        SaveWorkspace = cms.bool(False),
+    
+    
+        Variables = cms.PSet(
+            #essential for all den/num
+            weight = cms.vstring("weight","-100","100",""),
+            mass = cms.vstring("Tag-muon Mass", _mrange, "130", "GeV/c^{2}"),
+            #variables for track only DEN
+            pt = cms.vstring("muon p_{T}", "0", "1000", "GeV/c"),
+            eta    = cms.vstring("muon #eta", "-2.5", "2.5", ""),
+            abseta = cms.vstring("muon |#eta|", "0", "2.5", ""),
+            pair_probeMultiplicity = cms.vstring("pair_probeMultiplicity", "0","30",""),
+            #for Iso
+            combRelIsoPF04dBeta = cms.vstring("dBeta rel iso dR 0.4", "-2", "9999999", ""),
+            #tag selection
+            tag_combRelIsoPF04dBeta = cms.vstring("Tag dBeta rel iso dR 0.4", "-2", "9999999", ""),
+            tag_pt = cms.vstring("Tag p_{T}", "0", "1000", "GeV/c"),
+            ),
+    
+        Categories = cms.PSet(
+            PF    = cms.vstring("PF Muon", "dummy[pass=1,fail=0]"),
+            #tag selection
+            tag_IsoMu20 = cms.vstring("PF Muon", "dummy[pass=1,fail=0]"),
         ),
-
-    Categories = cms.PSet(
-        PF    = cms.vstring("PF Muon", "dummy[pass=1,fail=0]"),
-        #Medium   = cms.vstring("Medium Id. Muon", "dummy[pass=1,fail=0]"),
-        #Tight2012 = cms.vstring("Tight Id. Muon", "dummy[pass=1,fail=0]"),
-        #TMOST = cms.vstring("TMOneStationTight", "dummy[pass=1,fail=0]"),
-        tag_IsoMu20 = cms.vstring("PF Muon", "dummy[pass=1,fail=0]"),
-        #Track_HP = cms.vstring("High-Purity muons", "dummy[pass=1,fail=0]"),
-    ),
-
-    Expressions = cms.PSet(
-        #ID 
-        Loose_noIPVar = cms.vstring("Loose_noIPVar", "PF==1", "PF"),
-        #Medium_noIPVar= cms.vstring("Medium_noIPVar", "Medium==1", "Medium"),
-        #Tight2012_zIPCutVar = cms.vstring("Tight2012_zIPCut", "Tight2012 == 1 && abs(dzPV) < 0.5", "Tight2012", "dzPV"),
-        #SoftVar = cms.vstring("SoftVar", "TMOST == 1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
-    ),
-
-    Cuts = cms.PSet(
-        #ID
-        Loose_noIP = cms.vstring("Loose_noIP", "Loose_noIPVar", "0.5"),
-        #Medium_noIP= cms.vstring("Medium_noIP", "Medium_noIPVar", "0.5"),
-        #Tight2012_zIPCut = cms.vstring("Tight2012_zIPCut", "Tight2012_zIPCutVar", "0.5"),
-        #SoftID = cms.vstring("Soft", "SoftVar", "0.5"),
-
-        #Isolations
-        #LooseIso4 = cms.vstring("LooseIso4" ,"combRelIsoPF04dBeta", "0.25"),
-        #TightIso4 = cms.vstring("TightIso4" ,"combRelIsoPF04dBeta", "0.15"),
-    ),
-
-                          
-    PDFs = cms.PSet(
-        voigtPlusExpo = cms.vstring(
-            "Voigtian::signal(mass, mean[90,80,100], width[2.495], sigma[3,1,20])",
-            "Exponential::backgroundPass(mass, lp[0,-5,5])",
-            "Exponential::backgroundFail(mass, lf[0,-5,5])",
-            "efficiency[0.9,0,1]",
-            "signalFractionInPassing[0.9]"
+    
+        Expressions = cms.PSet(
+            #ID 
+            Loose_noIPVar = cms.vstring("Loose_noIPVar", "PF==1", "PF"),
         ),
-        vpvPlusExpo = cms.vstring(
-            "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
-            "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,2,10])",
-            "SUM::signal(vFrac[0.8,0,1]*signal1, signal2)",
-            "Exponential::backgroundPass(mass, lp[-0.1,-1,0.1])",
-            "Exponential::backgroundFail(mass, lf[-0.1,-1,0.1])",
-            "efficiency[0.9,0,1]",
-            "signalFractionInPassing[0.9]"
+    
+        Cuts = cms.PSet(
+            #ID
+            Loose_noIP = cms.vstring("Loose_noIP", "Loose_noIPVar", "0.5"),
+            #Isolations
+            LooseIso4 = cms.vstring("LooseIso4" ,"combRelIsoPF04dBeta", "0.25"),
+            TightIso4 = cms.vstring("TightIso4" ,"combRelIsoPF04dBeta", "0.15"),
         ),
-        vpvPlusExpoMin70 = cms.vstring(
-            "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
-            "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,3,10])",
-            "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
-            "Exponential::backgroundPass(mass, lp[-0.1,-1,0.1])",
-            "Exponential::backgroundFail(mass, lf[-0.1,-1,0.1])",
-            "efficiency[0.9,0.7,1]",
-            "signalFractionInPassing[0.9]"
+    
+                              
+        PDFs = cms.PSet(
+            voigtPlusExpo = cms.vstring(
+                "Voigtian::signal(mass, mean[90,80,100], width[2.495], sigma[3,1,20])",
+                "Exponential::backgroundPass(mass, lp[0,-5,5])",
+                "Exponential::backgroundFail(mass, lf[0,-5,5])",
+                "efficiency[0.9,0,1]",
+                "signalFractionInPassing[0.9]"
+            ),
+            vpvPlusExpo = cms.vstring(
+                "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
+                "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,2,10])",
+                "SUM::signal(vFrac[0.8,0,1]*signal1, signal2)",
+                "Exponential::backgroundPass(mass, lp[-0.1,-1,0.1])",
+                "Exponential::backgroundFail(mass, lf[-0.1,-1,0.1])",
+                "efficiency[0.9,0,1]",
+                "signalFractionInPassing[0.9]"
+            ),
+            vpvPlusExpoMin70 = cms.vstring(
+                "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
+                "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,3,10])",
+                "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
+                "Exponential::backgroundPass(mass, lp[-0.1,-1,0.1])",
+                "Exponential::backgroundFail(mass, lf[-0.1,-1,0.1])",
+                "efficiency[0.9,0.7,1]",
+                "signalFractionInPassing[0.9]"
+            ),
+            vpvPlusCheb = cms.vstring(
+                "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
+                "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,3,10])",
+                "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
+                #par3
+                "RooChebychev::backgroundPass(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25]})",
+                "RooChebychev::backgroundFail(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25]})",
+                "efficiency[0.9,0.7,1]",
+                "signalFractionInPassing[0.9]"
+            )
         ),
-        vpvPlusCheb = cms.vstring(
-            "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
-            "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,3,10])",
-            "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
-            #par3
-            "RooChebychev::backgroundPass(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25]})",
-            "RooChebychev::backgroundFail(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25]})",
-            "efficiency[0.9,0.7,1]",
-            "signalFractionInPassing[0.9]"
-        )
-    ),
-
-    binnedFit = cms.bool(True),
-    binsForFit = cms.uint32(40),
-    saveDistributionsPlot = cms.bool(False),
-
-    Efficiencies = cms.PSet(), # will be filled later
-)
+    
+        binnedFit = cms.bool(True),
+        binsForFit = cms.uint32(40),
+        saveDistributionsPlot = cms.bool(False),
+    
+        Efficiencies = cms.PSet(), # will be filled later
+    )
+elif _id == "medium":
+    Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
+            NumCPU = cms.uint32(1),
+        SaveWorkspace = cms.bool(False),
+    
+    
+        Variables = cms.PSet(
+            #essential for all den/num
+            weight = cms.vstring("weight","-100","100",""),
+            mass = cms.vstring("Tag-muon Mass", _mrange, "130", "GeV/c^{2}"),
+            #variables for track only DEN
+            pt = cms.vstring("muon p_{T}", "0", "1000", "GeV/c"),
+            eta    = cms.vstring("muon #eta", "-2.5", "2.5", ""),
+            abseta = cms.vstring("muon |#eta|", "0", "2.5", ""),
+            pair_probeMultiplicity = cms.vstring("pair_probeMultiplicity", "0","30",""),
+            #for Iso
+            combRelIsoPF04dBeta = cms.vstring("dBeta rel iso dR 0.4", "-2", "9999999", ""),
+            #tag selection
+            tag_combRelIsoPF04dBeta = cms.vstring("Tag dBeta rel iso dR 0.4", "-2", "9999999", ""),
+            tag_pt = cms.vstring("Tag p_{T}", "0", "1000", "GeV/c"),
+            ),
+    
+        Categories = cms.PSet(
+            Medium   = cms.vstring("Medium Id. Muon", "dummy[pass=1,fail=0]"),
+            #tag selection
+            tag_IsoMu20 = cms.vstring("PF Muon", "dummy[pass=1,fail=0]"),
+        ),
+    
+        Expressions = cms.PSet(
+            #ID 
+            Medium_noIPVar= cms.vstring("Medium_noIPVar", "Medium==1", "Medium"),
+        ),
+    
+        Cuts = cms.PSet(
+            #ID
+            Medium_noIP= cms.vstring("Medium_noIP", "Medium_noIPVar", "0.5"),
+            #Isolations
+            LooseIso4 = cms.vstring("LooseIso4" ,"combRelIsoPF04dBeta", "0.25"),
+            TightIso4 = cms.vstring("TightIso4" ,"combRelIsoPF04dBeta", "0.15"),
+        ),
+    
+                              
+        PDFs = cms.PSet(
+            voigtPlusExpo = cms.vstring(
+                "Voigtian::signal(mass, mean[90,80,100], width[2.495], sigma[3,1,20])",
+                "Exponential::backgroundPass(mass, lp[0,-5,5])",
+                "Exponential::backgroundFail(mass, lf[0,-5,5])",
+                "efficiency[0.9,0,1]",
+                "signalFractionInPassing[0.9]"
+            ),
+            vpvPlusExpo = cms.vstring(
+                "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
+                "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,2,10])",
+                "SUM::signal(vFrac[0.8,0,1]*signal1, signal2)",
+                "Exponential::backgroundPass(mass, lp[-0.1,-1,0.1])",
+                "Exponential::backgroundFail(mass, lf[-0.1,-1,0.1])",
+                "efficiency[0.9,0,1]",
+                "signalFractionInPassing[0.9]"
+            ),
+            vpvPlusExpoMin70 = cms.vstring(
+                "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
+                "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,3,10])",
+                "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
+                "Exponential::backgroundPass(mass, lp[-0.1,-1,0.1])",
+                "Exponential::backgroundFail(mass, lf[-0.1,-1,0.1])",
+                "efficiency[0.9,0.7,1]",
+                "signalFractionInPassing[0.9]"
+            ),
+            vpvPlusCheb = cms.vstring(
+                "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
+                "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,3,10])",
+                "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
+                #par3
+                "RooChebychev::backgroundPass(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25]})",
+                "RooChebychev::backgroundFail(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25]})",
+                "efficiency[0.9,0.7,1]",
+                "signalFractionInPassing[0.9]"
+            )
+        ),
+    
+        binnedFit = cms.bool(True),
+        binsForFit = cms.uint32(40),
+        saveDistributionsPlot = cms.bool(False),
+    
+        Efficiencies = cms.PSet(), # will be filled later
+    )
+elif _id == 'tight':
+    Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
+            NumCPU = cms.uint32(1),
+        SaveWorkspace = cms.bool(False),
+    
+    
+        Variables = cms.PSet(
+            #essential for all den/num
+            weight = cms.vstring("weight","-100","100",""),
+            mass = cms.vstring("Tag-muon Mass", _mrange, "130", "GeV/c^{2}"),
+            #variables for track only DEN
+            pt = cms.vstring("muon p_{T}", "0", "1000", "GeV/c"),
+            eta    = cms.vstring("muon #eta", "-2.5", "2.5", ""),
+            abseta = cms.vstring("muon |#eta|", "0", "2.5", ""),
+            pair_probeMultiplicity = cms.vstring("pair_probeMultiplicity", "0","30",""),
+            #variables for tightID
+            dzPV = cms.vstring("dzPV", "-1000", "1000", ""),
+            #for Iso
+            combRelIsoPF04dBeta = cms.vstring("dBeta rel iso dR 0.4", "-2", "9999999", ""),
+            #tag selection
+            tag_combRelIsoPF04dBeta = cms.vstring("Tag dBeta rel iso dR 0.4", "-2", "9999999", ""),
+            tag_pt = cms.vstring("Tag p_{T}", "0", "1000", "GeV/c"),
+            ),
+    
+        Categories = cms.PSet(
+            Tight2012 = cms.vstring("Tight Id. Muon", "dummy[pass=1,fail=0]"),
+            #tag selection
+            tag_IsoMu20 = cms.vstring("PF Muon", "dummy[pass=1,fail=0]"),
+        ),
+    
+        Expressions = cms.PSet(
+            #ID 
+            Tight2012_zIPCutVar = cms.vstring("Tight2012_zIPCut", "Tight2012 == 1 && abs(dzPV) < 0.5", "Tight2012", "dzPV"),
+        ),
+    
+        Cuts = cms.PSet(
+            #ID
+            Tight2012_zIPCut = cms.vstring("Tight2012_zIPCut", "Tight2012_zIPCutVar", "0.5"),
+            #Isolations
+            LooseIso4 = cms.vstring("LooseIso4" ,"combRelIsoPF04dBeta", "0.25"),
+            TightIso4 = cms.vstring("TightIso4" ,"combRelIsoPF04dBeta", "0.15"),
+        ),
+    
+                              
+        PDFs = cms.PSet(
+            voigtPlusExpo = cms.vstring(
+                "Voigtian::signal(mass, mean[90,80,100], width[2.495], sigma[3,1,20])",
+                "Exponential::backgroundPass(mass, lp[0,-5,5])",
+                "Exponential::backgroundFail(mass, lf[0,-5,5])",
+                "efficiency[0.9,0,1]",
+                "signalFractionInPassing[0.9]"
+            ),
+            vpvPlusExpo = cms.vstring(
+                "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
+                "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,2,10])",
+                "SUM::signal(vFrac[0.8,0,1]*signal1, signal2)",
+                "Exponential::backgroundPass(mass, lp[-0.1,-1,0.1])",
+                "Exponential::backgroundFail(mass, lf[-0.1,-1,0.1])",
+                "efficiency[0.9,0,1]",
+                "signalFractionInPassing[0.9]"
+            ),
+            vpvPlusExpoMin70 = cms.vstring(
+                "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
+                "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,3,10])",
+                "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
+                "Exponential::backgroundPass(mass, lp[-0.1,-1,0.1])",
+                "Exponential::backgroundFail(mass, lf[-0.1,-1,0.1])",
+                "efficiency[0.9,0.7,1]",
+                "signalFractionInPassing[0.9]"
+            ),
+            vpvPlusCheb = cms.vstring(
+                "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
+                "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,3,10])",
+                "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
+                #par3
+                "RooChebychev::backgroundPass(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25]})",
+                "RooChebychev::backgroundFail(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25]})",
+                "efficiency[0.9,0.7,1]",
+                "signalFractionInPassing[0.9]"
+            )
+        ),
+    
+        binnedFit = cms.bool(True),
+        binsForFit = cms.uint32(40),
+        saveDistributionsPlot = cms.bool(False),
+    
+        Efficiencies = cms.PSet(), # will be filled later
+    )
+elif _id == 'soft':
+    Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
+            NumCPU = cms.uint32(1),
+        SaveWorkspace = cms.bool(False),
+    
+    
+        Variables = cms.PSet(
+            #essential for all den/num
+            weight = cms.vstring("weight","-100","100",""),
+            mass = cms.vstring("Tag-muon Mass", _mrange, "130", "GeV/c^{2}"),
+            #variables for track only DEN
+            pt = cms.vstring("muon p_{T}", "0", "1000", "GeV/c"),
+            eta    = cms.vstring("muon #eta", "-2.5", "2.5", ""),
+            abseta = cms.vstring("muon |#eta|", "0", "2.5", ""),
+            pair_probeMultiplicity = cms.vstring("pair_probeMultiplicity", "0","30",""),
+            #variables for tightID
+            dB = cms.vstring("dB", "-1000", "1000", ""),
+            dzPV = cms.vstring("dzPV", "-1000", "1000", ""),
+            tkTrackerLay = cms.vstring("tkTrackerLay", "-10","1000",""),
+            tkPixelLay = cms.vstring("tkPixelLay", "-10","1000",""),
+            #tag selection
+            tag_combRelIsoPF04dBeta = cms.vstring("Tag dBeta rel iso dR 0.4", "-2", "9999999", ""),
+            tag_pt = cms.vstring("Tag p_{T}", "0", "1000", "GeV/c"),
+            ),
+    
+        Categories = cms.PSet(
+            TMOST = cms.vstring("TMOneStationTight", "dummy[pass=1,fail=0]"),
+            Track_HP = cms.vstring("High-Purity muons", "dummy[pass=1,fail=0]"),
+            #tag selection
+            tag_IsoMu20 = cms.vstring("PF Muon", "dummy[pass=1,fail=0]"),
+        ),
+    
+        Expressions = cms.PSet(
+            #ID 
+            SoftVar = cms.vstring("SoftVar", "TMOST == 1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
+        ),
+    
+        Cuts = cms.PSet(
+            #ID
+            SoftID = cms.vstring("Soft", "SoftVar", "0.5"),
+        ),
+    
+                              
+        PDFs = cms.PSet(
+            voigtPlusExpo = cms.vstring(
+                "Voigtian::signal(mass, mean[90,80,100], width[2.495], sigma[3,1,20])",
+                "Exponential::backgroundPass(mass, lp[0,-5,5])",
+                "Exponential::backgroundFail(mass, lf[0,-5,5])",
+                "efficiency[0.9,0,1]",
+                "signalFractionInPassing[0.9]"
+            ),
+            vpvPlusExpo = cms.vstring(
+                "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
+                "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,2,10])",
+                "SUM::signal(vFrac[0.8,0,1]*signal1, signal2)",
+                "Exponential::backgroundPass(mass, lp[-0.1,-1,0.1])",
+                "Exponential::backgroundFail(mass, lf[-0.1,-1,0.1])",
+                "efficiency[0.9,0,1]",
+                "signalFractionInPassing[0.9]"
+            ),
+            vpvPlusExpoMin70 = cms.vstring(
+                "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
+                "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,3,10])",
+                "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
+                "Exponential::backgroundPass(mass, lp[-0.1,-1,0.1])",
+                "Exponential::backgroundFail(mass, lf[-0.1,-1,0.1])",
+                "efficiency[0.9,0.7,1]",
+                "signalFractionInPassing[0.9]"
+            ),
+            vpvPlusCheb = cms.vstring(
+                "Voigtian::signal1(mass, mean1[90,80,100], width[2.495], sigma1[2,1,3])",
+                "Voigtian::signal2(mass, mean2[90,80,100], width,        sigma2[4,3,10])",
+                "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
+                #par3
+                "RooChebychev::backgroundPass(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25]})",
+                "RooChebychev::backgroundFail(mass, {a0[0.25,0,0.5], a1[-0.25,-1,0.1],a2[0.,-0.25,0.25]})",
+                "efficiency[0.9,0.7,1]",
+                "signalFractionInPassing[0.9]"
+            )
+        ),
+    
+        binnedFit = cms.bool(True),
+        binsForFit = cms.uint32(40),
+        saveDistributionsPlot = cms.bool(False),
+    
+        Efficiencies = cms.PSet(), # will be filled later
+    )
 
 #_*_*_*_*_*_*_*_*_*_*_*_*
 #Denominators and Binning
@@ -167,21 +437,19 @@ COARSE_ETA_BINS = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-VTX_BINS_ETA24  = cms.PSet(
-    pt     = cms.vdouble( 20, 500 ),
-    abseta = cms.vdouble(  0.0, 2.4),
-    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
+#VTX_BINS_ETA24  = cms.PSet(
+#    pt     = cms.vdouble( 20, 500 ),
+#    abseta = cms.vdouble(  0.0, 2.4),
+#    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
+#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+#    #tag selections
+#    tag_pt = cms.vdouble(21, 500),
+#    tag_IsoMu20 = cms.vstring("pass"), 
+#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
+#)
 PT_ALLETA_BINS = cms.PSet(
     #Main
     pt     = cms.vdouble(20, 25, 30, 40, 50, 60, 80, 120, 200),
-    #For testing bkg function
-    #pt     = cms.vdouble(60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
     pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
     #tag selections
@@ -204,26 +472,26 @@ PT_ETA_BINS = cms.PSet(
     
 )
 #Additional study for Medium ID (in selected eta region)
-PHI_LOWETA = cms.PSet(
-    pt     = cms.vdouble(20, 500),
-    eta = cms.vdouble(-2.4, -2.1),
-    phi =  cms.vdouble(-3.1416, -2.618, -2.0944, -1.5708, -1.0472, -0.5236, 0, 0.5236, 1.0472, 1.5708, 2.0944, 2.618, 3.1416),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
-PHI_HIGHETA = cms.PSet(
-    pt     = cms.vdouble(20, 500),
-    eta = cms.vdouble(2.1, 2.4),
-    phi =  cms.vdouble(-3.1416, -2.618, -2.0944, -1.5708, -1.0472, -0.5236, 0, 0.5236, 1.0472, 1.5708, 2.0944, 2.618, 3.1416),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
+#PHI_LOWETA = cms.PSet(
+#    pt     = cms.vdouble(20, 500),
+#    eta = cms.vdouble(-2.4, -2.1),
+#    phi =  cms.vdouble(-3.1416, -2.618, -2.0944, -1.5708, -1.0472, -0.5236, 0, 0.5236, 1.0472, 1.5708, 2.0944, 2.618, 3.1416),
+#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+#    #tag selections
+#    tag_pt = cms.vdouble(21, 500),
+#    tag_IsoMu20 = cms.vstring("pass"), 
+#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
+#)
+#PHI_HIGHETA = cms.PSet(
+#    pt     = cms.vdouble(20, 500),
+#    eta = cms.vdouble(2.1, 2.4),
+#    phi =  cms.vdouble(-3.1416, -2.618, -2.0944, -1.5708, -1.0472, -0.5236, 0, 0.5236, 1.0472, 1.5708, 2.0944, 2.618, 3.1416),
+#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+#    #tag selections
+#    tag_pt = cms.vdouble(21, 500),
+#    tag_IsoMu20 = cms.vstring("pass"), 
+#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
+#)
 PT_HIGHABSETA = cms.PSet(
     pt     = cms.vdouble(20, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(2.1, 2.4),
@@ -233,16 +501,16 @@ PT_HIGHABSETA = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-VTX_HIGHABSETA  = cms.PSet(
-    pt     = cms.vdouble( 20, 500 ),
-    abseta = cms.vdouble(2.1, 2.4),
-    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
+#VTX_HIGHABSETA  = cms.PSet(
+#    pt     = cms.vdouble( 20, 500 ),
+#    abseta = cms.vdouble(2.1, 2.4),
+#    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
+#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+#    #tag selections
+#    tag_pt = cms.vdouble(21, 500),
+#    tag_IsoMu20 = cms.vstring("pass"), 
+#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
+#)
 
 #For IP on ID
 LOOSE_ETA_BINS = cms.PSet(
@@ -266,17 +534,17 @@ LOOSE_COARSE_ETA_BINS = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-LOOSE_VTX_BINS_ETA24  = cms.PSet(
-    pt     = cms.vdouble( 20, 500 ),
-    abseta = cms.vdouble(  0.0, 2.4),
-    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    PF = cms.vstring("pass"), 
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
+#LOOSE_VTX_BINS_ETA24  = cms.PSet(
+#    pt     = cms.vdouble( 20, 500 ),
+#    abseta = cms.vdouble(  0.0, 2.4),
+#    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
+#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+#    PF = cms.vstring("pass"), 
+#    #tag selections
+#    tag_pt = cms.vdouble(21, 500),
+#    tag_IsoMu20 = cms.vstring("pass"), 
+#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
+#)
 LOOSE_PT_ALLETA_BINS = cms.PSet(
     pt     = cms.vdouble(20, 25, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
@@ -321,17 +589,17 @@ MEDIUM_COARSE_ETA_BINS = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-MEDIUM_VTX_BINS_ETA24  = cms.PSet(
-    pt     = cms.vdouble( 20, 500 ),
-    abseta = cms.vdouble(  0.0, 2.4),
-    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    Medium = cms.vstring("pass"), 
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
+#MEDIUM_VTX_BINS_ETA24  = cms.PSet(
+#    pt     = cms.vdouble( 20, 500 ),
+#    abseta = cms.vdouble(  0.0, 2.4),
+#    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
+#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+#    Medium = cms.vstring("pass"), 
+#    #tag selections
+#    tag_pt = cms.vdouble(21, 500),
+#    tag_IsoMu20 = cms.vstring("pass"), 
+#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
+#)
 MEDIUM_PT_ALLETA_BINS = cms.PSet(
     pt     = cms.vdouble(20, 25, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
@@ -378,18 +646,18 @@ TIGHT_COARSE_ETA_BINS = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-TIGHT_VTX_BINS_ETA24  = cms.PSet(
-    pt     = cms.vdouble( 20, 500 ),
-    abseta = cms.vdouble(  0.0, 2.4),
-    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
-    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-    Tight2012 = cms.vstring("pass"), 
-    dzPV = cms.vdouble(-0.5, 0.5),
-    #tag selections
-    tag_pt = cms.vdouble(21, 500),
-    tag_IsoMu20 = cms.vstring("pass"), 
-    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-)
+#TIGHT_VTX_BINS_ETA24  = cms.PSet(
+#    pt     = cms.vdouble( 20, 500 ),
+#    abseta = cms.vdouble(  0.0, 2.4),
+#    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
+#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
+#    Tight2012 = cms.vstring("pass"), 
+#    dzPV = cms.vdouble(-0.5, 0.5),
+#    #tag selections
+#    tag_pt = cms.vdouble(21, 500),
+#    tag_IsoMu20 = cms.vstring("pass"), 
+#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
+#)
 TIGHT_PT_ALLETA_BINS = cms.PSet(
     pt     = cms.vdouble(20, 25, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
@@ -455,144 +723,73 @@ ID_BINS = []
 #_*_*_*_*_*_*_*_*_*_*
 
 #Loose ID
-if id_bins == '1':
+if _id == 'loose' and _iso == 'noiso':
     ID_BINS = [
     (("Loose_noIP"), ("NUM_LooseID_DEN_genTracks_PAR_eta", ETA_BINS)),
-    #(("Loose_noIP"), ("NUM_LooseID_DEN_genTracks_PAR_coarse_eta", COARSE_ETA_BINS)),
-    #(("Loose_noIP"), ("NUM_LooseID_DEN_genTracks_PAR_vtx_bin1_24", VTX_BINS_ETA24 )),
     (("Loose_noIP"), ("NUM_LooseID_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS)),
     (("Loose_noIP"), ("NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS)),
     ]
 #Medium ID
-if id_bins == '2':
+if _id == 'medium' and _iso == 'noiso':
     ID_BINS = [
     (("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_eta", ETA_BINS)),
-    #(("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_coarse_eta", COARSE_ETA_BINS)),
-    #(("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_vtx_bin1_24", VTX_BINS_ETA24 )),
     (("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS)),
     (("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS)),
     ]
 #Tight ID
-if id_bins == '3':
+if _id == 'tight' and _iso == 'noiso':
     ID_BINS = [
     (("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_eta", ETA_BINS)),
-    #(("Tight2012_zIPCut"), ("NUM_TightID_DEN_genTracks_PAR_coarse_eta", COARSE_ETA_BINS)),
-    #(("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_vtx_bin1_24", VTX_BINS_ETA24 )),
     (("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS)),
     (("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS)),
     ]
 #SoftID
-if id_bins == '4':
+if _id == 'soft' and _iso == 'noiso':
     ID_BINS = [
-    #(("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_eta", ETA_BINS)),
-    #(("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_coarse_eta", COARSE_ETA_BINS)),
-    #(("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_vtx_bin1_24", VTX_BINS_ETA24 )),
-    #(("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS)),
-    #(("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS)),
+    (("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_eta", ETA_BINS)),
+    (("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS)),
+    (("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS)),
     ]
-#Additional studies on Medium ID (in selected eta region)
-#Medium ID
-if id_bins == '5':
-    ID_BINS = [
-    #(("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_phi_loweta", PHI_LOWETA)),
-    #(("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_phi_higheta", PHI_HIGHETA )),
-    #(("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_pt_highabseta", PT_HIGHABSETA)),
-    #(("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_vtx_highabseta", VTX_HIGHABSETA)),
-    ]
+
 #_*_*_*_*_*_*_*_*_*_*
 #ISOs
 #_*_*_*_*_*_*_*_*_*_*
 #Loose Iso
-if id_bins == '6':
+if _id == 'loose' and _iso == 'loose':
     ID_BINS = [
     (("LooseIso4"), ("NUM_LooseRelIso_DEN_LooseID_PAR_eta", LOOSE_ETA_BINS)),
-    #(("LooseIso4"), ("NUM_LooseRelIso_DEN_LooseID_PAR_coarse_eta", LOOSE_COARSE_ETA_BINS)),
-    #(("LooseIso4"), ("NUM_LooseRelIso_DEN_LooseID_PAR_vtx_bin1_24", LOOSE_VTX_BINS_ETA24 )),
     (("LooseIso4"), ("NUM_LooseRelIso_DEN_LooseID_PAR_pt_alleta_bin1", LOOSE_PT_ALLETA_BINS)),
     (("LooseIso4"), ("NUM_LooseRelIso_DEN_LooseID_PAR_pt_spliteta_bin1", LOOSE_PT_ETA_BINS)),
     ]
-if id_bins == '7':
+elif _id == 'medium' and _iso == 'loose':
     ID_BINS = [
-    #(("LooseIso4"), ("NUM_LooseRelIso_DEN_MediumID_PAR_eta", MEDIUM_ETA_BINS)),
-    #(("LooseIso4"), ("NUM_LooseRelIso_DEN_MediumID_PAR_coarse_eta", MEDIUM_COARSE_ETA_BINS)),
-    #(("LooseIso4"), ("NUM_LooseRelIso_DEN_MediumID_PAR_vtx_bin1_24", MEDIUM_VTX_BINS_ETA24 )),
-    #(("LooseIso4"), ("NUM_LooseRelIso_DEN_MediumID_PAR_pt_alleta_bin1", MEDIUM_PT_ALLETA_BINS)),
-    #(("LooseIso4"), ("NUM_LooseRelIso_DEN_MediumID_PAR_pt_spliteta_bin1", MEDIUM_PT_ETA_BINS)),
+    (("LooseIso4"), ("NUM_LooseRelIso_DEN_MediumID_PAR_eta", MEDIUM_ETA_BINS)),
+    (("LooseIso4"), ("NUM_LooseRelIso_DEN_MediumID_PAR_pt_alleta_bin1", MEDIUM_PT_ALLETA_BINS)),
+    (("LooseIso4"), ("NUM_LooseRelIso_DEN_MediumID_PAR_pt_spliteta_bin1", MEDIUM_PT_ETA_BINS)),
     ]
-if id_bins == '8':
+elif _id == 'tight' and _iso == 'loose':
     ID_BINS = [
-    #(("LooseIso4"), ("NUM_LooseRelIso_DEN_TightID_PAR_eta", TIGHT_ETA_BINS)),
-    #(("LooseIso4"), ("NUM_LooseRelIso_DEN_TightID_PAR_coarse_eta", TIGHT_COARSE_ETA_BINS)),
-    #(("LooseIso4"), ("NUM_LooseRelIso_DEN_TightID_PAR_vtx_bin1_24", TIGHT_VTX_BINS_ETA24 )),
-    #(("LooseIso4"), ("NUM_LooseRelIso_DEN_TightID_PAR_pt_alleta_bin1", TIGHT_PT_ALLETA_BINS)),
-    #(("LooseIso4"), ("NUM_LooseRelIso_DEN_TightID_PAR_pt_spliteta_bin1", TIGHT_PT_ETA_BINS)),
+    (("LooseIso4"), ("NUM_LooseRelIso_DEN_TightID_PAR_eta", TIGHT_ETA_BINS)),
+    (("LooseIso4"), ("NUM_LooseRelIso_DEN_TightID_PAR_pt_alleta_bin1", TIGHT_PT_ALLETA_BINS)),
+    (("LooseIso4"), ("NUM_LooseRelIso_DEN_TightID_PAR_pt_spliteta_bin1", TIGHT_PT_ETA_BINS)),
     ]
 #Tight Iso
-if id_bins == '9':
+elif _id == 'tight' and _iso == 'tight':
     ID_BINS = [
     (("TightIso4"), ("NUM_TightRelIso_DEN_TightID_PAR_eta", TIGHT_ETA_BINS)),
-    #(("TightIso4"), ("NUM_TightRelIso_DEN_TightID_PAR_coarse_eta", TIGHT_COARSE_ETA_BINS)),
-    #(("TightIso4"), ("NUM_TightRelIso_DEN_TightID_PAR_vtx_bin1_24", TIGHT_VTX_BINS_ETA24 )),
     (("TightIso4"), ("NUM_TightRelIso_DEN_TightID_PAR_pt_alleta_bin1", TIGHT_PT_ALLETA_BINS)),
     (("TightIso4"), ("NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1", TIGHT_PT_ETA_BINS)),
     ]
-if id_bins == '10':
+elif _id == 'medium' and _iso == 'tight':
     ID_BINS = [
     (("TightIso4"), ("NUM_TightRelIso_DEN_MediumID_PAR_eta", MEDIUM_ETA_BINS)),
-    #(("TightIso4"), ("NUM_TightRelIso_DEN_MediumID_PAR_coarse_eta", MEDIUM_COARSE_ETA_BINS)),
-    #(("TightIso4"), ("NUM_TightRelIso_DEN_MediumID_PAR_vtx_bin1_24", MEDIUM_VTX_BINS_ETA24 )),
     (("TightIso4"), ("NUM_TightRelIso_DEN_MediumID_PAR_pt_alleta_bin1", MEDIUM_PT_ALLETA_BINS)),
     (("TightIso4"), ("NUM_TightRelIso_DEN_MediumID_PAR_pt_spliteta_bin1", MEDIUM_PT_ETA_BINS)),
     ]
-#Doing jobs one by one
-#if id_bins == '11':
-#    ID_BINS = [
-#    (("TightIso4"), ("NUM_TightRelIso_DEN_MediumID_PAR_eta", MEDIUM_ETA_BINS)),
-#    ]
-#if id_bins == '12':
-#    ID_BINS = [
-#    (("TightIso4"), ("NUM_TightRelIso_DEN_MediumID_PAR_pt_alleta_bin1", MEDIUM_PT_ALLETA_BINS)),
-#    ]
-#if id_bins == '13':
-#    ID_BINS = [
-#    (("TightIso4"), ("NUM_TightRelIso_DEN_MediumID_PAR_pt_spliteta_bin1", MEDIUM_PT_ETA_BINS)),
-#    ]
-if id_bins == '11':
-    ID_BINS = [
-    (("Loose_noIP"), ("NUM_LooseID_DEN_genTracks_PAR_eta", ETA_BINS)),
-    ]
-if id_bins == '12':
-    ID_BINS = [
-    (("Loose_noIP"), ("NUM_LooseID_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS)),
-    ]
-if id_bins == '13':
-    ID_BINS = [
-    (("Loose_noIP"), ("NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS)),
-    ]
-if id_bins == '14':
-    ID_BINS = [
-    (("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_eta", ETA_BINS)),
-    ]
-if id_bins == '15':
-    ID_BINS = [
-    (("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS)),
-    ]
-if id_bins == '16':
-    ID_BINS = [
-    (("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS)),
-    ]
-if id_bins == '17':
-    ID_BINS = [
-    (("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_eta", ETA_BINS)),
-    ]
-if id_bins == '18':
-    ID_BINS = [
-    (("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS)),
-    ]
-if id_bins == '19':
-    ID_BINS = [
-    (("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS)),
-    ]
+else:
+    print "@ERROR: no combination for _id", _id, "and _iso", _iso, '. Abort.'
+    sys.exit()
+
 
 #_*_*_*_*_*_*_*_*_*_*_*
 #Launch fit production
