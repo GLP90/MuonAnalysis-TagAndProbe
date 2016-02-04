@@ -75,7 +75,7 @@ TH1F* DividTGraphs(TGraphAsymmErrors* gr1, TGraphAsymmErrors* gr2){
 }
 
 
-int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _path2, TString _output){
+int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _path2, TString _output, TString _legtext){
 
     setTDRStyle();
     gROOT->SetBatch(kTRUE);
@@ -135,8 +135,9 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     eff2->SetLineColor(4);
     eff2->SetMarkerStyle(21);
     eff2->SetMarkerColor(4);
-    TString _legtext = "";
+    //TString _legtext = "";
 
+    /*
     if(_canvas.Contains("/Loose_noIP_eta")){
         _legtext = "Loose Id, p_{T} #geq 20 GeV";
     }else if(_canvas.Contains("/Loose_noIP_vtx_bin")){
@@ -243,6 +244,7 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
         std::cout<<"=============================="<<std::endl;
         //return 1;
     }
+    */
     TLegend* leg = new TLegend(0.45, 0.65, 0.75 , 0.85);
     leg->SetHeader(_legtext);
     TLegendEntry *header = (TLegendEntry*)leg->GetListOfPrimitives()->First();
@@ -310,9 +312,13 @@ int make_ratioplots(TString _file, TString _canvas, TString _path1, TString _pat
     CMS_lumi(pad1, 4, 11);
     c3->Update();
 
-    c3->SaveAs(_output + _par + "_" + _file);
-    _file.ReplaceAll("pdf","png");
-    c3->SaveAs(_output + _par + "_" + _file);
+    TString cname = _output + _file;
+    cname.ReplaceAll(".pdf","_"+_par+".pdf");
+    //c3->SaveAs(_output + _file); + "_" + _par);
+    c3->SaveAs(cname);
+    //_file.ReplaceAll("pdf","png");
+    cname.ReplaceAll("pdf","png");
+    c3->SaveAs(cname);
 
     return 0;
 

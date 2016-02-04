@@ -55,6 +55,38 @@ def getparameter(_file):
         sys.exit()
     return _par
 
+def makeleg(_canvas):
+    leg = ''
+    num = _canvas[_canvas.find('NUM_')+4:_canvas.find('DEN_')-1]
+    den = _canvas[_canvas.find('DEN_')+4:_canvas.find('PAR_')-1] 
+    par1 = _canvas[_canvas.find('PAR_')+4:].split('_')[0]
+    par2 =  _canvas[_canvas.find('PAR_')+4:].split('_')[1]
+    print 'par2 is', par2
+    NUMleg = {'LooseID':'Loose Id','MediumID':'Medium Id','TightIDandIPCut':'Tight Id','SoftID':'Soft Id','LooseRelIso':'Loose Iso','TightRelIso':'Tight Iso'}
+    DENleg = {'genTracks':'','LooseID':'/Loose Id','MediumID':'/Medium Id','TightID':'/Tight Id'}
+    PAR2leg = {'eff':', p_{T} #geq 20 GeV','alleta':', p_{T} #geq 20 GeV','spliteta':'','alleta':', #||{#eta} #leq 2.4'}
+    
+    leg += NUMleg[num]
+    leg += DENleg[den]
+    leg += PAR2leg[par2]
+    if par2 == 'spliteta':
+        if _canvas.find('PLOT_abseta_bin0') != -1:
+            leg += ' , #||{#eta} #leq 0.9'
+        elif _canvas.find('PLOT_abseta_bin1') != -1:
+            leg += ' , 0.9 #leq #||{#eta} #leq 1.2'
+        elif _canvas.find('PLOT_abseta_bin2') != -1:
+            leg += ' , 1.2 #leq #||{#eta} #leq 2.1'
+        elif _canvas.find('PLOT_abseta_bin3') != -1:
+            leg += ' , 2.1 #leq #||{#eta} #leq 2.4'
+        else:
+            print '@ERROR: no eta range corresponding to this spliteta'
+            sys.exit()
+    print 'debug2'
+    if leg == '':
+        print "@ERROR: empty legend !"
+        sys.exit()
+    return leg
+
 import sys, os
 args = sys.argv[1:]
 
@@ -109,7 +141,7 @@ for file in dir:
         else:
             if debug: print 'The file', file, 'exists !'
             CANVAS = getplotpath( file, _path1, _tptree)
-            print "CANVAS is", CANVAS
+            #print "CANVAS is", CANVAS
             for _canvas in CANVAS:
                 print 'will retrieve the canvas ', _canvas
-                r.make_ratioplots(file, _canvas, _path1, _path2, _output)
+                r.make_ratioplots(file, _canvas, _path1, _path2, _output, makeleg(_canvas))
