@@ -7,6 +7,7 @@
 #include "TKey.h"
 #include "TCanvas.h"
 #include "TH2F.h"
+#include "TROOT.h"
 
 #include <iostream>
 using namespace std;
@@ -110,6 +111,7 @@ TH1F *computeTheSF_1D(TGraphAsymmErrors *graphDATA, TGraphAsymmErrors *graphMC){
 }
 
 void extractPlotsAndComputeTheSFs(TString theIDname, TString dataFile, TString mcFile){
+    gROOT->SetBatch(kTRUE);
     efficienciesDATA = new TFile(dataFile);
     efficienciesMC = new TFile(mcFile);
     TDirectory *plotDirectory = efficienciesDATA->GetDirectory("tpTree");
@@ -259,6 +261,11 @@ void extractPlotsAndComputeTheSFs(TString theIDname, TString dataFile, TString m
                         histo2Dratio->Sumw2();
                         histo2Dratio->Divide(histo2D,histo2DMC,1,1);
                         histo2Dratio->Write();
+                        TCanvas* c1 = new TCanvas("c1","c1");
+                        c1->SetLogy();
+                        histo2Dratio->Draw();
+                        c1->SaveAs((TString) "PlotSF_"+nomDirectory+"_"+histo2Dratio->GetName()+".pdf");
+                        c1->SaveAs((TString) "PlotSF_"+nomDirectory+"_"+histo2Dratio->GetName()+".png");
                     }
                 }
             }

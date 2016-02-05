@@ -27,6 +27,16 @@ _path2 = os.getcwd() + "/Efficiency" + iteration + '/' + sample2 + '/'
 
 _tptree = 'tpTree'
 
+_output = os.getcwd() + '/RatioPlots' + iteration
+_output += '/' + sample1 + '_' + sample2 + '/'
+if not os.path.exists(_output): 
+    os.makedirs(_output)
+#print '_output is ', _output
+if not os.path.exists(_output):
+    os.makedirs(_output)
+
+os.chdir(_output)
+
 ##!! Get the list of files
 dir = os.listdir(_path1)
 for file in dir:
