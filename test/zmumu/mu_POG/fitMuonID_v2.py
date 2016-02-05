@@ -437,16 +437,6 @@ COARSE_ETA_BINS = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-#VTX_BINS_ETA24  = cms.PSet(
-#    pt     = cms.vdouble( 20, 500 ),
-#    abseta = cms.vdouble(  0.0, 2.4),
-#    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
-#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-#    #tag selections
-#    tag_pt = cms.vdouble(21, 500),
-#    tag_IsoMu20 = cms.vstring("pass"), 
-#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-#)
 PT_ALLETA_BINS = cms.PSet(
     #Main
     pt     = cms.vdouble(20, 25, 30, 40, 50, 60, 80, 120, 200),
@@ -471,27 +461,6 @@ PT_ETA_BINS = cms.PSet(
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
     
 )
-#Additional study for Medium ID (in selected eta region)
-#PHI_LOWETA = cms.PSet(
-#    pt     = cms.vdouble(20, 500),
-#    eta = cms.vdouble(-2.4, -2.1),
-#    phi =  cms.vdouble(-3.1416, -2.618, -2.0944, -1.5708, -1.0472, -0.5236, 0, 0.5236, 1.0472, 1.5708, 2.0944, 2.618, 3.1416),
-#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-#    #tag selections
-#    tag_pt = cms.vdouble(21, 500),
-#    tag_IsoMu20 = cms.vstring("pass"), 
-#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-#)
-#PHI_HIGHETA = cms.PSet(
-#    pt     = cms.vdouble(20, 500),
-#    eta = cms.vdouble(2.1, 2.4),
-#    phi =  cms.vdouble(-3.1416, -2.618, -2.0944, -1.5708, -1.0472, -0.5236, 0, 0.5236, 1.0472, 1.5708, 2.0944, 2.618, 3.1416),
-#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-#    #tag selections
-#    tag_pt = cms.vdouble(21, 500),
-#    tag_IsoMu20 = cms.vstring("pass"), 
-#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-#)
 PT_HIGHABSETA = cms.PSet(
     pt     = cms.vdouble(20, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(2.1, 2.4),
@@ -501,16 +470,6 @@ PT_HIGHABSETA = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-#VTX_HIGHABSETA  = cms.PSet(
-#    pt     = cms.vdouble( 20, 500 ),
-#    abseta = cms.vdouble(2.1, 2.4),
-#    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
-#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-#    #tag selections
-#    tag_pt = cms.vdouble(21, 500),
-#    tag_IsoMu20 = cms.vstring("pass"), 
-#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-#)
 
 #For IP on ID
 LOOSE_ETA_BINS = cms.PSet(
@@ -534,17 +493,6 @@ LOOSE_COARSE_ETA_BINS = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-#LOOSE_VTX_BINS_ETA24  = cms.PSet(
-#    pt     = cms.vdouble( 20, 500 ),
-#    abseta = cms.vdouble(  0.0, 2.4),
-#    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
-#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-#    PF = cms.vstring("pass"), 
-#    #tag selections
-#    tag_pt = cms.vdouble(21, 500),
-#    tag_IsoMu20 = cms.vstring("pass"), 
-#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-#)
 LOOSE_PT_ALLETA_BINS = cms.PSet(
     pt     = cms.vdouble(20, 25, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
@@ -589,17 +537,6 @@ MEDIUM_COARSE_ETA_BINS = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-#MEDIUM_VTX_BINS_ETA24  = cms.PSet(
-#    pt     = cms.vdouble( 20, 500 ),
-#    abseta = cms.vdouble(  0.0, 2.4),
-#    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
-#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-#    Medium = cms.vstring("pass"), 
-#    #tag selections
-#    tag_pt = cms.vdouble(21, 500),
-#    tag_IsoMu20 = cms.vstring("pass"), 
-#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-#)
 MEDIUM_PT_ALLETA_BINS = cms.PSet(
     pt     = cms.vdouble(20, 25, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
@@ -646,18 +583,6 @@ TIGHT_COARSE_ETA_BINS = cms.PSet(
     tag_IsoMu20 = cms.vstring("pass"), 
     tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
 )
-#TIGHT_VTX_BINS_ETA24  = cms.PSet(
-#    pt     = cms.vdouble( 20, 500 ),
-#    abseta = cms.vdouble(  0.0, 2.4),
-#    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5),
-#    pair_probeMultiplicity = cms.vdouble(0.5, 1.5),
-#    Tight2012 = cms.vstring("pass"), 
-#    dzPV = cms.vdouble(-0.5, 0.5),
-#    #tag selections
-#    tag_pt = cms.vdouble(21, 500),
-#    tag_IsoMu20 = cms.vstring("pass"), 
-#    tag_combRelIsoPF04dBeta = cms.vdouble(-0.5, 0.2),
-#)
 TIGHT_PT_ALLETA_BINS = cms.PSet(
     pt     = cms.vdouble(20, 25, 30, 40, 50, 60, 80, 120, 200),
     abseta = cms.vdouble(  0.0, 2.4),
@@ -813,8 +738,10 @@ for ID, ALLBINS in ID_BINS:
     shape = cms.vstring("vpvPlusExpo")
     #shape = "vpvPlusCheb"
     if not "Iso" in ID:  #customize only for ID
-        if (len(B.pt)==7) or (len(B.pt)==9):  #customize only when the pT have the high pt bins
+        if (len(B.pt)==7): #customize only when the pT have the high pt bins
             shape = cms.vstring("vpvPlusExpo","*pt_bin5*","vpvPlusCheb")
+        elif (len(B.pt)==9): 
+            shape = cms.vstring("vpvPlusExpo","*pt_bin5*","vpvPlusCheb","*pt_bin6*","vpvPlusCheb","*pt_bin7*","vpvPlusCheb")
     DEN = B.clone(); num = ID;
     
 
