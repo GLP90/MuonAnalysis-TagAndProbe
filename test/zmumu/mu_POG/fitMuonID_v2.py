@@ -60,7 +60,7 @@ if not _id in ['loose', 'medium', 'tight', 'soft']:
 
 #Set-up the mass range
 _mrange = "70"
-if not _iso == 'nosio': 
+if not _iso == 'noiso': 
     _mrange = "77"
 print '_mrange is', _mrange
 
@@ -697,12 +697,11 @@ if sample == "data":
     process.TnP_MuonID = Template.clone(
         InputFileNames = cms.vstring(
             #'root://eoscms//eos/cms/store/group/phys_tracking/gpetrucc/tnp/76X/tnpZ_MC_DY76_chunk0.root'
-            #'samples/TnPTree_76X_RunC_and_D_total.root'
-            'samples/TnPTree_76X_RunC.root',
+            #'samples/TnPTree_76X_RunC.root',
             'samples/TnPTree_76X_RunD_part1.root',
-            'samples/TnPTree_76X_RunD_part2.root',
-            'samples/TnPTree_76X_RunD_part3.root',
-            'samples/TnPTree_76X_RunD_part4.root'
+            #'samples/TnPTree_76X_RunD_part2.root',
+            #'samples/TnPTree_76X_RunD_part3.root',
+            #'samples/TnPTree_76X_RunD_part4.root'
             ),
         InputTreeName = cms.string("fitter_tree"),
         InputDirectoryName = cms.string("tpTree"),
@@ -730,21 +729,21 @@ if _id == 'loose' and _iso == 'noiso':
     (("Loose_noIP"), ("NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS)),
     ]
 #Medium ID
-if _id == 'medium' and _iso == 'noiso':
+elif _id == 'medium' and _iso == 'noiso':
     ID_BINS = [
     (("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_eta", ETA_BINS)),
     (("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS)),
     (("Medium_noIP"), ("NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS)),
     ]
 #Tight ID
-if _id == 'tight' and _iso == 'noiso':
+elif _id == 'tight' and _iso == 'noiso':
     ID_BINS = [
     (("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_eta", ETA_BINS)),
     (("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS)),
     (("Tight2012_zIPCut"), ("NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1", PT_ETA_BINS)),
     ]
 #SoftID
-if _id == 'soft' and _iso == 'noiso':
+elif _id == 'soft' and _iso == 'noiso':
     ID_BINS = [
     (("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_eta", ETA_BINS)),
     (("SoftID"), ("NUM_SoftID_DEN_genTracks_PAR_pt_alleta_bin1", PT_ALLETA_BINS)),
@@ -755,7 +754,7 @@ if _id == 'soft' and _iso == 'noiso':
 #ISOs
 #_*_*_*_*_*_*_*_*_*_*
 #Loose Iso
-if _id == 'loose' and _iso == 'loose':
+elif _id == 'loose' and _iso == 'loose':
     ID_BINS = [
     (("LooseIso4"), ("NUM_LooseRelIso_DEN_LooseID_PAR_eta", LOOSE_ETA_BINS)),
     (("LooseIso4"), ("NUM_LooseRelIso_DEN_LooseID_PAR_pt_alleta_bin1", LOOSE_PT_ALLETA_BINS)),
@@ -814,7 +813,7 @@ for ID, ALLBINS in ID_BINS:
     shape = cms.vstring("vpvPlusExpo")
     #shape = "vpvPlusCheb"
     if not "Iso" in ID:  #customize only for ID
-        if (len(B.pt)==7):  #customize only when the pT have the high pt bins
+        if (len(B.pt)==7) or (len(B.pt)==9):  #customize only when the pT have the high pt bins
             shape = cms.vstring("vpvPlusExpo","*pt_bin5*","vpvPlusCheb")
     DEN = B.clone(); num = ID;
     
