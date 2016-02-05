@@ -622,11 +622,11 @@ if sample == "data":
     process.TnP_MuonID = Template.clone(
         InputFileNames = cms.vstring(
             #'root://eoscms//eos/cms/store/group/phys_tracking/gpetrucc/tnp/76X/tnpZ_MC_DY76_chunk0.root'
-            #'samples/TnPTree_76X_RunC.root',
+            'samples/TnPTree_76X_RunC.root',
             'samples/TnPTree_76X_RunD_part1.root',
-            #'samples/TnPTree_76X_RunD_part2.root',
-            #'samples/TnPTree_76X_RunD_part3.root',
-            #'samples/TnPTree_76X_RunD_part4.root'
+            'samples/TnPTree_76X_RunD_part2.root',
+            'samples/TnPTree_76X_RunD_part3.root',
+            'samples/TnPTree_76X_RunD_part4.root'
             ),
         InputTreeName = cms.string("fitter_tree"),
         InputDirectoryName = cms.string("tpTree"),
@@ -738,10 +738,10 @@ for ID, ALLBINS in ID_BINS:
     shape = cms.vstring("vpvPlusExpo")
     #shape = "vpvPlusCheb"
     if not "Iso" in ID:  #customize only for ID
-        if (len(B.pt)==7): #customize only when the pT have the high pt bins
-            shape = cms.vstring("vpvPlusExpo","*pt_bin5*","vpvPlusCheb")
-        elif (len(B.pt)==9): 
-            shape = cms.vstring("vpvPlusExpo","*pt_bin5*","vpvPlusCheb","*pt_bin6*","vpvPlusCheb","*pt_bin7*","vpvPlusCheb")
+        if (len(B.pt)==9): #customize only when the pT have the high pt bins
+            shape = cms.vstring("vpvPlusExpo","*pt_bin7*","vpvPlusCheb")
+        elif (len(B.pt)==11): 
+            shape = cms.vstring("vpvPlusExpo","*pt_bin7*","vpvPlusCheb","*pt_bin8*","vpvPlusCheb","*pt_bin9*","vpvPlusCheb")
     DEN = B.clone(); num = ID;
     
 
