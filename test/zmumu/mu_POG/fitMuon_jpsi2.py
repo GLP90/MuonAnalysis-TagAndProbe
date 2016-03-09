@@ -333,7 +333,7 @@ if sample == "mc":
 if sample == "data":
     process.TnP_MuonID = Template.clone(
         InputFileNames = cms.vstring(
-            '/afs/cern.ch/work/g/gaperrin/private/TnP/TnP76/CMSSW_7_6_3_patch2/src/MuonAnalysis/TagAndProbe/test/zmumu/mu_POG/samples/tnpJPsi_Data_Run2015D.root'
+            '/afs/cern.ch/work/g/gaperrin/private/TnP/TnP76/CMSSW_7_6_3_patch2/src/MuonAnalysis/TagAndProbe/test/zmumu/mu_POG/samples/tnpJPsi_MC_JPsiPt8_full_withNVtxWeights.root'
             ),
         InputTreeName = cms.string("fitter_tree"),
         InputDirectoryName = cms.string("tpTree"),

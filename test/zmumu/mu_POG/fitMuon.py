@@ -79,7 +79,7 @@ if _id == "loose":
             pt = cms.vstring("muon p_{T}", "0", "1000", "GeV/c"),
             eta    = cms.vstring("muon #eta", "-2.5", "2.5", ""),
             abseta = cms.vstring("muon |#eta|", "0", "2.5", ""),
-            pair_probeMultiplicity = cms.vstring("pair_probeMultiplicity", "0","30",""),
+            pair_probeMultiplicity = cms.vstring("pair_probeMultiplicity", "1","30",""),
             #for Iso
             combRelIsoPF04dBeta = cms.vstring("dBeta rel iso dR 0.4", "-2", "9999999", ""),
             #tag selection
